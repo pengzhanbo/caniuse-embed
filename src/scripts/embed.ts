@@ -4,6 +4,9 @@
 
   for (const embed of embeds) {
     const feature = embed.getAttribute('data-feature')
+    if (!feature)
+      continue
+
     const past = embed.getAttribute('data-past') || ''
     const future = embed.getAttribute('data-future') || ''
     let meta = embed.getAttribute('data-meta') || ''

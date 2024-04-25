@@ -14,9 +14,12 @@
     "@astrojs/vercel": "^7.5.3",
     "@pengzhanbo/utils": "^1.1.2",
     "astro": "^4.6.3",
+    "choices.js": "^10.2.0",
     "markdown-it": "^14.1.0",
     "markdown-it-link-attributes": "^4.0.1",
+    "nanoid": "^5.0.7",
     "normalize.css": "^8.0.1",
+    "tsup": "^8.0.2",
     "typescript": "^5.4.5"
   },
   "devDependencies": {

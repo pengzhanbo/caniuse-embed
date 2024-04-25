@@ -1,5 +1,6 @@
 ---
 import 'normalize.css'
+import 'choices.js/public/assets/styles/choices.min.css'
 import '../styles/home.css'
 
 import Layout from '../layouts/Layout.astro'
@@ -34,45 +35,48 @@ import Layout from '../layouts/Layout.astro'
 
     <p>What feature are you trying to display?</p>
 
-    <label for="features">
-      <select id="featuresSelect">
-        <option value="">Select a feature</option>
-      </select>
-    </label>
+    <select id="featuresSelect"></select>
 
     <h3>Additional Settings</h3>
 
-    <h5>Browser Versions:</h5>
+    <p>Select the past versions you want to display</p>
 
-    <label for="past">
-      <span>Past verison:</span>
-      <select name="past" id="past">
-        <option value="">-</option>
-        <option value="1">1</option>
-        <option value="2" selected>2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-    </label>
+    <select id="pastSelect"></select>
 
-    <label for="future">
-      <span>Future verison:</span>
-      <select name="future" id="future">
-        <option value="">-</option>
-        <option value="1" selected>1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-      </select>
-    </label>
+    <p>Select the future versions you want to display</p>
 
-    <div id="output"></div>
+    <select id="futureSelect"></select>
+
+    <div class="embed-config" style="display:none">
+      <h3>Include Script</h3>
+
+      <p>Include the following javascript file in your document.</p>
+
+      <pre><code>&lt;script type="module" src="https://caniuse-embed.vercel.app/embed.js"&gt;&lt;/script&gt;</code></pre>
+
+      <h3>Get the Embed Code</h3>
+
+      <p>Paste this snippet where you want the embed to be displayed:</p>
+
+      <pre id="embedCode"></pre>
+
+    </div>
+
+    <div id="output">
+      <h3>Embed Preview</h3>
+
+      <p class="ciu-embed">
+        <iframe width="100%" height="330px" frameborder="0"></iframe>
+      </p>
+    </div>
+
   </main>
 </Layout>
 
 <style>
 #output {
   margin: 40px auto;
+  display: none;
 }
 
 </style>
