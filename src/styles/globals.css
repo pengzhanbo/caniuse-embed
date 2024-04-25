@@ -1,0 +1,88 @@
+
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {
+  display: block
+}
+
+@font-face {
+  font-family: 'open sans';
+  src: url("/fonts/open-sans-regular.woff2") format("woff2");
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal
+}
+
+@font-face {
+  font-family: 'open sans';
+  src: url("/fonts/open-sans-300.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 300;
+  font-style: normal
+}
+
+@font-face {
+  font-family: 'open sans';
+  src: url("/fonts/open-sans-700.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font: 16px / 1.5 "open sans", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  background-size: 400px 400px, 10px 10px;
+  color: black
+}
+
+@media (max-width: 736px) {
+  body {
+    padding:0;
+    background-size: 12.5em 12.5em,.625em .625em
+  }
+}
+
+a {
+  color: #EB8900;
+  text-decoration: none
+}
+
+a:hover {
+  text-decoration: none
+}
+
+ul {
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-weight: normal
+}
+
+h1 {
+  font-size: 1.4em;
+  display: inline
+}
+
+h2 {
+  font-size: 1em
+}
+
+code {
+  padding: 1px 4px;
+  font-family: Inconsolata, monospace;
+  background-color: var(--code-bg)
+}
+
+
+[hidden],
+.hidden {
+  display: none;
+}

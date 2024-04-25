@@ -1,0 +1,32 @@
+---
+import type { FeatureBrowserSupport } from '../types'
+import { getShortenedBrowserVersion } from '../utils/getShortenedBrowserVersion'
+import { BROWSERS, BROWSERS_NAME } from '../common/constants'
+
+export interface Props {
+  supports: [string, FeatureBrowserSupport[]][]
+}
+
+const { supports } = Astro.props
+---
+
+<div class="supports">
+  <header class="supports-header">
+    {BROWSERS.map(browser => (
+      <h4 class={`browser--${browser}`}>
+        <span class="browser-title">{BROWSERS_NAME[browser]}</span>
+      </h4>
+    ))}
+  </header>
+  {supports.map(([period, browsers]) => (
+    <article class:list={['supports-item', 'statistics', period]}>
+      {browsers.map(browser => (
+        <div class:list={[browser.browser, browser.supportType ?? '']}>
+          <span class="version">{getShortenedBrowserVersion(browser.version)}</span>
+          <span class="state"></span>
+          {browser.version && (<span class="usage">{browser.usage}</span>)}
+        </div>
+      ))}
+    </article>
+  ))}
+</div>

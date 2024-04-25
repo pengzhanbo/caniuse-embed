@@ -1,0 +1,35 @@
+---
+import type { Feature } from '../types'
+
+interface Props {
+  data: Feature
+}
+
+const data = Astro.props.data
+---
+
+{(data.globalY || data.globalA) && (
+  <small class="note">
+    Globals:
+    {data.globalY && <span class="y">{data.globalY}</span>}
+    {data.globalY && data.globalA && ' + '}
+    {data.globalA && <span class="a">{data.globalA}</span>}
+    {data.globalT && ` = ${data.globalT}`}
+  </small>
+)}
+{data.experimental && (<small class="note"><strong>Experimental</strong> feature</small>)}
+{data.deprecated && (<small class="note"><strong>Deprecated</strong> feature</small>)}
+
+<div class="legend">
+  <div class="y" aria-label="Supported">&#x2713;</div>
+  <div class="n" aria-lablel="Not Supported">&#x2717;</div>
+  {data.unknown && (<div class="u" aria-lablel="Unknown Support">?</div>)}
+  <div class="a">Partial Support</div>
+  {data.prefixed && <div class="x">Prefixed</div>}
+  {data.flag && (
+    <div class="d" id="legendD">
+      <img src="/flag.png" alt="" />
+      Behind a Flag
+    </div>
+  )}
+</div>

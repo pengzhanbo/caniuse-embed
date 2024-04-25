@@ -1,0 +1,77 @@
+@font-face {
+  font-family: 'open sans';
+  src: url("/fonts/open-sans-regular.woff2") format("woff2");
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal
+}
+
+@font-face {
+  font-family: 'open sans';
+  src: url("/fonts/open-sans-300.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 300;
+  font-style: normal
+}
+
+@font-face {
+  font-family: 'open sans';
+  src: url("/fonts/open-sans-700.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal
+}
+
+body {
+  font: 16px / 1.5 "open sans", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  background-size: 400px 400px, 10px 10px;
+  color: black
+}
+
+@media (max-width: 736px) {
+  body {
+    padding:0;
+    background-size: 12.5em 12.5em,.625em .625em
+  }
+}
+
+
+/* =================================  */
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+select {
+  max-width: 100%;
+  padding: 4px 16px;
+}
+
+h1 {
+  font-size: 36px;
+}
+
+h2 {
+  font-size: 28px;
+  margin-top: 30px;
+  padding-bottom: 12px;
+  border-bottom: solid 1px #e1e1e1;
+}
+
+.description {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 40px;
+}
+
+.description a {
+  color: #000;
+}
+
+select#past,
+select#future {
+  margin-right: 20px;
+}

@@ -1,0 +1,52 @@
+---
+import '../styles/globals.css'
+import '../styles/feature.css'
+
+import type { Feature } from '../types'
+import Layout from '../layouts/Layout.astro'
+import FeatureFooter from '../components/FeatureFooter.astro'
+import FeatureInfo from '../components/FeatureInfo.astro'
+import FeatureHeader from '../components/FeatureHeader.astro'
+import FeatureSupports from '../components/FeatureSupports.astro'
+
+import { getFeaturesList } from '../services/featuresList'
+import { parseSupportData } from '../services/parseSupportData'
+
+export interface Params {
+  feature: string
+}
+
+export interface Props {
+  data: Feature
+}
+
+export const prerender = true
+
+export async function getStaticPaths() {
+  const list = await getFeaturesList()
+  return list.map(([feature, data]) => ({ params: { feature }, props: { data } }))
+}
+const { feature } = Astro.params
+const { data } = Astro.props
+
+const source = feature.startsWith('mdn') ? 'mdn' : 'caniuse'
+const supports = parseSupportData(data.supports || [])
+---
+
+<Layout title={data.title} {source}>
+  <input class="feature_id" type="hidden" hidden value={feature} />
+
+  <main class="feature past_1 past_2 future_1">
+    <FeatureHeader {data} />
+
+    <div class="main">
+      <FeatureSupports {supports} />
+
+      <FeatureInfo {data} />
+    </div>
+
+    <FeatureFooter {source} />
+  </main>
+</Layout>
+
+<script src="../scripts/feature.ts"></script>

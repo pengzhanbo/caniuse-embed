@@ -1,0 +1,81 @@
+---
+import 'normalize.css'
+import '../styles/home.css'
+
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="Welcome to Astro." source="">
+  <main class="container">
+    <h1>The CanIUse Embed</h1>
+
+    <p class="description">
+      Embed up-to-date data from <a href="https://caniuse.com/" target="_blank">caniuse.com</a> and <a href="https://github.com/mdn/browser-compat-data" target="_blank">mozilla's browser compat data</a>. Displays feature support data for multiple versions of the 10 major browsers. Configurable, reliable, and fully responsive.
+    </p>
+
+    <p>
+      Made with <a href="https://astro.build/" target="_blank">Astro</a> by <a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> .
+    </p>
+    <p>Deloy with <a href="https://vercel.com/" target="_blank">Vercel</a>.</p>
+
+    <h2>Examples</h2>
+
+    <p>
+      By default, the interactive embed will display the feature support for the current version, 1 version in the future, and 2 versions back.
+    </p>
+
+    <p class="ciu-embed" data-feature="css-grid"></p>
+
+    <p class="ciu-embed" data-feature="mdn-css_properties_z-index"></p>
+
+    <h2>Create your Embed</h2>
+
+    <h3>Select Feature</h3>
+
+    <p>What feature are you trying to display?</p>
+
+    <label for="features">
+      <select id="featuresSelect">
+        <option value="">Select a feature</option>
+      </select>
+    </label>
+
+    <h3>Additional Settings</h3>
+
+    <h5>Browser Versions:</h5>
+
+    <label for="past">
+      <span>Past verison:</span>
+      <select name="past" id="past">
+        <option value="">-</option>
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </label>
+
+    <label for="future">
+      <span>Future verison:</span>
+      <select name="future" id="future">
+        <option value="">-</option>
+        <option value="1" selected>1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+    </label>
+
+    <div id="output"></div>
+  </main>
+</Layout>
+
+<style>
+#output {
+  margin: 40px auto;
+}
+
+</style>
+
+<script src="../scripts/home.ts"></script>
+<script src="../scripts/embed.ts"></script>
