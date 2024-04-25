@@ -1,5 +1,5 @@
 /**
- * https://caniuse.pengzhanbo.cn/{feature}?meta={meta}&past={past}&future={future}&theme={theme}
+ * https://caniuse-embed.vercel.app/{feature}?meta={meta}&past={past}&future={future}&theme={theme}
  * meta: string -  uuid
  * past: number - past browser version  range: 1 - 5
  * future: number - future browser version  range: 1 - 3

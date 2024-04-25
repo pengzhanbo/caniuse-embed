@@ -1,18 +1,27 @@
 (function () {
-  const embeds = document.querySelectorAll('.ciu-embed')
+  const $$ = (query: string) => document.querySelectorAll(query)
+  const attr = (el: Element, ...args: string[]) => {
+    const name = `data-${args[0]}`
+    if (args.length === 1)
+      return el.getAttribute(name)
+    else
+      el.setAttribute(name, args[1])
+  }
+
+  const embeds = $$('.ciu-embed')
   let uuid = 1
 
   for (const embed of embeds) {
-    const feature = embed.getAttribute('data-feature')
+    const feature = attr(embed, 'feature')
     if (!feature)
       continue
 
-    const past = embed.getAttribute('data-past') || ''
-    const future = embed.getAttribute('data-future') || ''
-    let meta = embed.getAttribute('data-meta') || ''
+    const past = attr(embed, 'past') || ''
+    const future = attr(embed, 'future') || ''
+    let meta = attr(embed, 'meta') || ''
     if (!meta) {
       meta = `${uuid++}`
-      embed.setAttribute('data-meta', meta)
+      attr(embed, 'meta', meta)
     }
     const source = `/${feature}#meta=${meta}&past=${past}&future=${future}`
     const iframe = document.createElement('iframe') as HTMLIFrameElement
@@ -23,17 +32,17 @@
     embed.appendChild(iframe)
   }
 
-  window.addEventListener('message', (ev) => {
+  window.addEventListener('message', (ev): void => {
     const data = typeof ev.data === 'string' ? JSON.parse(ev.data) : ev.data
     const { type, payload } = data
     if (type === 'ciu_embed') {
-      const embeds = document.querySelectorAll('.ciu-embed')
+      const embeds = $$('.ciu-embed')
       for (const embed of embeds) {
-        const feature = embed.getAttribute('data-feature')
-        const meta = embed.getAttribute('data-meta') || ''
+        const feature = attr(embed, 'feature')
+        const meta = attr(embed, 'meta') || ''
         if (payload.feature === feature && payload.meta === meta) {
           const iframe = embed.querySelector('iframe') as HTMLIFrameElement
-          iframe.style.height = `${payload.height}px`
+          iframe.style.height = `${Math.ceil(payload.height)}px`
         }
       }
     }

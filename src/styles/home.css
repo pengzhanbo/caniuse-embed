@@ -45,6 +45,24 @@ body {
 
 /* =================================  */
 
+.fork {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2;
+}
+
+@media (max-width: 736px) {
+  .fork img {
+    width: 50px;
+  }
+}
+
+a {
+  color: #3c75c6;
+}
+
+
 .container {
   max-width: 800px;
   margin: 0 auto;
