@@ -46,7 +46,7 @@ const embedCode = $('#embedCode') as HTMLPreElement
 
 const featureChoices = new Choices(featureSelect, {
   renderChoiceLimit: 200,
-  allowHTML: true,
+  allowHTML: false,
 })
 
 featureChoices.setChoices(() => getFeatureList())
