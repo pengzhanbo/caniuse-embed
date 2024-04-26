@@ -6,5 +6,10 @@ export async function GET() {
     label: data.title,
     value: feature,
   }))
-  return new Response(JSON.stringify(data))
+  return new Response(JSON.stringify(data), {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+  })
 }
