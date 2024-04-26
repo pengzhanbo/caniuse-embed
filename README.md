@@ -9,7 +9,7 @@ Configurable, reliable, and fully responsive.
 
 ## Document
 
-- See [Documention](https://caniuse-embed.vercel.app/) for more details.
+See [Documention](https://caniuse-embed.vercel.app/) for more details.
 
 ## Usage
 

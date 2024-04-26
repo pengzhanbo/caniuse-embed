@@ -8,7 +8,7 @@
 
 ## 文档
 
-- 查看 [文档](https://caniuse-embed.vercel.app/) 。
+查看 [文档](https://caniuse-embed.vercel.app/) 。
 
 ## 使用
 

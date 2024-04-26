@@ -21,9 +21,9 @@ const data = Astro.props.data
 {data.deprecated && (<small class="note"><strong>Deprecated</strong> feature</small>)}
 
 <div class="legend">
-  <div class="y" aria-label="Supported">&#x2713;</div>
-  <div class="n" aria-lablel="Not Supported">&#x2717;</div>
-  {data.unknown && (<div class="u" aria-lablel="Unknown Support">?</div>)}
+  <div class="y" aria-label="Supported" title="Support">&#x2713;</div>
+  <div class="n" aria-lablel="Not Supported" title="Not Support">&#x2717;</div>
+  {data.unknown && (<div class="u" aria-lablel="Unknown Support" title="Unknown Support">?</div>)}
   <div class="a">Partial Support</div>
   {data.prefixed && <div class="x">Prefixed</div>}
   {data.flag && (

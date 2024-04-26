@@ -1,0 +1,89 @@
+---
+import 'normalize.css'
+import 'choices.js/public/assets/styles/choices.min.css'
+import '../styles/home.css'
+
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout lang="zh-CN">
+  <a href="https://github.com/pengzhanbo/caniuse-embed" target="_blank" class="fork">
+    <img src="/fork.svg" alt="CanIUse Embed Logo" />
+  </a>
+  <main class="container">
+    <h1>The CanIUse Embed</h1>
+
+    <p class="description">
+      从 <a href="https://caniuse.com/" target="_blank">caniuse.com</a> 和 <a href="https://github.com/mdn/browser-compat-data" target="_blank">mozilla's browser compat data</a> 嵌入最新数据。<br /> 显示10个主要浏览器多个版本的功能支持数据。 <br /> 可配置、可靠且完全响应。
+    </p>
+
+    <p>
+      由 <a href="https://astro.build/" target="_blank">Astro</a> 构建 | 部署在 <a href="https://vercel.com/" target="_blank">Vercel</a>
+    </p>
+    <p>
+      <a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> 开发
+    </p>
+
+    <div class="lang-wrapper">
+      <select class="lang-select">
+        <option value="zh-CN" selected>简体中文</option>
+        <option value="">English</option>
+      </select>
+    </div>
+
+    <h2>示例</h2>
+
+    <p>
+      默认情况下，嵌入将显示当前版本、未来1个版本以及过去2个版本 的功能支持。
+    </p>
+
+    <p class="ciu-embed" data-feature="css-grid"></p>
+
+    <p class="ciu-embed" data-feature="mdn-css_properties_z-index"></p>
+
+    <h2>生成嵌入代码</h2>
+
+    <h3>选择特性</h3>
+
+    <p>你想展示什么特性？</p>
+
+    <select id="featuresSelect"></select>
+
+    <h3>附加设置</h3>
+
+    <p>选择您想要显示的旧版本</p>
+
+    <select id="pastSelect"></select>
+
+    <p>选择您想要显示的未来版本</p>
+
+    <select id="futureSelect"></select>
+
+    <div class="embed-config" style="display:none">
+      <h3>嵌入脚本</h3>
+
+      <p>在您的文档中嵌入以下 JavaScript 文件。</p>
+
+      <pre><code>&lt;script type="module" src="https://caniuse-embed.vercel.app/embed.js"&gt;&lt;/script&gt;</code></pre>
+
+      <h3>获取嵌入代码</h3>
+
+      <p>将此片段粘贴到您希望嵌入显示的位置：</p>
+
+      <pre id="embedCode"></pre>
+
+    </div>
+
+    <div id="output">
+      <h3>嵌入预览</h3>
+
+      <p class="ciu-embed">
+        <iframe width="100%" height="330px" frameborder="0"></iframe>
+      </p>
+    </div>
+
+  </main>
+</Layout>
+
+<script src="../scripts/home.ts"></script>
+<script src="../scripts/embed.ts"></script>

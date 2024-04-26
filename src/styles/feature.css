@@ -12,6 +12,9 @@
   --partial-stats: #5c6708;
 
   --unknown: #757575;
+  --unknown-alt: #697069;
+  --unknown-pattern: repeating-linear-gradient(-45deg, var(--unknown) 0, var(--unknown-alt) 1px, var(--unknown-alt) 0.4em, var(--unknown) calc(.25em + 1px), var(--unknown) 0.75em);
+
   --supported-fg: #fff;
   --supported-stats-fg: #fff;
   --no-support-fg: #fff;
@@ -30,7 +33,7 @@
   --primary-bg-shade-2: #e0c89b;
   --primary-bg-shade-3: #c4ab7e;
   --primary-border: #DB5600;
-  --primary-fg: #000;
+  --primary-fg: rgba(60, 60, 67);
   --input-bg: #fff;
   --code-bg: rgba(255,255,255,0.5);
   --form-bg: #C75000;
@@ -187,6 +190,12 @@
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-gap: 5px;
+}
+
+@media (max-width: 700px) {
+  .supports-header {
+    font-size: 12px;;
+  }
 }
 
 @media (max-width: 500px) {
@@ -347,8 +356,7 @@
 }
 
 .u {
-  background: none;
-  background-color: var(--unknown);
+  background: var(--unknown-pattern);
   color: var(--unknown-fg);
   transition: var(--transition);
 }
@@ -421,7 +429,15 @@
 
 .note .a,
 .note .y {
-  padding: 0 3px;
+  background: none;
+}
+
+.note .y {
+  color: var(--supported);
+}
+
+.note .a {
+  color: var(--partial);
 }
 
 .feature [class*="past_"],

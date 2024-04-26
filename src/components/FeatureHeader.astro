@@ -1,7 +1,6 @@
 ---
-import markdown from 'markdown-it'
-import linkAttr from 'markdown-it-link-attributes'
 import type { Feature } from '../types'
+import { markdownRender } from '../services/markdown'
 import IconExternalLink from './IconExternalLink.astro'
 
 interface Props {
@@ -10,19 +9,8 @@ interface Props {
 
 const data = Astro.props.data
 
-const md = markdown({
-  html: true,
-  linkify: true,
-})
 
-md.use(linkAttr, {
-  attrs: {
-    target: '_blank',
-    rel: 'noopener',
-  },
-})
-
-const description = data.description ? md.render(data.description) : ''
+const description = data.description ? markdownRender(data.description) : ''
 ---
 
 <header class="header">

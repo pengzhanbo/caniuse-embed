@@ -6,7 +6,7 @@ import '../styles/home.css'
 import Layout from '../layouts/Layout.astro'
 ---
 
-<Layout title="Welcome to Astro." source="">
+<Layout lang="en-US">
   <a href="https://github.com/pengzhanbo/caniuse-embed" target="_blank" class="fork">
     <img src="/fork.svg" alt="CanIUse Embed Logo" />
   </a>
@@ -21,6 +21,13 @@ import Layout from '../layouts/Layout.astro'
       Made with <a href="https://astro.build/" target="_blank">Astro</a> by <a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> .
     </p>
     <p>Deloy with <a href="https://vercel.com/" target="_blank">Vercel</a>.</p>
+
+    <div class="lang-wrapper">
+      <select class="lang-select">
+        <option value="" selected>English</option>
+        <option value="zh-CN">简体中文</option>
+      </select>
+    </div>
 
     <h2>Examples</h2>
 
@@ -75,14 +82,6 @@ import Layout from '../layouts/Layout.astro'
 
   </main>
 </Layout>
-
-<style>
-#output {
-  margin: 40px auto;
-  display: none;
-}
-
-</style>
 
 <script src="../scripts/home.ts"></script>
 <script src="../scripts/embed.ts"></script>
