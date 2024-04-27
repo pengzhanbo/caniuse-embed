@@ -78,7 +78,8 @@ h2 {
 code {
   padding: 1px 4px;
   font-family: Inconsolata, monospace;
-  background-color: var(--code-bg)
+  background-color: var(--code-bg);
+  transition: background .25s ease;
 }
 
 

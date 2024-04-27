@@ -2,6 +2,8 @@ import Choices from 'choices.js'
 import { customAlphabet } from 'nanoid'
 
 type Lang = 'en-US' | 'zh-CN'
+type Theme = 'auto' | 'dark' | 'light'
+
 interface Locale {
   noPast: string
   noFuture: string
@@ -29,13 +31,15 @@ const locales: Record<Lang, Locale> = {
 }
 
 const $ = (query: string, el?: HTMLElement) => (el || document).querySelector(query)
+const $$ = (query: string, el?: HTMLElement) => (el || document).querySelectorAll(query)
 const nanoid = customAlphabet('0123456789abcdef', 4)
 
-const lang: Lang = (document.documentElement.lang as Lang) || 'en-US'
 const featureSelect = $('#featuresSelect')! as HTMLSelectElement
 const pastVersionSelect = $('#pastSelect')! as HTMLSelectElement
 const futureVersionSelect = $('#futureSelect')! as HTMLSelectElement
 const langSelect = $('.lang-select') as HTMLSelectElement
+const themeEl = $('.theme') as HTMLDivElement
+const embeds = $$('.ciu-embed')
 
 const output = $('#output') as HTMLDivElement
 const embed = $('.ciu-embed', output) as HTMLIFrameElement
@@ -44,8 +48,11 @@ const iframe = $('iframe', embed) as HTMLIFrameElement
 const embedConfig = $('.embed-config') as HTMLDivElement
 const embedCode = $('#embedCode') as HTMLPreElement
 
+const lang: Lang = (document.documentElement.lang as Lang) || 'en-US'
+let theme: Theme = 'auto'
+
 const featureChoices = new Choices(featureSelect, {
-  renderChoiceLimit: 200,
+  renderChoiceLimit: 1000,
   allowHTML: false,
   shouldSort: false,
   searchResultLimit: 20,
@@ -57,6 +64,7 @@ featureChoices.setChoices(() => getFeatureList())
 // eslint-disable-next-line no-new
 new Choices(pastVersionSelect, {
   allowHTML: false,
+  searchEnabled: false,
   choices: [
     { label: translate('noPast'), value: '0' },
     ...Array(5).fill(0).map((_, i) => ({
@@ -70,6 +78,7 @@ new Choices(pastVersionSelect, {
 // eslint-disable-next-line no-new
 new Choices(futureVersionSelect, {
   allowHTML: false,
+  searchEnabled: false,
   choices: [
     { label: translate('noFuture'), value: '0' },
     ...Array(3).fill(0).map((_, i) => ({
@@ -80,10 +89,44 @@ new Choices(futureVersionSelect, {
   ],
 })
 
+genScript()
+
 on(featureSelect, 'change', onChange)
 on(pastVersionSelect, 'change', onChange)
 on(futureVersionSelect, 'change', onChange)
 on(langSelect, 'change', onLangChange)
+
+on(themeEl, 'click', () => {
+  if (theme === 'auto')
+    theme = 'light'
+  else if (theme === 'light')
+    theme = 'dark'
+  else
+    theme = 'auto'
+  document.documentElement.classList.toggle('dark', theme === 'dark')
+  document.documentElement.classList.toggle('light', theme === 'light')
+
+  embeds.forEach((embed) => {
+    attr(embed as HTMLElement, { theme: theme === 'dark' ? 'dark' : 'light' })
+  })
+  onChange()
+})
+
+if (typeof window.matchMedia !== 'undefined') {
+  const media = window.matchMedia('(prefers-color-scheme: dark)')
+  if (theme === 'auto')
+    document.documentElement.classList.toggle('dark', media.matches)
+
+  media.addEventListener('change', (ev) => {
+    if (theme === 'auto') {
+      document.documentElement.classList.toggle('dark', ev.matches)
+      embeds.forEach((embed) => {
+        attr(embed as HTMLElement, { theme: ev.matches ? 'dark' : 'light' })
+      })
+      onChange()
+    }
+  })
+}
 
 function onChange() {
   const feature = featureSelect.value || ''
@@ -96,7 +139,7 @@ function onChange() {
   }
   const data = { past, future, meta: nanoid() }
   attr(embed, { feature, ...data })
-  iframe.src = genSource(feature, data)
+  iframe.src = `${genSource(feature, data)}&theme=${theme === 'dark' ? 'dark' : 'light'}`
   output.style.display = 'block'
   embedCode.textContent = genCode({ feature, ...data })
   embedConfig.style.display = 'block'
@@ -126,6 +169,10 @@ T extends HTMLElement = HTMLElement,
 
 function attr(el: HTMLElement, obj: Record<string, string>) {
   Object.keys(obj).forEach(key => el.setAttribute(`data-${key}`, obj[key]))
+}
+
+function genScript() {
+  $('#embedScript')!.textContent = `<script type="module" src="${location.origin}/embed.js"></script>`
 }
 
 function genCode(data: Record<string, string>) {

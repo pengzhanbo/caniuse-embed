@@ -1,22 +1,31 @@
 /**
- * https://caniuse-embed.vercel.app/{feature}?meta={meta}&past={past}&future={future}&theme={theme}
+ * https://caniuse-embed.vercel.app/{feature}?meta={meta}&past={past}&future={future}&theme={theme}&observer={observer}
+ *
+ * https://caniuse.pengzhanbo.cn/{feature}?meta={meta}&past={past}&future={future}&theme={theme}&observer={observer}
+ *
+ * feature: string
  * meta: string -  uuid
- * past: number - past browser version  range: 1 - 5
- * future: number - future browser version  range: 1 - 3
- * theme: string - light/dark
+ * past: number - past browser version  range: 0 - 5
+ * future: number - future browser version  range: 0 - 3
+ * theme: optional string - light /dark / auto
+ * observer: optional string - true / false
  */
 
-const on = window.addEventListener
-const toNum = Number.parseInt
+const on = (ev: string, cb: EventListener) => window.addEventListener(ev, cb)
+const toNum = (v: string) => Number.parseInt(v)
+const $ = <T extends Element>(query: string) => document.querySelector<T>(query)
 
-const el = document.querySelector('.feature')
-const embedLink = document.querySelector('.embed-link') as HTMLAnchorElement
+const el = $('.feature')
+const embedLink = $('.embed-link') as HTMLAnchorElement
 
 const featureName
-    = document.querySelector<HTMLInputElement>('.feature_id')?.value
+    = $<HTMLInputElement>('.feature_id')?.value
 let meta = ''
 
+let themeMode = 'auto' // light / dark / auto
+
 hashchange()
+initTheme()
 setEmbedLink()
 
 on('hashchange', hashchange)
@@ -41,8 +50,26 @@ function hashchange() {
   Array(future).fill(0).forEach((_, i) => list.push(`future_${i + 1}`))
 
   el?.setAttribute('class', `feature ${list.join(' ')}`)
-  document.documentElement.classList.toggle('dark', search.get('theme') === 'dark')
+  themeMode = noNullable(search.get('theme'), 'auto')
+  themeMode !== 'auto' && updateTheme(themeMode === 'dark')
   resize()
+}
+
+function initTheme() {
+  if (typeof window.matchMedia !== 'undefined') {
+    const media = window.matchMedia('(prefers-color-scheme: dark)')
+    if (themeMode === 'auto')
+      updateTheme(media.matches)
+
+    media.addEventListener('change', (ev) => {
+      if (themeMode === 'auto')
+        updateTheme(ev.matches)
+    })
+  }
+}
+
+function updateTheme(isDark: boolean) {
+  document.documentElement.classList.toggle('dark', isDark)
 }
 
 function resize() {

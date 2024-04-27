@@ -4,6 +4,9 @@ import 'choices.js/public/assets/styles/choices.min.css'
 import '../styles/home.css'
 
 import Layout from '../layouts/Layout.astro'
+import IconAuto from '../components/IconAuto.astro'
+import IconMoon from '../components/IconMoon.astro'
+import IconSun from '../components/IconSun.astro'
 ---
 
 <Layout lang="zh-CN">
@@ -24,7 +27,12 @@ import Layout from '../layouts/Layout.astro'
       <a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> 开发
     </p>
 
-    <div class="lang-wrapper">
+    <div class="wrapper">
+      <div class="theme">
+        <IconAuto class="auto" />
+        <IconMoon class="moon" />
+        <IconSun class="sun" />
+      </div>
       <select class="lang-select">
         <option value="zh-CN" selected>简体中文</option>
         <option value="">English</option>
@@ -37,9 +45,9 @@ import Layout from '../layouts/Layout.astro'
       默认情况下，嵌入将显示当前版本、未来1个版本以及过去2个版本 的功能支持。
     </p>
 
-    <p class="ciu-embed" data-feature="css-grid"></p>
+    <p class="ciu-embed" data-feature="css-grid" data-observer="true" data-theme=""></p>
 
-    <p class="ciu-embed" data-feature="mdn-css_properties_z-index"></p>
+    <p class="ciu-embed" data-feature="mdn-css_properties_z-index" data-observer="true" data-theme=""></p>
 
     <h2>生成嵌入代码</h2>
 
@@ -64,13 +72,30 @@ import Layout from '../layouts/Layout.astro'
 
       <p>在您的文档中嵌入以下 JavaScript 文件。</p>
 
-      <pre><code>&lt;script type="module" src="https://caniuse-embed.vercel.app/embed.js"&gt;&lt;/script&gt;</code></pre>
+      <pre id="embedScript"><code>&lt;script type="module" src="https://caniuse-embed.vercel.app/embed.js"&gt;&lt;/script&gt;</code></pre>
 
       <h3>获取嵌入代码</h3>
 
       <p>将此片段粘贴到您希望嵌入显示的位置：</p>
 
       <pre id="embedCode"></pre>
+
+      <h4>参数说明</h4>
+
+      <p><code>data-feature="feature_name"</code>: 特性名称</p>
+
+      <p><code>data-past="2"</code>: 显示过去 2 个版本, 范围为 0 - 5</p>
+
+      <p><code>data-future="1"</code>: 显示未来 1 个版本, 范围为 0 - 3</p>
+
+      <p>
+        <code>data-meta="xxx"</code>:
+        自定义元数据，当存在多个同名特性时，可以为每个特性指定不同的元数据，用于正确更新 iframe 高度。
+      </p>
+
+      <p><code>data-theme="dark"</code>: 使用深色主题，支持 <code>light / dark / auto`</code>。</p>
+
+      <p><code>data-observer="true"</code>: 使用观察者模式, 当前标签的属性变化将被监听</p>
 
     </div>
 

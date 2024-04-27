@@ -24,6 +24,8 @@
   --unknown-fg: #fff;
   --prefix-bg: #ff6;
   --prefix-fg: rgba(60, 60, 67);
+  --flag-fg: rgba(60, 60, 67);
+  --flag-bg: rgba(60, 60, 67, 0.2);
   --footer-link-fg: #f2e8d5;
 
   --transition: background 0.25s ease, color 0.25s ease, border 0.25s ease;
@@ -70,6 +72,8 @@
   --no-support-fg: #d7d2c9;
   --partial-fg: #d7d2c9;
   --partial-stats-fg: #d7d2c9;
+  --flag-fg: #d7d2c9;
+  --flag-bg: rgba(60, 60, 67, 0.87);
   --unknown-fg: #d7d2c9;
 }
 
@@ -176,7 +180,7 @@
   .header .title {
     font-size: 18px;
   }
-  .header .description {
+  .header .description p {
     font-size: 14px;
     margin: 8px 0;
   }
@@ -390,6 +394,17 @@
   background-color: var(--prefix-bg);
 }
 
+@media (max-width: 500px) {
+  .supports-item > div.d .state::before {
+    width: 5px;
+    height: 5px
+  }
+  .supports-item > div.x .state::after {
+    width: 4px;
+    height: 4px;
+  }
+}
+
 .legend {
   font-size: 12px;
   margin-left: 10px;
@@ -410,8 +425,8 @@
 }
 
 .legend .d {
-  background-color: #FFF;
-  color: #000;
+  background-color: var(--flag-bg);
+  color: var(--flag-fg);
   transition: var(--transition);
 }
 
