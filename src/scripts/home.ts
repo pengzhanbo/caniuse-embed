@@ -47,12 +47,16 @@ const embedCode = $('#embedCode') as HTMLPreElement
 const featureChoices = new Choices(featureSelect, {
   renderChoiceLimit: 200,
   allowHTML: false,
+  shouldSort: false,
+  searchResultLimit: 20,
+  sorter: () => 0,
 })
 
 featureChoices.setChoices(() => getFeatureList())
 
 // eslint-disable-next-line no-new
 new Choices(pastVersionSelect, {
+  allowHTML: false,
   choices: [
     { label: translate('noPast'), value: '0' },
     ...Array(5).fill(0).map((_, i) => ({
@@ -65,6 +69,7 @@ new Choices(pastVersionSelect, {
 
 // eslint-disable-next-line no-new
 new Choices(futureVersionSelect, {
+  allowHTML: false,
   choices: [
     { label: translate('noFuture'), value: '0' },
     ...Array(3).fill(0).map((_, i) => ({

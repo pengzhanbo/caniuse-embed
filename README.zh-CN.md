@@ -18,6 +18,12 @@
 <script type="module" src="https://caniuse-embed.vercel.app/embed.js"></script>
 ```
 
+特别的，对于国内的用户，由于一些原因，`vercel.app` 网站可能会无法访问。因此，可以使用以下方式替代：
+
+```html
+<script type="module" src="https://caniuse.pengzhanbo.cn/embed.js"></script>
+```
+
 将此片段粘贴到您希望显示嵌入内容的位置：
 
 ```html

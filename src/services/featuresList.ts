@@ -1,6 +1,6 @@
-// import fs from 'node:fs'
-// import path from 'node:path'
-// import process from 'node:process'
+import fs from 'node:fs'
+import path from 'node:path'
+import process from 'node:process'
 import { FEATURE_IDENTIFIERS, MDN_BROWSERS_KEY } from '../common/constants'
 import type {
   BrowserData,
@@ -14,19 +14,34 @@ import type {
 import { toFixed } from '../utils/toFixed'
 import { getFullData } from './getFullData'
 
+const cache: { data: FeatureList | null, updated: number, maxAge: number } = {
+  data: null,
+  updated: 0,
+  maxAge: import.meta.env.DEV ? 30 * 60 * 1000 : 24 * 60 * 60 * 1000,
+}
+
 export async function getFeaturesList(): Promise<FeatureList> {
-  // if (import.meta.env.DEV) {
-  //   const filepath = path.resolve(process.cwd(), 'data/features.json')
-  //   const content = await fs.promises.readFile(filepath, 'utf-8')
-  //   if (content)
-  //     return JSON.parse(content)
-  // }
+  if (cache.data && Date.now() - cache.updated < cache.maxAge)
+    return cache.data
+
+  if (import.meta.env.DEV) {
+    const filepath = path.resolve(process.cwd(), 'data/features.json')
+    const content = await fs.promises.readFile(filepath, 'utf-8')
+    if (content) {
+      cache.data = JSON.parse(content)
+      cache.updated = Date.now()
+      return cache.data!
+    }
+  }
 
   const { ciu, bcd, browsers } = await getFullData()
   const featureList: FeatureList = []
 
   addFeatureByCIU(ciu, browsers, featureList)
   addFeatureByBCD(bcd, browsers, featureList)
+
+  cache.data = featureList
+  cache.updated = Date.now()
 
   return featureList
 }

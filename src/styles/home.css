@@ -107,3 +107,9 @@ pre {
   margin: 40px auto;
   display: none;
 }
+
+iframe {
+  display: block;
+  width: 100%;
+  border: none;
+}

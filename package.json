@@ -8,7 +8,8 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "gendata": "NODE_ENV=GENDATA esno scripts/datagen.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",

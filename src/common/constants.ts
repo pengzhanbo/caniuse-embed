@@ -1,6 +1,9 @@
+import process from 'node:process'
+
 export const API = {
   bcd: 'https://unpkg.com/@mdn/browser-compat-data',
-  caniuse: 'https://api.pengzhanbo.cn/caniuse',
+  // caniuse: 'https://api.pengzhanbo.cn/caniuse',
+  caniuse: process.env.NODE_ENV === 'GENDATA' ? 'https://api.pengzhanbo.cn/caniuse' : 'https://raw.githubusercontent.com/Fyrd/caniuse/main/fulldata-json/data-2.0.json',
 }
 
 export const BROWSERS = ['ie', 'edge', 'firefox', 'chrome', 'safari', 'ios_saf', 'op_mini', 'and_chr', 'android', 'samsung'] as const

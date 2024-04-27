@@ -1,4 +1,5 @@
 (function () {
+  const $ = (query: string) => document.querySelector(query)
   const $$ = (query: string) => document.querySelectorAll(query)
   const attr = (el: Element, ...args: string[]) => {
     const name = `data-${args[0]}`
@@ -6,6 +7,13 @@
       return el.getAttribute(name)
     else
       el.setAttribute(name, args[1])
+  }
+
+  const site = $('script[src*="caniuse"][src*="/embed.js"]')
+  let origin = ''
+  if (site) {
+    const source = site.getAttribute('src') || ''
+    origin = source.includes('vercel.app') ? 'https://caniuse-embed.vercel.app' : 'https://caniuse.pengzhanbo.cn'
   }
 
   const embeds = $$('.ciu-embed')
@@ -23,11 +31,11 @@
       meta = `${uuid++}`
       attr(embed, 'meta', meta)
     }
-    const source = `/${feature}#meta=${meta}&past=${past}&future=${future}`
+    const source = `${origin}/${feature}#meta=${meta}&past=${past}&future=${future}`
     const iframe = document.createElement('iframe') as HTMLIFrameElement
     iframe.src = source
     iframe.className = 'ciu-embed-iframe'
-    iframe.setAttribute('style', 'width:100%;height:330px;border:none;')
+    iframe.setAttribute('style', 'display:block;width:100%;height:330px;border:none;')
     iframe.allow = 'fullscreen'
     embed.appendChild(iframe)
   }

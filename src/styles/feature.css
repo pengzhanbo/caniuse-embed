@@ -15,6 +15,7 @@
   --unknown-alt: #697069;
   --unknown-pattern: repeating-linear-gradient(-45deg, var(--unknown) 0, var(--unknown-alt) 1px, var(--unknown-alt) 0.4em, var(--unknown) calc(.25em + 1px), var(--unknown) 0.75em);
 
+  --version-fg: rgb(255, 255, 255);
   --supported-fg: #fff;
   --supported-stats-fg: #fff;
   --no-support-fg: #fff;
@@ -22,7 +23,8 @@
   --partial-stats-fg: #fff;
   --unknown-fg: #fff;
   --prefix-bg: #ff6;
-  --prefix-fg: #000;
+  --prefix-fg: rgba(60, 60, 67);
+  --footer-link-fg: #f2e8d5;
 
   --transition: background 0.25s ease, color 0.25s ease, border 0.25s ease;
 }
@@ -34,7 +36,7 @@
   --primary-bg-shade-3: #c4ab7e;
   --primary-border: #DB5600;
   --primary-fg: rgba(60, 60, 67);
-  --input-bg: #fff;
+  --usage-bg: #fefefe;
   --code-bg: rgba(255,255,255,0.5);
   --form-bg: #C75000;
   --color-bg: #AD6500;
@@ -42,12 +44,12 @@
 
 .dark {
   --primary-bg: #252017;
-  --primary-fg: #f2e8d5;
+  --primary-fg: #e2d8c5;
   --primary-bg-shade-1: #2d271c;
   --primary-bg-shade-2: #382e22;
   --primary-bg-shade-3: #4e402e;
   --primary-border: #572403;
-  --input-bg: #000;
+  --usage-bg: rgba(60, 60, 67);
   --code-bg: rgba(255,255,255,0.12);
   --supported: #0b6316;
   --supported-alt: #095714;
@@ -58,8 +60,17 @@
   --no-support: #86261a;
   --no-support-alt: #6e1f14;
   --unknown: #464646;
+  --unknown-alt: #404040;
   --form-bg: #833502;
   --color-bg: #654600;
+  --prefix-bg: #bb6;
+  --version-fg: #d7d2c9;
+  --supported-fg: #d7d2c9;
+  --supported-stats-fg: #d7d2c9;
+  --no-support-fg: #d7d2c9;
+  --partial-fg: #d7d2c9;
+  --partial-stats-fg: #d7d2c9;
+  --unknown-fg: #d7d2c9;
 }
 
 .browser--ie,.browser--edge {
@@ -100,7 +111,7 @@
 
 .footer {
   padding: 5px 10px;
-  margin-top: 20px;
+  margin-top: 16px;
   background-color: var(--form-bg);
   color: rgba(255,255,255,0.7);
   font-size: 12px;
@@ -115,7 +126,8 @@
 }
 
 .footer a {
-  color: var(--primary-bg);
+  color: var(--footer-link-fg);
+  text-decoration: underline;
   transition: var(--transition);
 }
 
@@ -270,7 +282,7 @@
   line-height: 30px;
   word-spacing: -2px;
   text-align: center;
-  color: rgb(255, 255, 255);
+  color: var(--version-fg);
   font-size: 14px;
   cursor: default;
   transition: var(--transition);
@@ -295,7 +307,7 @@
 .supports-item > div span.usage {
   position: absolute;
   width: 100%;
-  background-color: var(--input-bg);
+  background-color: var(--usage-bg);
   height: 100%;
   top: 0;
   left: 0;

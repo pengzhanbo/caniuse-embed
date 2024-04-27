@@ -17,7 +17,7 @@ const description = data.description ? markdownRender(data.description) : ''
   <h1 class="title">
     <a href={data.url} target="_blank">
       <span class="title">{data.title}</span>
-      <IconExternalLink />
+      {data.url && <IconExternalLink />}
     </a>
   </h1>
   <div class="description" set:html={description}></div>
