@@ -32,9 +32,7 @@ export async function getFullData(): Promise<{
     browsers,
     ciu,
     bcd,
-    ciuUpdated: raw_ciu.updated || Date.now(),
-    bcdUpdated: raw_bcd.__meta?.timestamp
-      ? new Date(raw_bcd.__meta.timestamp).getTime()
-      : Date.now(),
+    ciuUpdated: raw_ciu.updated * 1000,
+    bcdUpdated: new Date(raw_bcd.__meta.timestamp).getTime(),
   }
 }
