@@ -22,6 +22,7 @@ export type CaniuseFeatureList = [string, CaniuseDataOption][]
 export interface CaniuseData {
   agents: CaniuseAgents
   data: CaniuseDataOptions
+  updated: number
 }
 
 export type CaniuseAgents = Record<Browser, CaniuseAgent>

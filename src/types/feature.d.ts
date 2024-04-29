@@ -3,6 +3,12 @@ import type { Period } from './browser'
 
 export type FeatureList = [string, Feature][]
 
+export interface FeatureData {
+  featureList: FeatureList
+  ciuUpdated: number
+  bcdUpdated: number
+}
+
 export interface Feature {
   title: string
   description?: string

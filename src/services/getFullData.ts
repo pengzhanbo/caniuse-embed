@@ -13,6 +13,8 @@ export async function getFullData(): Promise<{
   ciu: CaniuseFeatureList
   bcd: MDNCompatDataList
   browsers: BrowserData[]
+  ciuUpdated: number
+  bcdUpdated: number
 }> {
   const [raw_ciu, raw_bcd] = await Promise.all([
     fetchData<CaniuseData>(API.caniuse),
@@ -30,5 +32,9 @@ export async function getFullData(): Promise<{
     browsers,
     ciu,
     bcd,
+    ciuUpdated: raw_ciu.updated || Date.now(),
+    bcdUpdated: raw_bcd.__meta?.timestamp
+      ? new Date(raw_bcd.__meta.timestamp).getTime()
+      : Date.now(),
   }
 }

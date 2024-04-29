@@ -2,7 +2,7 @@ import { hasOwn } from '@pengzhanbo/utils'
 import type { MDNCompatData, MDNCompatDataList } from '../types'
 
 export function parseCompatData(
-  bcd: MDNCompatData,
+  bcd: Omit<MDNCompatData, '__meta'>,
   res: MDNCompatDataList = [],
   prefix: string[] = [],
 ): MDNCompatDataList {

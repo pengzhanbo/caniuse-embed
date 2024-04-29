@@ -18,18 +18,24 @@ export interface Params {
 
 export interface Props {
   data: Feature
+  bcdUpdated: number
+  ciuUpdated: number
 }
 
 export const prerender = true
 
 export async function getStaticPaths() {
-  const list = await getFeaturesList()
-  return list.map(([feature, data]) => ({ params: { feature }, props: { data } }))
+  const { featureList, bcdUpdated, ciuUpdated } = await getFeaturesList()
+  return featureList.map(([feature, data]) => ({
+    params: { feature },
+    props: { data, bcdUpdated, ciuUpdated },
+  }))
 }
 const { feature } = Astro.params
-const { data } = Astro.props
+const { data, bcdUpdated, ciuUpdated } = Astro.props
 
 const source = feature.startsWith('mdn') ? 'mdn' : 'caniuse'
+const lastUpdated = source === 'mdn' ? bcdUpdated : ciuUpdated
 const supports = parseSupportData(data.supports || [])
 ---
 
@@ -45,7 +51,7 @@ const supports = parseSupportData(data.supports || [])
       <FeatureInfo {data} />
     </div>
 
-    <FeatureFooter {source} />
+    <FeatureFooter {source} {lastUpdated} />
   </main>
 </Layout>
 

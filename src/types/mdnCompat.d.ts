@@ -20,9 +20,13 @@ export interface MDNCompatSupport {
 }
 
 export interface MDNCompatData {
+  __meta: {
+    timestamp: string
+    version: string
+  }
   [key: string]: {
     __compat?: CompatData
-    [key: string]: MDNCompatData
+    [key: string]: Omit<MDNCompatData, '__meta'>
   }
 }
 

@@ -114,7 +114,7 @@
 }
 
 .footer {
-  padding: 5px 10px;
+  padding: 3px 10px;
   margin-top: 16px;
   background-color: var(--form-bg);
   color: rgba(255,255,255,0.7);
@@ -125,7 +125,7 @@
 @media (max-width: 500px) {
   .footer {
     font-size: 10px;
-    margin-top: 12px;
+    margin-top: 10px;
   }
 }
 
@@ -135,11 +135,15 @@
   transition: var(--transition);
 }
 
+.footer time {
+  float: right;
+}
+
 
 .feature {
   background-color: var(--primary-bg);
   position: relative;
-  border: 3px solid var(--form-bg);
+  border: 1px solid var(--primary-border);
   border-bottom: 0;
   transition: var(--transition);
 }
@@ -250,12 +254,11 @@
   .supports-header .browser-title {
     position: absolute;
     border-bottom: 0;
-    padding-left: 5px;
     padding-bottom: 0;
     transform: rotate(-90deg);
     white-space: nowrap;
     left: 0;
-    bottom: 20px;
+    bottom: 15px;
     text-align: left;
     width: 100%;
   }
@@ -263,7 +266,7 @@
 
 @media (max-width: 500px) {
   .supports-header > h4 {
-    height: 115px;
+    height: 110px;
   }
 }
 
@@ -290,6 +293,7 @@
   font-size: 14px;
   cursor: default;
   transition: var(--transition);
+  border-radius: 3px;
 }
 
 @media (max-width: 500px) {
@@ -299,6 +303,7 @@
     height: 24px;
     max-height: 24px;
     line-height: 24px;
+    border-radius: 2px;
   }
 }
 
@@ -328,23 +333,25 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  right: 0;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
   gap: 3px;
 }
 
-.supports-item.current > div {
-  margin: 7px 0;
-  outline: 5px solid var(--primary-bg-shade-3);
-  transition: outline 0.25s ease;
+.supports-item.current {
+  margin: 3px -5px;
+  padding: 3px 5px;
+  background-color: var(--primary-bg-shade-3);
+  transition: background 0.25s ease;
+  border-radius: 3px;
 }
 
 @media (max-width: 500px) {
-  .supports-item.current > div {
-    margin: 4px 0;
-    outline: 3px solid var(--primary-bg-shade-3);
+  .supports-item.current {
+    margin: 2px -3px;
+    padding: 2px 3px;
   }
 
   .supports-item > div span.usage {
@@ -410,12 +417,19 @@
   margin-left: 10px;
 }
 
+@media (max-width: 500px) {
+  .legend {
+    font-size: 10px;
+  }
+}
+
 .legend div {
   display: inline-block;
   width: auto;
   line-height: 1;
   padding: 3px 5px;
   margin-right: 5px;
+  border-radius: 3px;
 }
 
 .legend .x {

@@ -1,15 +1,30 @@
 ---
+import { padZero } from '../utils/padZero'
+
 interface Props {
   source: string
+  lastUpdated?: number
 }
 
-const { source } = Astro.props
+const { source, lastUpdated } = Astro.props
+let updated = ''
+let dateStr = ''
+
+if (lastUpdated) {
+  const date = new Date(lastUpdated)
+  const year = date.getFullYear()
+  const month = padZero(date.getMonth() + 1)
+  const day = padZero(date.getDate())
+  updated = `${year}-${month}-${day}`
+  dateStr = date.toISOString()
+}
 ---
 
 <footer class="footer">
- { source && ' Data from ' }
-  {source === 'caniuse' && (<a href="https://caniuse.com" target="_blank">caniuse.com</a>)}
+  { source && ' data: ' }
+  {source === 'caniuse' && (<a href="https://caniuse.com" target="_blank">caniuse</a>)}
   {source === 'mdn' && (<a href="https://github.com/mdn/browser-compat-data" target="_blank">MDN</a>)}
-  { source && '| ' }Embed from
-  <a class="embed-link" href="https://caniuse-embed.vercel.app/" target="_blank">caniuse-embed.vercel.app</a>
+  { source && '| embed: ' }
+  { source && <a class="embed-link" href="https://caniuse-embed.vercel.app/" target="_blank">caniuse-embed.vercel.app</a> }
+  { updated && <time datetime={dateStr}>{updated}</time> }
 </footer>

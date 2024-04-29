@@ -6,6 +6,7 @@ import type {
   BrowserData,
   CaniuseFeatureList,
   Feature,
+  FeatureData,
   FeatureList,
   FeatureSupport,
   MDNCompatDataList,
@@ -14,36 +15,37 @@ import type {
 import { toFixed } from '../utils/toFixed'
 import { getFullData } from './getFullData'
 
-const cache: { data: FeatureList | null, updated: number, maxAge: number } = {
+const cache: { data: FeatureData | null, updated: number, maxAge: number } = {
   data: null,
   updated: 0,
-  maxAge: import.meta.env.DEV ? 30 * 60 * 1000 : 24 * 60 * 60 * 1000,
+  maxAge: import.meta.env?.DEV ? 30 * 60 * 1000 : 24 * 60 * 60 * 1000,
 }
 
-export async function getFeaturesList(): Promise<FeatureList> {
+export async function getFeaturesList(): Promise<FeatureData> {
   if (cache.data && Date.now() - cache.updated < cache.maxAge)
     return cache.data
 
-  if (import.meta.env.DEV) {
+  if (import.meta.env?.DEV) {
     const filepath = path.resolve(process.cwd(), 'data/features.json')
     const content = await fs.promises.readFile(filepath, 'utf-8')
     if (content) {
-      cache.data = JSON.parse(content)
-      cache.updated = Date.now()
-      return cache.data!
+      const current = Date.now()
+      cache.data = { featureList: JSON.parse(content), ciuUpdated: current, bcdUpdated: current }
+      cache.updated = current
+      return cache.data
     }
   }
 
-  const { ciu, bcd, browsers } = await getFullData()
+  const { ciu, bcd, browsers, ciuUpdated, bcdUpdated } = await getFullData()
   const featureList: FeatureList = []
 
   addFeatureByCIU(ciu, browsers, featureList)
   addFeatureByBCD(bcd, browsers, featureList)
 
-  cache.data = featureList
+  cache.data = { featureList, ciuUpdated, bcdUpdated }
   cache.updated = Date.now()
 
-  return featureList
+  return cache.data
 }
 
 function deepClone<T>(data: T): T {
@@ -129,7 +131,7 @@ export function addFeatureByCIU(
     const item: Feature = {
       title: data.title,
       description: data.description || '',
-      url: `https://caniuse.com/#feat=${feature}`,
+      url: `https://caniuse.com/${feature}`,
       supports: deepClone(browsers) as FeatureSupport[],
       globalA: data.usage_perc_a ? `${toFixed(data.usage_perc_a)}%` : '',
       globalY: data.usage_perc_y ? `${toFixed(data.usage_perc_y)}%` : '',
