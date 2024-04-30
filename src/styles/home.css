@@ -96,6 +96,12 @@ h2 {
   transition: border .25s ease;
 }
 
+@media (max-width: 500px) {
+  h1 {
+    font-size: 32px;
+  }
+}
+
 .description {
   font-size: 24px;
   font-weight: 500;

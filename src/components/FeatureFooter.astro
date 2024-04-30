@@ -26,5 +26,5 @@ if (lastUpdated) {
   {source === 'mdn' && (<a href="https://github.com/mdn/browser-compat-data" target="_blank">MDN</a>)}
   { source && '| embed: ' }
   { source && <a class="embed-link" href="https://caniuse-embed.vercel.app/" target="_blank">caniuse-embed.vercel.app</a> }
-  { updated && <time datetime={dateStr}>{updated}</time> }
+  { updated && <time datetime={dateStr}>updated: {updated}</time> }
 </footer>
