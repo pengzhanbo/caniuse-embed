@@ -27,7 +27,7 @@ Paste this snippet where you want the embed to be displayed:
 
 ## Example
 
-![example](./preview/example.png)
+![example](./preview/examples.png)
 
 ## Why ?
 
@@ -40,6 +40,12 @@ Therefore, I decided to redevelop using [Astro](https://astro.build/) and deploy
 By using **Astro** SSR, a completely independent static page is generated for each feature without requesting any data, and each page is no more than 20kb in size!
 
 At the same time, using **Vercel's** ISR capability, new pages are regenerated and cached as static files every 7 days to ensure data freshness without the need for redeployment.
+
+## Reddit
+
+- [mdn-browser-compat-data](https://github.com/mdn/browser-compat-data)
+- [Fyrd/caniuse](https://github.com/Fyrd/caniuse)
+- [ireade/caniuse-embed](https://github.com/ireade/caniuse-embed)
 
 ## LICENSE
 

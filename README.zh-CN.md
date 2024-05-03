@@ -32,7 +32,7 @@
 
 ## Example
 
-![example](./preview/example.png)
+![example](./preview/examples.png)
 
 ## Why ?
 
@@ -47,3 +47,13 @@
 使用 **Astro** SSR, 为每个 feature 都生成完全独立的静态页面，无需请求任何数据，每个页面体积不超过 `20kb` !
 
 同时，使用 **Vercel** 的 ISR 能力，每 7 天 重新生成新的页面并缓存为静态文件，保证数据的实时性，无需重新部署。
+
+## Reddit
+
+- [mdn-browser-compat-data](https://github.com/mdn/browser-compat-data)
+- [Fyrd/caniuse](https://github.com/Fyrd/caniuse)
+- [ireade/caniuse-embed](https://github.com/ireade/caniuse-embed)
+
+## License
+
+MIT
