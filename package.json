@@ -12,10 +12,10 @@
     "gendata": "NODE_ENV=GENDATA esno scripts/datagen.ts"
   },
   "dependencies": {
-    "@astrojs/check": "^0.6.0",
-    "@astrojs/vercel": "^7.5.4",
+    "@astrojs/check": "^0.7.0",
+    "@astrojs/vercel": "^7.6.0",
     "@pengzhanbo/utils": "^1.1.2",
-    "astro": "^4.7.1",
+    "astro": "^4.9.2",
     "choices.js": "^10.2.0",
     "markdown-it": "^14.1.0",
     "markdown-it-link-attributes": "^4.0.1",
@@ -25,10 +25,10 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
-    "@pengzhanbo/eslint-config-astro": "^1.9.1",
+    "@pengzhanbo/eslint-config-astro": "^1.10.0",
     "@types/markdown-it": "^14.1.1",
-    "@types/node": "^20.12.10",
-    "eslint": "^9.2.0",
+    "@types/node": "^20.12.12",
+    "eslint": "^9.3.0",
     "esno": "^4.7.0"
   }
 }
