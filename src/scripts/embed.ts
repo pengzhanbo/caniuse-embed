@@ -5,7 +5,7 @@
   const [ft, p, f, t, m, obs] = ['feature', 'past', 'future', 'theme', 'meta', 'observer']
   const [qs, vercel, peng, protocol] = ['script[src*="caniuse"][src*="/embed.js"]', 'caniuse-embed.vercel.app', 'caniuse.pengzhanbo.cn', 'https://']
   const [ce, cei] = ['.ciu-embed', 'ciu-embed-iframe']
-  const style = ['style', 'display:block;width:100%;height:330px;border:none;'] as const
+  const style = ['style', 'display:block;width:100%;height:330px;border:none;border-radius:0;'] as const
 
   /**
    * 对于国内的用户，使用 caniuse.pengzhanbo.cn 作为替代，解决 vercel.app 网站无法访问的问题
@@ -89,7 +89,7 @@
     const iframe = document.createElement('iframe') as HTMLIFrameElement
     iframe.src = source
     iframe.className = cei
-    attr(iframe, ...style)
+    iframe.style.cssText = style[1]
     iframe.allow = 'fullscreen'
     embed.appendChild(iframe)
     return iframe
