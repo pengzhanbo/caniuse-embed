@@ -32,7 +32,9 @@
        * 支持 MutationObserver, 这在一些框架中比较有用，
        * 比如 切换 浅色 / 深色 模式
        */
-      attr(embed, obs) === 'true' && observer(embed, iframe)
+      if (attr(embed, obs) === 'true') {
+        observer(embed, iframe)
+      }
     }
   }
 
@@ -46,7 +48,8 @@
       for (const embed of embeds) {
         if (payload[ft] === attr(embed, ft) && payload[m] === attr(embed, m)) {
           const iframe = $(`.${cei}`, embed) as HTMLIFrameElement
-          iframe && (iframe.style.height = `${Math.ceil(payload.height)}px`)
+          if (iframe)
+            iframe.style.height = `${Math.ceil(payload.height)}px`
         }
       }
     }

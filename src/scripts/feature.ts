@@ -51,7 +51,9 @@ function hashchange() {
 
   el?.setAttribute('class', `feature ${list.join(' ')}`)
   themeMode = noNullable(search.get('theme'), 'auto')
-  themeMode !== 'auto' && updateTheme(themeMode === 'dark')
+  if (themeMode !== 'auto')
+    updateTheme(themeMode === 'dark')
+
   resize()
 }
 

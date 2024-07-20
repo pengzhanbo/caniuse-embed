@@ -162,7 +162,7 @@ function translate(key: keyof Locale, val?: string): string {
 }
 
 function on<
-T extends HTMLElement = HTMLElement,
+  T extends HTMLElement = HTMLElement,
 >(el: T, eventName: keyof HTMLElementEventMap, listener: EventListener) {
   el.addEventListener(eventName, listener)
 }

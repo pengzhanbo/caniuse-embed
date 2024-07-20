@@ -16,7 +16,8 @@ export function parseCompatData(
         res.push([`mdn-${newPrefix.join('_')}`, __compat])
       }
       const keys = Object.keys(data)
-      keys.length && keys[0] !== '0' && parseCompatData(data, res, newPrefix)
+      if (keys.length && keys[0] !== '0')
+        parseCompatData(data, res, newPrefix)
     }
   }
   return res
