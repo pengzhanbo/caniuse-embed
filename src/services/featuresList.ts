@@ -1,7 +1,3 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import process from 'node:process'
-import { FEATURE_IDENTIFIERS, MDN_BROWSERS_KEY } from '../common/constants'
 import type {
   BrowserData,
   CaniuseFeatureList,
@@ -12,6 +8,10 @@ import type {
   MDNCompatDataList,
   MDNCompatSupport,
 } from '../types'
+import fs from 'node:fs'
+import path from 'node:path'
+import process from 'node:process'
+import { FEATURE_IDENTIFIERS, MDN_BROWSERS_KEY } from '../common/constants'
 import { toFixed } from '../utils/toFixed'
 import { getFullData } from './getFullData'
 

@@ -1,9 +1,9 @@
-import path from 'node:path'
-import fs from 'node:fs'
-import { fileURLToPath } from 'node:url'
-import { getFullData } from '../src/services/getFullData'
-import { addFeatureByBCD, addFeatureByCIU } from '../src/services/featuresList'
 import type { FeatureList } from '../src/types'
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { addFeatureByBCD, addFeatureByCIU } from '../src/services/featuresList'
+import { getFullData } from '../src/services/getFullData'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 

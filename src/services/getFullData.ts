@@ -1,5 +1,5 @@
-import { API } from '../common/constants'
 import type { BrowserData, CaniuseData, CaniuseFeatureList, MDNCompatData, MDNCompatDataList } from '../types'
+import { API } from '../common/constants'
 import { parseBrowserData } from './parseBrowserData'
 import { parseCompatData } from './parseCompatData'
 

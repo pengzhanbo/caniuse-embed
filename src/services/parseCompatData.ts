@@ -1,5 +1,5 @@
-import { hasOwn } from '@pengzhanbo/utils'
 import type { MDNCompatData, MDNCompatDataList } from '../types'
+import { hasOwn } from '@pengzhanbo/utils'
 
 export function parseCompatData(
   bcd: Omit<MDNCompatData, '__meta'>,

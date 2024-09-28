@@ -1,9 +1,9 @@
-import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { defineConfig } from 'astro/config'
-import { build } from 'tsup'
-
+import { fileURLToPath } from 'node:url'
 import vercel from '@astrojs/vercel/serverless'
+import { defineConfig } from 'astro/config'
+
+import { build } from 'tsup'
 
 // https://astro.build/config
 export default defineConfig({

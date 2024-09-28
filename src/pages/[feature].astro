@@ -1,16 +1,16 @@
 ---
-import '../styles/globals.css'
-import '../styles/feature.css'
-
 import type { Feature } from '../types'
-import Layout from '../layouts/Layout.astro'
 import FeatureFooter from '../components/FeatureFooter.astro'
-import FeatureInfo from '../components/FeatureInfo.astro'
-import FeatureHeader from '../components/FeatureHeader.astro'
-import FeatureSupports from '../components/FeatureSupports.astro'
 
+import FeatureHeader from '../components/FeatureHeader.astro'
+import FeatureInfo from '../components/FeatureInfo.astro'
+import FeatureSupports from '../components/FeatureSupports.astro'
+import Layout from '../layouts/Layout.astro'
 import { getFeaturesList } from '../services/featuresList'
 import { parseSupportData } from '../services/parseSupportData'
+
+import '../styles/globals.css'
+import '../styles/feature.css'
 
 export interface Params {
   feature: string

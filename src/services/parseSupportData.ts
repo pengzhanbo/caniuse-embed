@@ -1,5 +1,5 @@
-import { PERIODS } from '../common/constants'
 import type { FeatureBrowserSupport, FeatureSupport } from '../types'
+import { PERIODS } from '../common/constants'
 
 export function parseSupportData(supports: FeatureSupport[]): [string, FeatureBrowserSupport[]][] {
   const map: Record<string, FeatureBrowserSupport[]> = {}

@@ -1,5 +1,5 @@
-import type { Browser } from './caniuse'
 import type { Period } from './browser'
+import type { Browser } from './caniuse'
 
 export type FeatureList = [string, Feature][]
 

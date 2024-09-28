@@ -46,8 +46,8 @@ function hashchange() {
   const future = toNum(noNullable(search.get('future'), '1'))
   const list: string[] = []
 
-  Array(past).fill(0).forEach((_, i) => list.push(`past_${i + 1}`))
-  Array(future).fill(0).forEach((_, i) => list.push(`future_${i + 1}`))
+  Array.from({ length: past }).fill(0).forEach((_, i) => list.push(`past_${i + 1}`))
+  Array.from({ length: future }).fill(0).forEach((_, i) => list.push(`future_${i + 1}`))
 
   el?.setAttribute('class', `feature ${list.join(' ')}`)
   themeMode = noNullable(search.get('theme'), 'auto')

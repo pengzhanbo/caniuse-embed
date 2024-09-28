@@ -1,5 +1,5 @@
-import { BROWSERS, PERIODS } from '../common/constants'
 import type { BrowserData, CaniuseAgents } from '../types'
+import { BROWSERS, PERIODS } from '../common/constants'
 import { toFixed } from '../utils/toFixed'
 
 export function parseBrowserData(agents: CaniuseAgents) {

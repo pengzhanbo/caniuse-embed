@@ -67,7 +67,7 @@ new Choices(pastVersionSelect, {
   searchEnabled: false,
   choices: [
     { label: translate('noPast'), value: '0' },
-    ...Array(5).fill(0).map((_, i) => ({
+    ...Array.from({ length: 5 }).fill(0).map((_, i) => ({
       label: translate('past', `${i + 1}`),
       selected: i === 1,
       value: i + 1,
@@ -81,7 +81,7 @@ new Choices(futureVersionSelect, {
   searchEnabled: false,
   choices: [
     { label: translate('noFuture'), value: '0' },
-    ...Array(3).fill(0).map((_, i) => ({
+    ...Array.from({ length: 3 }).fill(0).map((_, i) => ({
       label: translate('future', `${i + 1}`),
       selected: i === 0,
       value: i + 1,
