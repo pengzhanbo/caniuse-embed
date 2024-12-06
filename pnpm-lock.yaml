@@ -26,6 +26,9 @@ importers:
       choices.js:
         specifier: ^11.0.2
         version: 11.0.2
+      esbuild:
+        specifier: ^0.24.0
+        version: 0.24.0
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0

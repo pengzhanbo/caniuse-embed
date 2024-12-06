@@ -1,9 +1,12 @@
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import vercel from '@astrojs/vercel/serverless'
+import vercel from '@astrojs/vercel'
 import { defineConfig } from 'astro/config'
-
+import { transform } from 'esbuild'
 import { build } from 'tsup'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,6 +21,28 @@ export default defineConfig({
     },
   }),
   integrations: [
+    {
+      name: 'ciu-embed-scripts',
+      hooks: {
+        'astro:config:setup': ({ config }) => {
+          config.vite.plugins ??= []
+          config.vite.plugins.push({
+            name: 'ciu-embed-script',
+            async load(id) {
+              if (id === '/embed.js') {
+                const code = await fs.readFile(path.join(__dirname, 'src/scripts/embed.ts'), 'utf-8')
+                return code
+              }
+            },
+            async transform(code, id) {
+              if (id === '/embed.js') {
+                return await transform(code, { loader: 'ts' })
+              }
+            },
+          })
+        },
+      },
+    },
     {
       name: 'ciu-embed-scripts-bundle',
       hooks: {
