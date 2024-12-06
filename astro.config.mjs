@@ -22,7 +22,7 @@ export default defineConfig({
       name: 'ciu-embed-scripts-bundle',
       hooks: {
         'astro:build:done': async ({ dir }) => {
-          const output = path.join(path.dirname(fileURLToPath(dir)), 'static')
+          const output = path.join(path.dirname(fileURLToPath(dir)), 'client')
 
           await build({
             entry: ['src/scripts/embed.ts'],
