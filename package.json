@@ -23,7 +23,6 @@
     "markdown-it-link-attributes": "^4.0.1",
     "nanoid": "^5.0.9",
     "normalize.css": "^8.0.1",
-    "tsup": "^8.3.5",
     "typescript": "^5.7.2"
   },
   "devDependencies": {

@@ -4,7 +4,6 @@ import { fileURLToPath } from 'node:url'
 import vercel from '@astrojs/vercel'
 import { defineConfig } from 'astro/config'
 import { transform } from 'esbuild'
-import { build } from 'tsup'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -41,22 +40,24 @@ export default defineConfig({
             },
           })
         },
-      },
-    },
-    {
-      name: 'ciu-embed-scripts-bundle',
-      hooks: {
-        'astro:build:done': async ({ dir }) => {
-          const output = path.join(path.dirname(fileURLToPath(dir)), 'client')
-
-          await build({
-            entry: ['src/scripts/embed.ts'],
-            outDir: output,
-            format: 'esm',
-            platform: 'browser',
-            minify: true,
-            dts: false,
-            clean: false,
+        'astro:build:setup': ({ vite }) => {
+          vite.plugins ??= []
+          vite.plugins.push({
+            name: 'ciu-home-script-bundle',
+            async buildEnd() {
+              const code = await fs.readFile(path.join(__dirname, 'src/scripts/embed.ts'), 'utf-8')
+              this.emitFile({
+                fileName: 'embed.js',
+                type: 'asset',
+                source: (await transform(code, {
+                  loader: 'ts',
+                  format: 'esm',
+                  target: 'ES2020',
+                  platform: 'browser',
+                  minify: true,
+                })).code,
+              })
+            },
           })
         },
       },
