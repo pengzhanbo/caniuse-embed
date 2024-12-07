@@ -17,11 +17,22 @@ import '../styles/home.css'
     <h1>The CanIUse Embed</h1>
 
     <p class="description">
-      Embed up-to-date data from <a href="https://caniuse.com/" target="_blank">caniuse.com</a> and <a href="https://github.com/mdn/browser-compat-data" target="_blank">mozilla's browser compat data</a>. Displays feature support data for multiple versions of the 10 major browsers. Configurable, reliable, and fully responsive.
+      Embed up-to-date data from <a href="https://caniuse.com/" target="_blank">caniuse.com</a> and <a
+        href="https://github.com/mdn/browser-compat-data"
+        target="_blank"
+      >
+        mozilla's browser compat data
+      </a>. Displays feature support data for multiple versions of the 10 major browsers. Configurable, reliable, and
+      fully responsive.
     </p>
 
     <p>
-      Made with <a href="https://astro.build/" target="_blank">Astro</a> by <a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> .
+      Made with <a href="https://astro.build/" target="_blank">Astro</a> by <a
+        href="https://github.com/pengzhanbo"
+        target="_blank"
+      >
+        @pengzhanbo
+      </a> .
     </p>
     <p>Deloy with <a href="https://vercel.com/" target="_blank">Vercel</a>.</p>
 
@@ -40,7 +51,8 @@ import '../styles/home.css'
     <h2>Examples</h2>
 
     <p>
-      By default, the interactive embed will display the feature support for the current version, 1 version in the future, and 2 versions back.
+      By default, the interactive embed will display the feature support for the current version, 1 version in the
+      future, and 2 versions back.
     </p>
 
     <p class="ciu-embed" data-feature="css-grid" data-observer="true" data-theme=""></p>
@@ -70,7 +82,8 @@ import '../styles/home.css'
 
       <p>Include the following javascript file in your document.</p>
 
-      <pre id="embedScript"><code>&lt;script type="module" src="https://caniuse-embed.vercel.app/embed.js"&gt;&lt;/script&gt;</code></pre>
+      <pre
+        id="embedScript"><code>&lt;script type="module" src="https://caniuse-embed.vercel.app/embed.js"&gt;&lt;/script&gt;</code></pre>
 
       <h3>Get the Embed Code</h3>
 
@@ -87,15 +100,20 @@ import '../styles/home.css'
       <p><code>data-future="1"</code>: Show 1 version in the future, range is 0 - 3</p>
 
       <p>
-        <code>data-meta="xxx"</code>:
-        Custom metadata allows for specifying different metadata for each attribute when multiple attributes with the same name exist, to correctly update the iframe height.
+        <code>data-meta="xxx"</code>: Custom metadata allows for specifying different metadata for each attribute when
+        multiple attributes with the same name exist, to correctly update the iframe height.
       </p>
 
       <p><code>data-theme="dark"</code>: Change the theme to <code>light / dark / auto</code>。</p>
 
-      <p><code>data-observer="true"</code>: Using the observer pattern, changes to the properties of the current tag will be monitored.</p>
+      <p>
+        <code>data-observer="true"</code>: Using the observer pattern, changes to the properties of the current tag will
+        be monitored.
+      </p>
 
-
+      <p>
+        <code>data-origin=""</code>: [Optional] Data source origin, e.g.: <code>https://caniuse-embed.vercel.app</code>.
+      </p>
     </div>
 
     <div id="output">
@@ -105,7 +123,6 @@ import '../styles/home.css'
         <iframe class="ciu-embed-iframe" width="100%" height="330px"></iframe>
       </p>
     </div>
-
   </main>
 </Layout>
 

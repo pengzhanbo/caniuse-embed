@@ -1,9 +1,11 @@
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import vercel from '@astrojs/vercel/serverless'
+import vercel from '@astrojs/vercel'
 import { defineConfig } from 'astro/config'
+import { transform } from 'esbuild'
 
-import { build } from 'tsup'
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // https://astro.build/config
 export default defineConfig({
@@ -19,19 +21,43 @@ export default defineConfig({
   }),
   integrations: [
     {
-      name: 'ciu-embed-scripts-bundle',
+      name: 'ciu-embed-scripts',
       hooks: {
-        'astro:build:done': async ({ dir }) => {
-          const output = path.join(path.dirname(fileURLToPath(dir)), 'static')
-
-          await build({
-            entry: ['src/scripts/embed.ts'],
-            outDir: output,
-            format: 'esm',
-            platform: 'browser',
-            minify: true,
-            dts: false,
-            clean: false,
+        'astro:config:setup': ({ config }) => {
+          config.vite.plugins ??= []
+          config.vite.plugins.push({
+            name: 'ciu-embed-script',
+            async load(id) {
+              if (id === '/embed.js') {
+                const code = await fs.readFile(path.join(__dirname, 'src/scripts/embed.ts'), 'utf-8')
+                return code
+              }
+            },
+            async transform(code, id) {
+              if (id === '/embed.js') {
+                return await transform(code, { loader: 'ts' })
+              }
+            },
+          })
+        },
+        'astro:build:setup': ({ vite }) => {
+          vite.plugins ??= []
+          vite.plugins.push({
+            name: 'ciu-home-script-bundle',
+            async buildEnd() {
+              const code = await fs.readFile(path.join(__dirname, 'src/scripts/embed.ts'), 'utf-8')
+              this.emitFile({
+                fileName: 'embed.js',
+                type: 'asset',
+                source: (await transform(code, {
+                  loader: 'ts',
+                  format: 'esm',
+                  target: 'ES2020',
+                  platform: 'browser',
+                  minify: true,
+                })).code,
+              })
+            },
           })
         },
       },

@@ -3,19 +3,10 @@
   const $$ = (query: string) => document.querySelectorAll(query)
 
   const [ft, p, f, t, m, obs] = ['feature', 'past', 'future', 'theme', 'meta', 'observer']
-  const [qs, vercel, peng, protocol] = ['script[src*="caniuse"][src*="/embed.js"]', 'caniuse-embed.vercel.app', 'caniuse.pengzhanbo.cn', 'https://']
   const [ce, cei] = ['.ciu-embed', 'ciu-embed-iframe']
   const style = ['style', 'display:block;width:100%;height:330px;border:none;border-radius:0;'] as const
 
-  /**
-   * 对于国内的用户，使用 caniuse.pengzhanbo.cn 作为替代，解决 vercel.app 网站无法访问的问题
-   */
-  const site = $(qs)
-  let origin = ''
-  if (site) {
-    const source = attr(site, 'src')
-    origin = `${protocol}${source.includes(vercel) ? vercel : peng}`
-  }
+  const origin = getEmbedOrigin()
 
   /**
    * uuid 是为了避免 假设存在多个相同的 feature，使用 meta 做唯一标识，
@@ -70,6 +61,26 @@
     observer.observe(embed, { attributes: true })
   }
 
+  /**
+   * 获取 embed.js 所在数据源
+   * 对于国内的用户，使用 caniuse.pengzhanbo.cn 作为替代，解决 vercel.app 网站无法访问的问题
+   */
+  function getEmbedOrigin() {
+    const qs = ['script[src*="caniuse"][src*="/embed.js"]', 'script[src*="/embed.js"]']
+    const currentScript = (document.currentScript || $(qs[0]) || $(qs[1])) as HTMLScriptElement
+    if (currentScript) {
+      const src = currentScript.src
+      if (src) {
+        const source = new URL(src)
+        if (source.pathname.includes('/embed.js')) {
+          return source.origin
+        }
+      }
+      return 'https://caniuse.pengzhanbo.cn'
+    }
+    return ''
+  }
+
   function genSource(embed: Element) {
     const feature = attr(embed, ft)
     if (!feature)
@@ -85,7 +96,7 @@
       .map(([k, v]) => `${k}=${v}`)
       .join('&')
 
-    return `${origin}/${feature}#${m}=${meta}${params ? `&${params}` : ''}`
+    return `${attr(embed, 'origin') || origin}/${feature}#${m}=${meta}${params ? `&${params}` : ''}`
   }
 
   function createIframe(embed: Element, source: string) {
