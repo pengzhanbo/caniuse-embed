@@ -6,6 +6,7 @@ import { defineConfig } from 'astro/config'
 import { transform } from 'esbuild'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const readEmbedFile = async () => await fs.readFile(path.join(__dirname, 'src/scripts/embed.ts'), 'utf-8')
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,40 +24,39 @@ export default defineConfig({
     {
       name: 'ciu-embed-scripts',
       hooks: {
-        'astro:config:setup': ({ config }) => {
-          config.vite.plugins ??= []
-          config.vite.plugins.push({
-            name: 'ciu-embed-script',
-            async load(id) {
-              if (id === '/embed.js') {
-                const code = await fs.readFile(path.join(__dirname, 'src/scripts/embed.ts'), 'utf-8')
-                return code
-              }
-            },
-            async transform(code, id) {
-              if (id === '/embed.js') {
-                return await transform(code, { loader: 'ts' })
-              }
-            },
+        'astro:server:setup': ({ server }) => {
+          server.middlewares.use(async (req, res, next) => {
+            if (req.url === '/embed.js') {
+              const source = await readEmbedFile()
+              res.setHeader('Content-Type', 'text/javascript;charset=utf-8')
+              res.end(source)
+            }
+            else {
+              next()
+            }
           })
         },
-        'astro:build:setup': ({ vite }) => {
-          vite.plugins ??= []
-          vite.plugins.push({
-            name: 'ciu-home-script-bundle',
-            async buildEnd() {
-              const code = await fs.readFile(path.join(__dirname, 'src/scripts/embed.ts'), 'utf-8')
-              this.emitFile({
-                fileName: 'embed.js',
-                type: 'asset',
-                source: (await transform(code, {
-                  loader: 'ts',
-                  format: 'esm',
-                  target: 'ES2020',
-                  platform: 'browser',
-                  minify: true,
-                })).code,
-              })
+        'astro:build:setup': ({ updateConfig }) => {
+          updateConfig({
+            vite: {
+              plugins: [{
+                name: 'ciu-home-script-bundle',
+                async buildEnd() {
+                  const source = await readEmbedFile()
+                  const transformed = await transform(source, {
+                    loader: 'ts',
+                    format: 'esm',
+                    target: 'ES2020',
+                    platform: 'browser',
+                    minify: true,
+                  })
+                  this.emitFile({
+                    fileName: 'embed.js',
+                    type: 'asset',
+                    source: transformed.code,
+                  })
+                },
+              }],
             },
           })
         },
