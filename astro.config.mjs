@@ -29,7 +29,8 @@ export default defineConfig({
             if (req.url === '/embed.js') {
               const source = await readEmbedFile()
               res.setHeader('Content-Type', 'text/javascript;charset=utf-8')
-              res.end(source)
+              const transformed = await transform(source, { loader: 'ts' })
+              res.end(transformed.code)
             }
             else {
               next()
