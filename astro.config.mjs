@@ -37,27 +37,25 @@ export default defineConfig({
             }
           })
         },
-        'astro:build:setup': ({ updateConfig }) => {
-          updateConfig({
-            vite: {
-              plugins: [{
-                name: 'ciu-home-script-bundle',
-                async buildEnd() {
-                  const source = await readEmbedFile()
-                  const transformed = await transform(source, {
-                    loader: 'ts',
-                    format: 'esm',
-                    target: 'ES2020',
-                    platform: 'browser',
-                    minify: true,
-                  })
-                  this.emitFile({
-                    fileName: 'embed.js',
-                    type: 'asset',
-                    source: transformed.code,
-                  })
-                },
-              }],
+        'astro:build:setup': ({ vite }) => {
+          vite.plugins ??= []
+          vite.plugins.push({
+            name: 'ciu-home-script-bundle',
+            async buildEnd() {
+              const source = await readEmbedFile()
+              const transformed = await transform(source, {
+                loader: 'ts',
+                format: 'esm',
+                target: 'ES2020',
+                platform: 'browser',
+                minify: true,
+              })
+              this.emitFile({
+                fileName: 'embed.js',
+                type: 'asset',
+                source: transformed.code,
+              })
+              console.log('Embed script bundle generated')
             },
           })
         },
