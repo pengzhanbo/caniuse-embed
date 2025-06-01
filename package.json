@@ -2,7 +2,7 @@
   "name": "caniuse-embed",
   "type": "module",
   "version": "0.0.1",
-  "packageManager": "pnpm@9.15.1",
+  "packageManager": "pnpm@10.11.0",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -14,22 +14,22 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/vercel": "^8.0.1",
-    "@pengzhanbo/utils": "^1.2.0",
-    "astro": "^5.1.1",
-    "choices.js": "^11.0.2",
-    "esbuild": "^0.24.2",
+    "@astrojs/vercel": "^8.1.4",
+    "@pengzhanbo/utils": "^2.1.0",
+    "astro": "^5.8.1",
+    "choices.js": "^11.1.0",
+    "esbuild": "^0.25.5",
     "markdown-it": "^14.1.0",
     "markdown-it-link-attributes": "^4.0.1",
-    "nanoid": "^5.0.9",
+    "nanoid": "^5.1.5",
     "normalize.css": "^8.0.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@pengzhanbo/eslint-config-astro": "^1.22.0",
+    "@pengzhanbo/eslint-config-astro": "^1.33.0",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^22.10.2",
-    "eslint": "^9.17.0",
+    "@types/node": "^22.15.29",
+    "eslint": "^9.28.0",
     "esno": "^4.8.0"
   },
   "resolutions": {
