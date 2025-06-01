@@ -9,7 +9,7 @@ Configurable, reliable, and fully responsive.
 
 ## Document
 
-See [Documention](https://caniuse-embed.vercel.app/) for more details.
+See [Documentation](https://caniuse-embed.vercel.app/) for more details.
 
 ## Usage
 
@@ -41,7 +41,7 @@ By using **Astro** SSR, a completely independent static page is generated for ea
 
 At the same time, using **Vercel's** ISR capability, new pages are regenerated and cached as static files every 7 days to ensure data freshness without the need for redeployment.
 
-## Reddit
+## Credits
 
 - [mdn-browser-compat-data](https://github.com/mdn/browser-compat-data)
 - [Fyrd/caniuse](https://github.com/Fyrd/caniuse)
