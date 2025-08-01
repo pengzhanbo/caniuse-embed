@@ -24,12 +24,16 @@ let meta = ''
 
 let themeMode = 'auto' // light / dark / auto
 
-hashchange()
 initTheme()
 setEmbedLink()
 
 on('hashchange', hashchange)
 on('resize', resize)
+
+requestAnimationFrame(() => {
+  // delay execution to make Safari happy
+  setTimeout(hashchange, 0)
+})
 
 function setEmbedLink() {
   const { origin, hostname } = location
