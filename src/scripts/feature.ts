@@ -24,12 +24,16 @@ let meta = ''
 
 let themeMode = 'auto' // light / dark / auto
 
-hashchange()
 initTheme()
 setEmbedLink()
 
 on('hashchange', hashchange)
 on('resize', resize)
+
+requestAnimationFrame(() => {
+  // delay execution to make Safari happy
+  setTimeout(hashchange, 0)
+})
 
 function setEmbedLink() {
   const { origin, hostname } = location
@@ -51,8 +55,8 @@ function hashchange() {
 
   el?.setAttribute('class', `feature ${list.join(' ')}`)
   themeMode = noNullable(search.get('theme'), 'auto')
-  if (themeMode !== 'auto')
-    updateTheme(themeMode === 'dark')
+  const media = window.matchMedia('(prefers-color-scheme: dark)')
+  updateTheme(themeMode === 'auto' ? media.matches : themeMode === 'dark')
 
   resize()
 }
