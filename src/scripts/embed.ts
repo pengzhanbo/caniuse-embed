@@ -67,7 +67,7 @@
    */
   function getEmbedOrigin() {
     const qs = ['script[src*="caniuse"][src*="/embed.js"]', 'script[src*="/embed.js"]']
-    const currentScript = (document.currentScript || $(qs[0]) || $(qs[1])) as HTMLScriptElement
+    const currentScript = (document.currentScript || $(qs[0]!) || $(qs[1]!)) as HTMLScriptElement
     if (currentScript) {
       const src = currentScript.src
       if (src) {
@@ -111,12 +111,12 @@
 
   function attr(el: Element, key: string): string
   function attr(el: Element, key: string, value: string): void
-  function attr(el: Element, ...args: string[]) {
+  function attr(el: Element, ...args: string[]): void | string {
     const name = `data-${args[0]}`
     if (args.length === 1)
       return el.getAttribute(name) || ''
     else
-      el.setAttribute(name, args[1])
+      el.setAttribute(name, args[1]!)
   }
 
   function parseData(data: unknown): any {

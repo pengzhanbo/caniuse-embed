@@ -1,4 +1,8 @@
 ---
+import type { HTMLAttributes } from 'astro/types'
+
+export interface Props extends HTMLAttributes<"svg"> {}
+
 const props = Astro.props
 ---
 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>

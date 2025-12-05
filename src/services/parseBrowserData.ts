@@ -20,11 +20,11 @@ export function parseBrowserData(agents: CaniuseAgents) {
       }
       else if (period.startsWith('past_')) {
         const n = Number(period[5])
-        version = agent.version_list[currentVersionIndex - n]?.version
+        version = agent.version_list[currentVersionIndex - n]?.version ?? ''
       }
       else if (period.startsWith('future_')) {
         const n = Number(period[7])
-        version = agent.version_list[currentVersionIndex + n]?.version
+        version = agent.version_list[currentVersionIndex + n]?.version ?? ''
       }
       const usage = toFixed(agent.usage_global[version] || 0)
       item.periods.push({

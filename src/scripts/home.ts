@@ -168,7 +168,7 @@ function on<
 }
 
 function attr(el: HTMLElement, obj: Record<string, string>) {
-  Object.keys(obj).forEach(key => el.setAttribute(`data-${key}`, obj[key]))
+  Object.keys(obj).forEach(key => el.setAttribute(`data-${key}`, obj[key]!))
 }
 
 function genScript() {

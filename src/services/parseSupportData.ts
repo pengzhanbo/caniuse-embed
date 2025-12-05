@@ -13,7 +13,7 @@ export function parseSupportData(supports: FeatureSupport[]): [string, FeatureBr
   }
   const supportList: [string, FeatureBrowserSupport[]][] = []
   PERIODS.forEach((period) => {
-    supportList.push([period, map[period]])
+    supportList.push([period, map[period]!])
   })
 
   return supportList

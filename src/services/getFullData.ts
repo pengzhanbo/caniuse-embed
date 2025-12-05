@@ -26,7 +26,7 @@ export async function getFullData(): Promise<{
   const bcd: MDNCompatDataList = parseCompatData(raw_bcd)
 
   for (const feature in raw_ciu.data)
-    ciu.push([feature, raw_ciu.data[feature]])
+    ciu.push([feature, raw_ciu.data[feature]!])
 
   return {
     browsers,

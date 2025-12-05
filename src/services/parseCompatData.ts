@@ -8,7 +8,7 @@ export function parseCompatData(
 ): MDNCompatDataList {
   for (const feature in bcd) {
     if (hasOwn(bcd, feature)) {
-      const { __compat, ...data } = bcd[feature]
+      const { __compat, ...data } = bcd[feature]!
       const newPrefix = [...prefix, feature]
       if (__compat) {
         __compat.url = __compat.mdn_url

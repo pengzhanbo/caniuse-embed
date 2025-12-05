@@ -19,7 +19,7 @@ const el = $('.feature')
 const embedLink = $('.embed-link') as HTMLAnchorElement
 
 const featureName
-    = $<HTMLInputElement>('.feature_id')?.value
+  = $<HTMLInputElement>('.feature_id')?.value
 let meta = ''
 
 let themeMode = 'auto' // light / dark / auto
@@ -43,7 +43,7 @@ function setEmbedLink() {
 
 function hashchange() {
   const hash
-      = window.location.hash.slice(1) || window.location.search.slice(1)
+    = window.location.hash.slice(1) || window.location.search.slice(1)
   const search = new URLSearchParams(hash)
   meta = noNullable(search.get('meta'), '')
   const past = toNum(noNullable(search.get('past'), '2'))
