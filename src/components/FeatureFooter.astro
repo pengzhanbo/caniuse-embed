@@ -3,10 +3,11 @@ import { padZero } from '../utils/padZero'
 
 interface Props {
   source: string
+  feature: string
   lastUpdated?: number
 }
 
-const { source, lastUpdated } = Astro.props
+const { source, lastUpdated, feature } = Astro.props
 let updated = ''
 let dateStr = ''
 
@@ -22,9 +23,9 @@ if (lastUpdated) {
 
 <footer class="footer">
   { source && ' data: ' }
-  {source === 'caniuse' && (<a href="https://caniuse.com" target="_blank">caniuse</a>)}
-  {source === 'mdn' && (<a href="https://github.com/mdn/browser-compat-data" target="_blank">MDN</a>)}
+  {source === 'caniuse' && (<a href={"https://caniuse.com/" + feature} target="_blank" rel="noopener noreferrer" aria-label="caniuse">caniuse</a>)}
+  {source === 'mdn' && (<a href="https://github.com/mdn/browser-compat-data" target="_blank" rel="noopener noreferrer" aria-label="MDN">MDN</a>)}
   { source && '| embed: ' }
-  { source && <a class="embed-link" href="https://caniuse-embed.vercel.app/" target="_blank">caniuse-embed.vercel.app</a> }
+  { source && <a class="embed-link" href="https://caniuse-embed.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="caniuse-embed">caniuse-embed.vercel.app</a> }
   { updated && <time datetime={dateStr}>updated: {updated}</time> }
 </footer>
