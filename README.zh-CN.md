@@ -30,11 +30,11 @@
 <p class="ciu-embed" data-feature="{feature}" data-past="2" data-future="3" data-meta="be6d"></p>
 ```
 
-## Example
+## 示例
 
 ![example](./preview/examples.png)
 
-## Why ?
+## 为什么 ?
 
 过去，我经常在我的技术文档中，使用 [https://caniuse.bitsofco.de/](https://caniuse.bitsofco.de/)
 嵌入 CanIUse 数据。然而，我发现它在嵌入时，需要加载 [@mdn/browser-compat-data](https://github.com/mdn/browser-compat-data) (`14MB`) 和 [caniuse/full-data.json](https://github.com/Fyrd/caniuse) (`4MB`)
@@ -46,9 +46,9 @@
 
 使用 **Astro** SSR, 为每个 feature 都生成完全独立的静态页面，无需请求任何数据，每个页面体积不超过 `20kb` !
 
-同时，使用 **Vercel** 的 ISR 能力，每 7 天 重新生成新的页面并缓存为静态文件，保证数据的实时性，无需重新部署。
+同时，使用 Github Actions 在每周末通过触发 **Vercel** 的 **部署钩子**，每 7 天 重新生成新的页面并缓存为静态文件，保证数据的实时性。
 
-## Reddit
+## 感谢
 
 - [mdn-browser-compat-data](https://github.com/mdn/browser-compat-data)
 - [Fyrd/caniuse](https://github.com/Fyrd/caniuse)

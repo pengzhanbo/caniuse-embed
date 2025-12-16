@@ -39,7 +39,7 @@ Therefore, I decided to redevelop using [Astro](https://astro.build/) and deploy
 
 By using **Astro** SSR, a completely independent static page is generated for each feature without requesting any data, and each page is no more than 20kb in size!
 
-At the same time, using **Vercel's** ISR capability, new pages are regenerated and cached as static files every 7 days to ensure data freshness without the need for redeployment.
+Meanwhile, using Github Actions to trigger **Vercel**'s **deployment hooks** every weekend, regenerating new pages and caching them as static files every 7 days to ensure data timeliness.
 
 ## Thanks
 
