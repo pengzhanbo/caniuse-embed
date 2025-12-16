@@ -1,4 +1,4 @@
-name: 7 day auto deploy
+name: Deploy
 
 on:
   schedule:
@@ -12,4 +12,6 @@ jobs:
     steps:
       - name: curl
         run: |
-          curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_LAou3pNzPKBBNPqsQS260C3GdrA6/bKPolcBaMy
+          echo "Automatic deployment every Sunday."
+          curl -X POST ${{ secrets.VERCEL_WEB_HOOK }}
+          echo "Done."
