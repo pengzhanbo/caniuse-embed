@@ -13,6 +13,8 @@ md.use(linkAttr, {
   },
 })
 
-export function markdownRender(content: string): string {
+export function markdownRender(content: string, inline = false): string {
+  if (inline)
+    return md.renderInline(content)
   return md.render(content)
 }

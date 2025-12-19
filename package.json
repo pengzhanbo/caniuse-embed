@@ -1,8 +1,8 @@
 {
   "name": "caniuse-embed",
   "type": "module",
-  "version": "0.0.1",
-  "packageManager": "pnpm@10.26.0",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.26.1",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -10,30 +10,34 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",
-    "gendata": "NODE_ENV=GENDATA tsx scripts/datagen.ts"
+    "gendata": "tsx scripts/datagen.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
     "@astrojs/vercel": "^9.0.2",
+    "@mdn/browser-compat-data": "latest",
     "@pengzhanbo/utils": "^2.1.2",
-    "astro": "^5.16.5",
+    "astro": "^5.16.6",
+    "caniuse-db": "latest",
     "choices.js": "^11.1.0",
-    "esbuild": "^0.27.1",
+    "esbuild": "^0.27.2",
     "markdown-it": "^14.1.0",
     "markdown-it-link-attributes": "^4.0.1",
     "nanoid": "^5.1.6",
     "normalize.css": "^8.0.1",
+    "semver": "^7.7.3",
+    "sharp": "^0.34.5",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@pengzhanbo/eslint-config-astro": "^1.44.0",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^24.10.4",
+    "@types/node": "^25.0.3",
     "eslint": "^9.39.2",
     "tsx": "^4.21.0"
   },
   "resolutions": {
     "cross-spawn": ">=7.0.6",
-    "esbuild": "^0.27.1"
+    "esbuild": "^0.27.2"
   }
 }

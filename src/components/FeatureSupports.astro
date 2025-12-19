@@ -1,13 +1,41 @@
 ---
-import type { FeatureBrowserSupport } from '../types'
+import type { FeatureSupport } from '../types'
 import { BROWSERS, BROWSERS_NAME } from '../common/constants'
-import { getShortenedBrowserVersion } from '../utils/getShortenedBrowserVersion'
+import { zipFeatureSupports } from '../services/zip-feature-supports'
+import { formatUsage } from '../utils/format-usage'
 
 export interface Props {
-  supports: [string, FeatureBrowserSupport[]][]
+  supports: FeatureSupport[]
 }
 
-const { supports } = Astro.props
+const supports = zipFeatureSupports(Astro.props.supports)
+
+function formatVersion(version: [string] | [string, string]): string {
+  if (version.length === 1)
+    return version[0]
+  return `${sortVersion(version[0])}-${sortVersion(version[1], 1)}`
+}
+
+function sortVersion(version: string, index = 0): string {
+  if (version.includes('-'))
+    return version.split('-')[index]!
+  return version
+}
+
+function fontSize(version: [string] | [string, string]): string {
+  const ver = formatVersion(version)
+  if (!ver.includes('-'))
+    return ''
+  const len = ver.length
+  let styles = '--font-size:'
+  if (len >= 9)
+    return `${styles} 6px`
+  if (len >= 7)
+    return `${styles} 7px`
+  if (len === 6)
+    return `${styles} 8px`
+  return `${styles} 10px`
+}
 ---
 
 <div class="supports">
@@ -18,13 +46,13 @@ const { supports } = Astro.props
       </h4>
     ))}
   </header>
-  {supports.map(([period, browsers]) => (
-    <article class:list={['supports-item', 'statistics', period]}>
-      {browsers.map(browser => (
-        <div class:list={[browser.browser, browser.supportType ?? '']}>
-          <span class="version">{getShortenedBrowserVersion(browser.version)}</span>
+  {supports.map(([periodName, periods]) => (
+    <article class:list={['supports-item', 'statistics', periodName]}>
+      {periods.map(period => (
+        <div class:list={[period.browser, ...(period.stats || [])]}>
+          <span class="version" style={fontSize(period.version)}>{formatVersion(period.version)}</span>
           <span class="state"></span>
-          {browser.version && (<span class="usage">{browser.usage}</span>)}
+          {period.version[0] && (<span class="usage">{formatUsage(period.usage)}</span>)}
         </div>
       ))}
     </article>

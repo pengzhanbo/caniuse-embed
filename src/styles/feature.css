@@ -192,7 +192,7 @@
 }
 
 .supports {
-  padding: 10px 15px;
+  padding: 10px 12px;
   font-size: 14px;
   color: var(--primary-fg);
   display: flex;
@@ -201,7 +201,7 @@
 
 @media (max-width: 500px) {
   .supports {
-    padding: 4px 10px 8px;
+    padding: 4px 6px 8px;
     font-size: 12px;
   }
 }
@@ -306,6 +306,10 @@
     line-height: 24px;
     border-radius: 2px;
   }
+
+  .supports-item > div span.version {
+    font-size: var(--font-size);
+  }
 }
 
 .supports-item > div span.version {
@@ -390,7 +394,7 @@
   display: block;
   width: 10px;
   height: 10px;
-  background-image: url(/flag.png);
+  background-image: url(../assets/flag.png);
   background-size: cover;
   background-repeat: no-repeat;
 }

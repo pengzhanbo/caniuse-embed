@@ -1,44 +1,55 @@
-import type { FeatureList } from '../src/types'
-import fs from 'node:fs'
+import type { CaniuseData, FeatureData, MDNCompatData } from '../src/types'
+import fs from 'node:fs/promises'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { addFeatureByBCD, addFeatureByCIU } from '../src/services/featuresList'
-import { getFullData } from '../src/services/getFullData'
+import process from 'node:process'
+import { API } from '../src/common/constants'
+import { bcd2FeatureList } from '../src/services/bcd'
+import { ciu2FeatureList } from '../src/services/ciu'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const cacheDir = path.join(process.cwd(), 'data')
+console.log('cache dir ->', cacheDir)
 
-async function datagen() {
-  const start = performance.now()
-  let current = start
-  const end = () => {
-    const _current = performance.now()
-    const msg = `- time: ${_current - current}ms`
-    current = _current
-    return msg
-  }
+console.log('Generating feature list...')
+await writeFeatureList()
+console.log('Feature list generated')
 
-  console.log('[datagen] starting ...\n          fetching data ...')
-  const { ciu, bcd, browsers } = await getFullData()
+export async function writeFeatureList(): Promise<void> {
+  // 为保持自动构建时数据是新鲜的，每次都从远程获取
+  const [bcd, caniuse] = await Promise.all([
+    fetchData<MDNCompatData>(API.bcd),
+    fetchData<CaniuseData>(API.caniuse),
+  ])
 
-  console.log(`[datagen] fetch data success ! ${end()}\n           processing data ...`)
-  const featureList: FeatureList = []
+  const featureList: FeatureData[] = [
+    ...bcd2FeatureList(bcd, caniuse.agents),
+    ...ciu2FeatureList(caniuse),
+  ]
 
-  addFeatureByCIU(ciu, browsers, featureList)
-  addFeatureByBCD(bcd, browsers, featureList)
+  // await fs.mkdir(path.join(cacheDir, 'bcd'), { recursive: true })
+  // await fs.mkdir(path.join(cacheDir, 'ciu'), { recursive: true })
+  // for (const item of bcd2FeatureList(bcd, caniuse.agents)) {
+  //   featureList.push(item)
+  //   await fs.writeFile(path.join(cacheDir, 'bcd', `${item.id}.json`), JSON.stringify(item, null, 2), 'utf-8')
+  // }
 
-  const content = JSON.stringify(featureList)
+  // for (const item of ciu2FeatureList(caniuse)) {
+  //   featureList.push(item)
+  //   await fs.writeFile(path.join(cacheDir, 'ciu', `${item.id}.json`), JSON.stringify(item, null, 2), 'utf-8')
+  // }
 
-  console.log(`[datagen] process data success ! ${end()}\n          writing data ...`)
+  await fs.writeFile(path.join(cacheDir, 'agents.json'), JSON.stringify(caniuse.agents, null, 2), 'utf-8')
 
-  const filepath = path.resolve(__dirname, '../data')
+  // 写入本地缓存文件
+  await fs.writeFile(path.join(cacheDir, 'features.json'), JSON.stringify({
+    featureList,
+    bcdUpdated: bcd.__meta.timestamp,
+    ciuUpdated: caniuse.updated * 1000,
 
-  fs.mkdirSync(filepath, { recursive: true })
-
-  await fs.promises.writeFile(path.join(filepath, 'features.json'), content, 'utf-8')
-
-  console.log(`[datagen] write data success !${end()}\n\n`)
-
-  console.log(`[datagen] Done! - total time: ${performance.now() - start}ms`)
+  }), 'utf-8')
 }
 
-datagen()
+async function fetchData<T>(url: string): Promise<T> {
+  return await fetch(url, {
+    headers: { 'Content-Type': 'application/json' },
+  }).then(res => res.json())
+}

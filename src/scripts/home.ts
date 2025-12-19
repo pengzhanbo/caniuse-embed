@@ -53,7 +53,7 @@ let theme: Theme = 'auto'
 
 const featureChoices = new Choices(featureSelect, {
   renderChoiceLimit: 1000,
-  allowHTML: false,
+  allowHTML: true,
   shouldSort: false,
   searchResultLimit: 20,
   sorter: () => 0,

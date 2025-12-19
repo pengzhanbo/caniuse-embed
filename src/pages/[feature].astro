@@ -1,13 +1,11 @@
 ---
-import type { Feature } from '../types'
+import type { FeatureData } from '../types'
 import FeatureFooter from '../components/FeatureFooter.astro'
-
 import FeatureHeader from '../components/FeatureHeader.astro'
 import FeatureInfo from '../components/FeatureInfo.astro'
 import FeatureSupports from '../components/FeatureSupports.astro'
 import Layout from '../layouts/Layout.astro'
-import { getFeaturesList } from '../services/featuresList'
-import { parseSupportData } from '../services/parseSupportData'
+import { getFeaturesList } from '../services/get-feature-list'
 
 import '../styles/globals.css'
 import '../styles/feature.css'
@@ -17,7 +15,7 @@ export interface Params {
 }
 
 export interface Props {
-  data: Feature
+  data: FeatureData
   bcdUpdated: number
   ciuUpdated: number
 }
@@ -26,9 +24,10 @@ export const prerender = true
 
 export async function getStaticPaths() {
   const { featureList, bcdUpdated, ciuUpdated } = await getFeaturesList()
-  return featureList.map(([feature, data]) => ({
-    params: { feature },
-    props: { data, bcdUpdated, ciuUpdated },
+
+  return featureList.map((feature) => ({
+      params: { feature: feature.id },
+      props: { data: feature, bcdUpdated, ciuUpdated },
   }))
 }
 const { feature } = Astro.params
@@ -36,13 +35,13 @@ const { data, bcdUpdated, ciuUpdated } = Astro.props
 
 const source = feature.startsWith('mdn') ? 'mdn' : 'caniuse'
 const lastUpdated = source === 'mdn' ? bcdUpdated : ciuUpdated
-const supports = parseSupportData(data.supports || [])
+const supports = data.supports
 ---
 
 <Layout title={data.title} {source}>
   <input class="feature_id" type="hidden" hidden value={feature} />
 
-  <main class="feature past_1 past_2 future_1">
+  <main class="feature past_1 past_2 future_1 future_2">
     <FeatureHeader {data} />
 
     <div class="main">

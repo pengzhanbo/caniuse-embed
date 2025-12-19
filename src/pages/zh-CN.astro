@@ -1,9 +1,10 @@
 ---
-import IconAuto from '../components/IconAuto.astro'
-import IconMoon from '../components/IconMoon.astro'
-import IconSun from '../components/IconSun.astro'
-
+import IconAuto from '../components/icons/Auto.astro'
+import IconMoon from '../components/icons/Moon.astro'
+import IconSun from '../components/icons/Sun.astro'
+import IconGithub from '../components/icons/Github.astro'
 import Layout from '../layouts/Layout.astro'
+
 import 'normalize.css'
 import 'choices.js/public/assets/styles/choices.min.css'
 import '../styles/home.css'
@@ -11,7 +12,7 @@ import '../styles/home.css'
 
 <Layout lang="zh-CN">
   <a href="https://github.com/pengzhanbo/caniuse-embed" target="_blank" class="fork">
-    <img src="/fork.svg" alt="CanIUse Embed Logo" />
+    <IconGithub />
   </a>
   <main class="container">
     <h1>The CanIUse Embed</h1>

@@ -1,22 +1,24 @@
 ---
-import type { Feature } from '../types'
-import { markdownRender } from '../services/markdown'
-import IconExternalLink from './IconExternalLink.astro'
+import type { FeatureData } from '../types'
+import { markdownRender } from '../utils/markdown'
+import IconExternalLink from './icons/ExternalLink.astro'
 
 interface Props {
-  data: Feature
+  data: FeatureData
 }
 
 const data = Astro.props.data
 
-
+const title = markdownRender(data.title, true)
 const description = data.description ? markdownRender(data.description) : ''
 ---
 
 <header class="header">
   <h1 class="title">
-    <a href={data.url} target="_blank">
-      <span class="title">{data.title}</span>
+    <a href={data.url || 'javascript:;'} target="_blank">
+      <span class="title">
+        <Fragment set:html={title} />
+      </span>
       {data.url && <IconExternalLink />}
     </a>
   </h1>

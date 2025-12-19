@@ -1,20 +1,23 @@
 ---
-import type { Feature } from '../types'
+import type { FeatureData } from '../types'
+import { Image } from 'astro:assets'
+import FlagImg from '../assets/flag.png'
+import { formatUsage } from '../utils/format-usage'
 
 interface Props {
-  data: Feature
+  data: FeatureData
 }
 
 const data = Astro.props.data
 ---
 
-{(data.globalY || data.globalA) && (
+{(data.usage) && (
   <small class="note">
     Globals:
-    {data.globalY && <span class="y">{data.globalY}</span>}
-    {data.globalY && data.globalA && ' + '}
-    {data.globalA && <span class="a">{data.globalA}</span>}
-    {data.globalT && ` = ${data.globalT}`}
+    {data.usage.supported && <span class="y">{formatUsage(data.usage.supported)}</span>}
+    {data.usage.supported && data.usage.partial && ' + '}
+    {data.usage.partial && <span class="a">{formatUsage(data.usage.partial)}</span>}
+    {data.usage.total && ` = ${formatUsage(data.usage.total)}`}
   </small>
 )}
 {data.experimental && (<small class="note"><strong>Experimental</strong> feature</small>)}
@@ -24,11 +27,11 @@ const data = Astro.props.data
   <div class="y" aria-label="Supported" title="Support">&#x2713;</div>
   <div class="n" aria-lablel="Not Supported" title="Not Support">&#x2717;</div>
   {data.unknown && (<div class="u" aria-lablel="Unknown Support" title="Unknown Support">?</div>)}
-  <div class="a">Partial Support</div>
+  <div class="a">Partial support</div>
   {data.prefixed && <div class="x">Prefixed</div>}
   {data.flag && (
     <div class="d" id="legendD">
-      <img src="/flag.png" alt="" />
+      <Image src={FlagImg} alt="Behind a browser flags" />
       Behind a Flag
     </div>
   )}
