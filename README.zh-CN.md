@@ -32,7 +32,7 @@
 
 ## 示例
 
-![example](./preview/examples.png)
+![example](./preview/examples.webp)
 
 ## 为什么 ?
 
@@ -52,6 +52,7 @@
 
 - [mdn-browser-compat-data](https://github.com/mdn/browser-compat-data)
 - [Fyrd/caniuse](https://github.com/Fyrd/caniuse)
+- [web-platform-dx/web-features](https://github.com/web-platform-dx/web-features)
 - [ireade/caniuse-embed](https://github.com/ireade/caniuse-embed)
 
 ## License

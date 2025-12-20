@@ -27,7 +27,7 @@ Paste this snippet where you want the embed to be displayed:
 
 ## Example
 
-![example](./preview/examples.png)
+![example](./preview/examples.webp)
 
 ## Why ?
 
@@ -45,6 +45,7 @@ Meanwhile, using Github Actions to trigger **Vercel**'s **deployment hooks** eve
 
 - [mdn-browser-compat-data](https://github.com/mdn/browser-compat-data)
 - [Fyrd/caniuse](https://github.com/Fyrd/caniuse)
+- [web-platform-dx/web-features](https://github.com/web-platform-dx/web-features)
 - [ireade/caniuse-embed](https://github.com/ireade/caniuse-embed)
 
 ## LICENSE
