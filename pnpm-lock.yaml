@@ -57,6 +57,9 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      web-features:
+        specifier: ^3.12.0
+        version: 3.12.0
     devDependencies:
       '@pengzhanbo/eslint-config-astro':
         specifier: ^1.44.0
@@ -3380,6 +3383,9 @@ packages:
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: '>=6.0.0'
+
+  web-features@3.12.0:
+    resolution: {integrity: sha512-1doJVkbrQGmtrJ/+tACLLKYbm6QQSjKnhGRmXEXlH99sppkK7/HatjjDv+fWt3oozKfIrOElkApljEMAQ6RhsA==}
 
   web-namespaces@2.0.1:
     resolution: {integrity: sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==}
@@ -7377,6 +7383,8 @@ snapshots:
       semver: 7.7.3
     transitivePeerDependencies:
       - supports-color
+
+  web-features@3.12.0: {}
 
   web-namespaces@2.0.1: {}
 

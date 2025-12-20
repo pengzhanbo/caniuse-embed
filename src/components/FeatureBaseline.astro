@@ -1,0 +1,28 @@
+---
+import type {  FeatureStatus } from '../types'
+import { baselineInfo, months } from '../common/baseline'
+
+interface Props {
+  status: FeatureStatus
+}
+
+const status = Astro.props.status
+const type = status.baseline === false ? 'limit' : status.baseline
+const { title, label, description } = baselineInfo[type]
+const [year, month] = status.date?.split('-') || []
+
+const finalTitle = title?.replace('{date}', year || '')
+const finalDesc = description.replace('{date}', year && month ? `${months[+month - 1]} ${year}` : '')
+---
+
+<div class="baseline">
+  <span class:list={["logo", type]}></span>
+  <section>
+    <p class="title">
+      {finalTitle && <strong>{finalTitle}</strong>}
+      {label && <span class="label">{label}</span>}
+    </p>
+
+    <p class="desc">{finalDesc}</p>
+  </section>
+</div>

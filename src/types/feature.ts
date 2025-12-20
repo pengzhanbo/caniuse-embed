@@ -1,3 +1,4 @@
+import type { BaselineSupport } from './baseline-data'
 import type { Browser, CaniuseStats } from './caniuse-data'
 
 export type PeriodType = 'past_5' | 'past_4' | 'past_3' | 'past_2' | 'past_1' | 'current' | 'future' | 'future_1' | 'future_2' | 'future_3'
@@ -63,7 +64,7 @@ export interface FeatureData {
   supports: FeatureSupport[]
 
   /**
-   * 该特性的支持情况，仅适用于 bcd
+   * 该特性的基线支持情况，baseline 表示该特性是否被视为基线平台功能
    */
   status?: FeatureStatus | undefined
 }
@@ -137,23 +138,26 @@ export interface FeatureSupportPeriod {
 export interface FeatureStatus {
   /**
    * 该功能是基线广泛可用、基线新近可用，还是非基线
-   * - high: 基线广泛可用 widely available
-   * - low: 基线新近可用 newly available
+   * - 'high': 基线广泛可用 widely available
+   * - 'low': 基线新近可用 newly available
+   * - 'discouraged': 劝阻使用此功能
    * - false: 非基线 limited availability
    */
-  baseline: 'high' | 'low' | false
+  baseline: 'high' | 'low' | 'discouraged' | false
   /**
-   * 该功能的基线新近可用日期
+   * 该功能的基线日期
+   * 格式为 `YYYY-MM-DD`
    */
-  baseline_low_date?: string
+  date?: string | undefined
+
   /**
-   * 该功能的基线广泛可用日期
+   * 劝阻使用此功能的原因
    */
-  baseline_high_date?: string
+  reason?: string
 
   /**
    * 该功能在各个浏览器开始支持的版本
    * { [browser]: version }
    */
-  support: Record<string, string>
+  support: BaselineSupport
 }

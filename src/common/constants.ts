@@ -1,11 +1,12 @@
 import type { CaniuseStats } from '../types'
 
 export const API = {
-  // bcd: 'https://unpkg.com/@mdn/browser-compat-data',
+  // @mdn/browser-compat-data
   bcd: 'https://cdn.jsdelivr.net/npm/@mdn/browser-compat-data',
-  // caniuse: 'https://api.pengzhanbo.cn/caniuse',
-  // caniuse: 'https://raw.githubusercontent.com/Fyrd/caniuse/main/fulldata-json/data-2.0.json',
+  // Fyrd/caniuse
   caniuse: 'https://cdn.jsdelivr.net/gh/Fyrd/caniuse@master/fulldata-json/data-2.0.json',
+  // web-features
+  baseline: 'https://cdn.jsdelivr.net/npm/web-features/data.json',
 }
 
 export const BROWSERS = [

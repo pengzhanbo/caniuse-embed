@@ -501,3 +501,82 @@
 .feature.future_3 .future_3 {
   display: grid;
 }
+
+.baseline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 5px;
+  margin: 10px 0;
+  border: solid 1px var(--primary-bg-shade-3);
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: var(--transition);
+  font-size: 14px;
+  color: var(--primary-fg);
+}
+
+.baseline section {
+  flex: 1;
+  min-width: 0;
+}
+
+.baseline p {
+  margin: 0;
+}
+
+.baseline p.title {
+  font-size: 14px;
+  margin: 0;
+}
+
+.baseline p strong {
+  margin-right: 6px;
+}
+
+@media (max-width: 500px) {
+  .baseline {
+    align-items: center;
+  }
+  .baseline p.desc {
+    display: none;
+  }
+}
+
+
+.baseline .logo {
+  width: 36px;
+  height: 30px;
+  background-image: var(--baseline-logo);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.baseline .logo.high {
+  --baseline-logo: url(../assets/baseline-high-light.svg);
+}
+
+.baseline .logo.low {
+  --baseline-logo: url(../assets/baseline-low-light.svg);
+}
+
+.baseline .logo.limit {
+  --baseline-logo: url(../assets/baseline-limit.svg);
+}
+
+.baseline .logo.discouraged {
+  --baseline-logo: url(../assets/baseline-discouraged-light.svg);
+}
+
+.dark .baseline .logo.high {
+  --baseline-logo: url(../assets/baseline-high-dark.svg);
+}
+
+.dark .baseline .logo.low {
+  --baseline-logo: url(../assets/baseline-low-dark.svg);
+}
+
+.dark .baseline .logo.discouraged {
+  --baseline-logo: url(../assets/baseline-discouraged-dark.svg);
+}
