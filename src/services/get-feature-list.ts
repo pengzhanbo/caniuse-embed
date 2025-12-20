@@ -61,7 +61,8 @@ export async function getFeaturesList(): Promise<{
     [bcd, caniuse, baseline] = await Promise.all([
       fetchData<MDNCompatData>(API.bcd),
       fetchData<CaniuseData>(API.caniuse),
-      fetchData<Record<string, BaselineFeatureData>>(API.baseline),
+      fetchData<Record<string, BaselineFeatureData>>(API.baseline)
+        .then(res => res.features as unknown as Record<string, BaselineFeatureData>),
     ])
   }
 
