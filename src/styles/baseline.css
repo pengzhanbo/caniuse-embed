@@ -94,6 +94,12 @@
   color: var(--c-text);
 }
 
+@media (max-width: 500px) {
+  .baseline {
+    padding: 12px 12px;
+  }
+}
+
 .baseline h1,
 .baseline h1 a {
   color: var(--c-text);
@@ -204,7 +210,7 @@ code {
   content: attr(data-ver);
   font-size: 14px;
   color: var(--c-check);
-  margin: 0 4px;
+  margin: 0 0 0 4px;
 }
 
 .content .browsers span.n::after {
