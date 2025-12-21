@@ -1,0 +1,75 @@
+---
+import type { FeatureData, FeatureStatus } from '../../types'
+import Layout from '../../layouts/Layout.astro'
+import { getFeaturesList } from '../../services/get-feature-list'
+import { getBaselineStatus } from '../../services/get-baseline-status'
+import { markdownRender } from '../../utils/markdown'
+
+import '../../styles/globals.css'
+import '../../styles/baseline.css'
+
+export interface Params {
+  feature: string
+}
+
+export interface Props {
+  data: FeatureData
+  status: FeatureStatus
+}
+
+export const prerender = true
+
+export async function getStaticPaths() {
+  const { featureList, baseline } = await getFeaturesList()
+
+  return featureList.map((feature) => ({
+      params: { feature: feature.id },
+      props: { 
+        data: feature,
+        status: baseline[feature.source === 'mdn' ? feature.paths.toLowerCase() : feature.id],
+      },
+  })).filter(({ props }) => props.status || props.data.deprecated)
+}
+
+const { feature } = Astro.params
+const { data, status } = Astro.props
+
+const source = feature.startsWith('mdn') ? 'mdn' : 'caniuse'
+
+const featureTitle = markdownRender(data.title, true)
+const { type, title, label, description, reason } = getBaselineStatus(status, data.deprecated)
+const support = status?.support
+---
+
+<Layout title={data.title} {source}>
+  <input class="feature_id" type="hidden" hidden value={feature} />
+  <main class:list={["main","baseline", type]}>
+    <h1>
+      <a href={data.url || 'javascript:;'} target="_blank" set:html={featureTitle}></a>
+    </h1>
+
+    <div class="container">
+      <span class="logo"></span>
+      <div class="content">
+        <div class="header">
+          <h2>
+            {title && <span>{title}</span>}
+            {label && <span class="label">{label}</span>}
+          </h2>
+          {support && (<div class="browsers">
+            <span class:list={["chrome", 'chrome' in support ? 'y': 'n']} data-ver={support.chrome} />
+            <span class:list={["edge", 'edge' in support ? 'y': 'n']} data-ver={support.edge} />
+            <span class:list={["firefox", 'firefox' in support ? 'y': 'n']} data-ver={support.firefox} />
+            <span class:list={["safari", 'safari' in support ? 'y': 'n']} data-ver={support.safari} />
+          </div>)}
+        </div>
+        <article>
+          {description}
+          {reason ? <br /> + reason : ''}
+        </article>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script src="../../scripts/baseline.ts"></script>

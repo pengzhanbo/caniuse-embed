@@ -13,7 +13,7 @@ export function* bcd2FeatureList(bcd: MDNCompatData, agents: CaniuseAgents): Gen
 
   for (const { compat, paths, descriptions } of flattenCompatData(data)) {
     yield {
-      id: `mdn-${paths.join('_')}`,
+      id: `mdn-${paths.join('_')}`.toLowerCase(),
       source: 'mdn',
       paths: paths.join('.'),
       title: formatTitle(paths, descriptions),

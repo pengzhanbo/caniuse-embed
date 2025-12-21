@@ -19,15 +19,23 @@ Include the following javascript file in your document.
 <script type="module" src="https://caniuse-embed.vercel.app/embed.js"></script>
 ```
 
-Paste this snippet where you want the embed to be displayed:
+Paste this snippet where you want the embed `caniuse` to be displayed:
 
 ```html
-<p class="ciu-embed" data-feature="{feature}" data-past="2" data-future="3" data-meta="be6d"></p>
+<p class="ciu-embed" data-feature="{feature}" data-past="2" data-future="3"></p>
+```
+
+Or use the following snippet for `baseline` data:
+
+```html
+<p class="ciu-baseline-embed" data-feature="{feature}"></p>
 ```
 
 ## Example
 
-![example](./preview/examples.webp)
+![caniuse example](./preview/caniuse.webp)
+
+![baseline example](./preview/baseline.png)
 
 ## Why ?
 
@@ -46,7 +54,6 @@ Meanwhile, using Github Actions to trigger **Vercel**'s **deployment hooks** eve
 - [mdn-browser-compat-data](https://github.com/mdn/browser-compat-data)
 - [Fyrd/caniuse](https://github.com/Fyrd/caniuse)
 - [web-platform-dx/web-features](https://github.com/web-platform-dx/web-features)
-- [ireade/caniuse-embed](https://github.com/ireade/caniuse-embed)
 
 ## LICENSE
 

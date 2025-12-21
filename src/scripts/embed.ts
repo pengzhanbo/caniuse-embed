@@ -1,10 +1,12 @@
 (function () {
   const $ = (query: string, el?: Element) => (el || document).querySelector(query)
   const $$ = (query: string) => document.querySelectorAll(query)
+  const on = (ev: string, fn: (...args: any[]) => void) => window.addEventListener(ev, fn)
 
-  const [ft, p, f, t, m, obs] = ['feature', 'past', 'future', 'theme', 'meta', 'observer']
-  const [ce, cei] = ['.ciu-embed', 'ciu-embed-iframe']
-  const style = ['style', 'display:block;width:100%;height:330px;border:none;border-radius:0;'] as const
+  const [ft, p, f, t, m, ciu, cbe] = ['feature', 'past', 'future', 'theme', 'meta', 'ciu-embed', 'ciu-baseline-embed']
+  const [ce, cei] = [`.${ciu},.${cbe}`, 'ciu-embed-iframe']
+  const style = (h: number) => `display:block;width:100%;height:${h}px;border:none;border-radius:0;`
+  const qs = ['script[src*="caniuse"][src*="/embed.js"]', 'script[src*="/embed.js"]']
 
   const origin = getEmbedOrigin()
 
@@ -13,28 +15,26 @@
    * 正确设置 对应的 iframe height 值
    */
   let uuid = 1
+
   const embeds = $$(ce)
 
   for (const embed of embeds) {
     const source = genSource(embed)
     if (source) {
-      const iframe = createIframe(embed, source)
       /**
        * 支持 MutationObserver, 这在一些框架中比较有用，
        * 比如 切换 浅色 / 深色 模式
        */
-      if (attr(embed, obs) === 'true') {
-        observer(embed, iframe)
-      }
+      observer(embed, createIframe(embed, source))
     }
   }
 
-  window.addEventListener('message', onmessage)
+  on('message', onmessage)
 
   function onmessage(ev: MessageEvent): void {
     const data = parseData(ev.data)
     const { type, payload = {} } = data
-    if (type === 'ciu_embed') {
+    if (type === ciu) {
       const embeds = $$(ce)
       for (const embed of embeds) {
         if (payload[ft] === attr(embed, ft) && payload[m] === attr(embed, m)) {
@@ -49,7 +49,7 @@
   function observer(embed: Element, iframe: HTMLIFrameElement) {
     if (typeof window.MutationObserver === 'undefined')
       return
-    const observer = new MutationObserver((mutations) => {
+    const obs = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.type === 'attributes') {
           const source = genSource(embed)
@@ -58,7 +58,7 @@
         }
       }
     })
-    observer.observe(embed, { attributes: true })
+    obs.observe(embed, { attributes: true })
   }
 
   /**
@@ -66,7 +66,6 @@
    * 对于国内的用户，使用 caniuse.pengzhanbo.cn 作为替代，解决 vercel.app 网站无法访问的问题
    */
   function getEmbedOrigin() {
-    const qs = ['script[src*="caniuse"][src*="/embed.js"]', 'script[src*="/embed.js"]']
     const currentScript = (document.currentScript || $(qs[0]!) || $(qs[1]!)) as HTMLScriptElement
     if (currentScript) {
       const src = currentScript.src
@@ -90,20 +89,22 @@
     if (!meta)
       attr(embed, m, meta = `${Date.now()}-${uuid++}`)
 
+    const isBaseline = embed.classList.contains(cbe)
     const params = [p, f, t]
       .map(k => [k, attr(embed, k)])
       .filter(([, v]) => v)
       .map(([k, v]) => `${k}=${v}`)
       .join('&')
 
-    return `${attr(embed, 'origin') || origin}/${feature}#${m}=${meta}${params ? `&${params}` : ''}`
+    return `${attr(embed, 'origin') || origin}/${feature}${isBaseline ? '/baseline' : ''}#${m}=${meta}${params ? `&${params}` : ''}`
   }
 
   function createIframe(embed: Element, source: string) {
     const iframe = document.createElement('iframe') as HTMLIFrameElement
+    const isBaseline = embed.classList.contains(cbe)
     iframe.src = source
     iframe.className = cei
-    iframe.style.cssText = style[1]
+    iframe.style.cssText = style(isBaseline ? 150 : 350)
     iframe.allow = 'fullscreen'
     embed.appendChild(iframe)
     return iframe

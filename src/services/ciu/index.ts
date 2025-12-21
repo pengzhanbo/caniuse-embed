@@ -7,7 +7,7 @@ export function* ciu2FeatureList({ data, agents }: CaniuseData): Generator<Featu
   for (const [featureName, compat] of Object.entries(data)) {
     const stats = flattenStatsValues(compat.stats)
     yield {
-      id: featureName,
+      id: featureName.toLowerCase(),
       source: 'caniuse',
       paths: featureName,
       title: compat.title,

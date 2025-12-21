@@ -1,5 +1,5 @@
 export const baselineInfo: Record<
-  'low' | 'high' | 'limit' | 'discouraged',
+  'low' | 'high' | 'limit' | 'discouraged' | 'deprecated',
   { title?: string, label?: string, description: string }
 > = {
   low: {
@@ -20,6 +20,11 @@ export const baselineInfo: Record<
     title: 'Discouraged',
     description: 'This feature may be a candidate for removal from web standards or browsers.',
   },
+  deprecated: {
+    title: 'Deprecated',
+    description: 'This feature is no longer recommended.',
+  },
+
 }
 
 export const months = [

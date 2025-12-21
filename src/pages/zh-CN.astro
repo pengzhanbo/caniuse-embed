@@ -20,9 +20,13 @@ import '../styles/home.css'
     <p class="description">
       从
       <a href="https://caniuse.com/" target="_blank">caniuse.com</a>
-      和
+      ，
       <a href="https://github.com/mdn/browser-compat-data" target="_blank">
         mozilla's browser compat data
+      </a>
+      和
+      <a href="https://github.com/web-platform-dx/web-features" target="_blank">
+        web-platform-dx/web-features
       </a>
       嵌入最新数据。
       <br />
@@ -54,13 +58,41 @@ import '../styles/home.css'
 
     <h2>示例</h2>
 
+    <h3>嵌入浏览器各版本的功能支持</h3>
+
     <p>默认情况下，嵌入将显示当前版本、未来1个版本以及过去2个版本 的功能支持。</p>
 
-    <p class="ciu-embed" data-feature="css-grid" data-observer="true" data-theme=""></p>
+    <p class="ciu-embed" data-feature="css-grid"></p>
 
-    <p class="ciu-embed" data-feature="mdn-css_properties_z-index" data-observer="true" data-theme=""></p>
+    <p class="ciu-embed" data-feature="mdn-css_properties_z-index"></p>
+
+    <h3>嵌入功能支持基线</h3>
+
+    <p>该功能在当前主流浏览器中的支持程度。</p>
+
+    <p class="ciu-baseline-embed" data-feature="css-grid"></p>
+
+    <p class="ciu-baseline-embed" data-feature="mdn-css_at-rules_counter-style"></p>
+
+    <p class="ciu-baseline-embed" data-feature="mdn-css_at-rules_view-transition"></p>
+
+    <p class="ciu-baseline-embed" data-feature="mdn-api_document_write"></p>
 
     <h2>生成嵌入代码</h2>
+
+    <h3>选择嵌入类型</h3>
+
+    <p>
+      <label for="embed-type-1">
+        <input id="embed-type-1" type="radio" name="embed-type" value="caniuse" checked> 浏览器各版本的功能支持
+      </label>
+    </p>
+
+    <p>
+      <label for="embed-type-2">
+        <input id="embed-type-2" type="radio" name="embed-type" value="baseline"> 功能支持基线
+      </label>
+    </p>
 
     <h3>选择特性</h3>
 
@@ -68,15 +100,17 @@ import '../styles/home.css'
 
     <select id="featuresSelect"></select>
 
-    <h3>附加设置</h3>
+    <div class="range-setting">
+      <h3>附加设置</h3>
 
-    <p>选择您想要显示的旧版本</p>
+      <p>选择您想要显示的旧版本</p>
 
-    <select id="pastSelect"></select>
+      <select id="pastSelect"></select>
 
-    <p>选择您想要显示的未来版本</p>
+      <p>选择您想要显示的未来版本</p>
 
-    <select id="futureSelect"></select>
+      <select id="futureSelect"></select>
+    </div>
 
     <div class="embed-config" style="display:none">
       <h3>嵌入脚本</h3>
@@ -97,18 +131,13 @@ import '../styles/home.css'
 
       <p><code>data-feature="feature_name"</code>: 特性名称</p>
 
-      <p><code>data-past="2"</code>: 显示过去 2 个版本, 范围为 0 - 5</p>
+      <div class="range-attr">
+        <p><code>data-past="2"</code>: 显示过去 2 个版本, 范围为 0 - 5</p>
 
-      <p><code>data-future="1"</code>: 显示未来 1 个版本, 范围为 0 - 3</p>
-
-      <p>
-        <code>data-meta="xxx"</code>: 自定义元数据，当存在多个同名特性时，可以为每个特性指定不同的元数据，用于正确更新
-        iframe 高度。
-      </p>
+        <p><code>data-future="1"</code>: 显示未来 1 个版本, 范围为 0 - 3</p>
+      </div>
 
       <p><code>data-theme="dark"</code>: 使用深色主题，支持 <code>light / dark / auto</code>。</p>
-
-      <p><code>data-observer="true"</code>: 使用观察者模式, 当前标签的属性变化将被监听</p>
 
       <p><code>data-origin=""</code>: [可选] 数据源，例如：<code>https://caniuse.pengzhanbo.cn</code>。</p>
     </div>

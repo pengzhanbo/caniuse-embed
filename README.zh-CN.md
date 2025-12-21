@@ -24,15 +24,23 @@
 <script type="module" src="https://caniuse.pengzhanbo.cn/embed.js"></script>
 ```
 
-将此片段粘贴到您希望显示嵌入内容的位置：
+将此片段粘贴到您希望显示嵌入 `caniuse` 内容的位置：
 
 ```html
 <p class="ciu-embed" data-feature="{feature}" data-past="2" data-future="3" data-meta="be6d"></p>
 ```
 
+或使用下面的代码，显示基准 `(baseline)` 数据：
+
+```html
+<p class="ciu-baseline-embed" data-feature="{feature}"></p>
+```
+
 ## 示例
 
-![example](./preview/examples.webp)
+![caniuse example](./preview/caniuse.webp)
+
+![baseline example](./preview/baseline.png)
 
 ## 为什么 ?
 

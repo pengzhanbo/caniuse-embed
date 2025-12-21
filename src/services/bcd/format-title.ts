@@ -28,7 +28,7 @@ export function formatTitle(paths: string[], descriptions: string[]): string {
     case 'css': {
       const [type, ...css] = rest
       if (type === 'at-rules')
-        return `CSS at-rule: @${withDescriptions(css, descriptions, '')}` // checked
+        return `CSS at-rule: ${withDescriptions(css.slice(1), descriptions, '')}` // checked
       if (type === 'properties')
         // css.properties.z-index
         // css.properties.z-index.auto

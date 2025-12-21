@@ -13,17 +13,16 @@ const data = Astro.props.data
 const status = Astro.props.status
 const title = markdownRender(data.title, true)
 const description = data.description ? markdownRender(data.description) : ''
+const deprecated = data.deprecated
 ---
 
 <header class="header">
   <h1 class="title">
     <a href={data.url || 'javascript:;'} target="_blank">
-      <span class="title">
-        <Fragment set:html={title} />
-      </span>
+      <span class="title" set:html={title}></span>
       {data.url && <IconExternalLink />}
     </a>
   </h1>
-  {status && <FeatureBaseline {status} />}
+  {status && <FeatureBaseline {status} {deprecated} />}
   <div class="description" set:html={description}></div>
 </header>

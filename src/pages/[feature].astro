@@ -30,7 +30,7 @@ export async function getStaticPaths() {
       params: { feature: feature.id },
       props: { 
         data: feature,
-        status: baseline[feature.source === 'mdn' ? feature.paths : feature.id],
+        status: baseline[feature.source === 'mdn' ? feature.paths.toLowerCase() : feature.id],
         bcdUpdated,
         ciuUpdated
       },
@@ -47,7 +47,7 @@ const supports = data.supports
 <Layout title={data.title} {source}>
   <input class="feature_id" type="hidden" hidden value={feature} />
 
-  <main class="feature past_1 past_2 future_1 future_2">
+  <main class="main feature past_1 past_2 future_1 future_2">
     <FeatureHeader {data} {status} />
 
     <div class="main">

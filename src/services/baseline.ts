@@ -6,11 +6,12 @@ export function getBaselineStatusData(
   const res: Record<string, FeatureStatus> = {}
 
   const update = (feature: string, status: Status, discouraged?: Discouraged) => {
-    const prev = res[feature] || {} as FeatureStatus
+    const id = feature.toLowerCase()
+    const prev = res[id] || {} as FeatureStatus
     const baseline = discouraged ? 'discouraged' : status.baseline || prev.baseline || false
-    res[feature] = { ...prev, baseline, support: status.support || prev.support }
+    res[id] = { ...prev, baseline, support: status.support || prev.support }
     if (discouraged && baseline === 'discouraged') {
-      res[feature].reason = discouraged.reason
+      res[id].reason = discouraged.reason
     }
     const date = baseline === 'discouraged'
       ? discouraged?.removal_date
@@ -20,8 +21,9 @@ export function getBaselineStatusData(
           ? status.baseline_low_date
           : undefined
     if (date)
-      res[feature].date = date
+      res[id].date = date
   }
+
   for (const [feature, data] of Object.entries(features)) {
     if (data.status)
       update(data.caniuse?.[0] || feature, data.status, data.discouraged)

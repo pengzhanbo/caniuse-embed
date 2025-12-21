@@ -1,28 +1,25 @@
 ---
 import type {  FeatureStatus } from '../types'
-import { baselineInfo, months } from '../common/baseline'
+import { getBaselineStatus } from '../services/get-baseline-status'
 
 interface Props {
   status: FeatureStatus
+  deprecated: boolean
 }
 
-const status = Astro.props.status
-const type = status.baseline === false ? 'limit' : status.baseline
-const { title, label, description } = baselineInfo[type]
-const [year, month] = status.date?.split('-') || []
-
-const finalTitle = title?.replace('{date}', year || '')
-const finalDesc = description.replace('{date}', year && month ? `${months[+month - 1]} ${year}` : '')
+const { type, title, label, description } = getBaselineStatus(
+  Astro.props.status,
+  Astro.props.deprecated,
+)
 ---
 
-<div class="baseline">
+<div class:list={["baseline", type]}>
   <span class:list={["logo", type]}></span>
   <section>
     <p class="title">
-      {finalTitle && <strong>{finalTitle}</strong>}
+      {title && <strong>{title}</strong>}
       {label && <span class="label">{label}</span>}
     </p>
-
-    <p class="desc">{finalDesc}</p>
+    <p class="desc">{description}</p>
   </section>
 </div>

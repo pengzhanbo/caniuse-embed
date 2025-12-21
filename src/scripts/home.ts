@@ -1,5 +1,4 @@
 import Choices from 'choices.js'
-import { customAlphabet } from 'nanoid'
 
 type Lang = 'en-US' | 'zh-CN'
 type Theme = 'auto' | 'dark' | 'light'
@@ -9,6 +8,7 @@ interface Locale {
   noFuture: string
   past: string
   future: string
+  noFeature: string
 }
 interface ChoicesItem {
   label: string
@@ -21,25 +21,29 @@ const locales: Record<Lang, Locale> = {
     noFuture: 'No Future Version',
     past: 'Past Version (Current Version - {val})',
     future: 'Future Version (Current Version + {val})',
+    noFeature: 'Select a feature',
   },
   'zh-CN': {
     noPast: '不显示旧版本',
     noFuture: '不显示新版本',
     past: '旧版本 (当前版本 - {val})',
     future: '未来版本 (当前版本 + {val})',
+    noFeature: '请选择一个特性',
   },
 }
 
 const $ = (query: string, el?: HTMLElement) => (el || document).querySelector(query)
 const $$ = (query: string, el?: HTMLElement) => (el || document).querySelectorAll(query)
-const nanoid = customAlphabet('0123456789abcdef', 4)
 
 const featureSelect = $('#featuresSelect')! as HTMLSelectElement
 const pastVersionSelect = $('#pastSelect')! as HTMLSelectElement
 const futureVersionSelect = $('#futureSelect')! as HTMLSelectElement
+const typeRadio = $$('input[name="embed-type"]') as NodeListOf<HTMLInputElement>
 const langSelect = $('.lang-select') as HTMLSelectElement
 const themeEl = $('.theme') as HTMLDivElement
-const embeds = $$('.ciu-embed')
+const rangeSetting = $('.range-setting') as HTMLDivElement
+const rangeAttr = $('.range-attr') as HTMLDivElement
+const embeds = $$('.ciu-embed, .ciu-baseline-embed')
 
 const output = $('#output') as HTMLDivElement
 const embed = $('.ciu-embed', output) as HTMLIFrameElement
@@ -50,6 +54,7 @@ const embedCode = $('#embedCode') as HTMLPreElement
 
 const lang: Lang = (document.documentElement.lang as Lang) || 'en-US'
 let theme: Theme = 'auto'
+let type = 'caniuse'
 
 const featureChoices = new Choices(featureSelect, {
   renderChoiceLimit: 1000,
@@ -96,6 +101,8 @@ on(pastVersionSelect, 'change', onChange)
 on(futureVersionSelect, 'change', onChange)
 on(langSelect, 'change', onLangChange)
 
+typeRadio.forEach(el => on(el, 'change', onChange))
+
 on(themeEl, 'click', () => {
   if (theme === 'auto')
     theme = 'light'
@@ -132,12 +139,16 @@ function onChange() {
   const feature = featureSelect.value || ''
   const past = pastVersionSelect.value || ''
   const future = futureVersionSelect.value || ''
+  type = ($('input[name="embed-type"]:checked') as HTMLInputElement).value || 'caniuse'
+
+  rangeSetting.style.display = type === 'caniuse' ? 'block' : 'none'
+  rangeAttr.style.display = type === 'caniuse' ? 'block' : 'none'
   if (!feature) {
     embedConfig.style.display = 'none'
     output.style.display = 'none'
     return
   }
-  const data = { past, future, meta: nanoid() }
+  const data = type === 'caniuse' ? { past, future } : {}
   attr(embed, { feature, ...data })
   iframe.src = `${genSource(feature, data)}&theme=${theme === 'dark' ? 'dark' : 'light'}`
   output.style.display = 'block'
@@ -153,7 +164,7 @@ function onLangChange() {
 
 async function getFeatureList(): Promise<ChoicesItem[]> {
   const list = await fetch('/features.json').then(res => res.json())
-  return list as ChoicesItem[]
+  return [{ label: translate('noFeature'), value: '' }, ...list] as ChoicesItem[]
 }
 
 function translate(key: keyof Locale, val?: string): string {
@@ -176,7 +187,7 @@ function genScript() {
 }
 
 function genCode(data: Record<string, string>) {
-  let content = '<p class="ciu-embed"'
+  let content = `<p class="ciu-${type === 'caniuse' ? '' : 'baseline-'}embed"`
   Object.keys(data).forEach((key) => {
     if (data[key])
       content += ` data-${key}="${data[key]}"`
@@ -185,7 +196,7 @@ function genCode(data: Record<string, string>) {
 }
 
 function genSource(feature: string, data: Record<string, string>) {
-  const url = `${location.origin}/${feature}#`
+  const url = `${location.origin}/${feature}${type === 'caniuse' ? '' : '/baseline'}#`
   const params = new URLSearchParams(data)
   return `${url}${params.toString()}`
 }
