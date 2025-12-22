@@ -22,7 +22,7 @@ export function formatTitle(paths: string[], descriptions: string[]): string {
 
   switch (root) {
     case 'api': {
-      const [title, ...titles] = withDescriptions(rest, descriptions, ' ').split(/\s+/)
+      const [title, ...titles] = withDescriptions(rest.slice(1), descriptions, ' ').split(/\s+/)
       return `${title} API${titles.length ? `: ${titles.join(' ')}` : ''}`.trim() // checked
     }
     case 'css': {
