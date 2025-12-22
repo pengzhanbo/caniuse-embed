@@ -18,7 +18,7 @@ const deprecated = data.deprecated
 
 <header class="header">
   <h1 class="title">
-    <a href={data.url || 'javascript:;'} target="_blank">
+    <a href={data.url || 'javascript:void;'} target={data.url ?"_blank" : undefined}>
       <span class="title" set:html={title}></span>
       {data.url && <IconExternalLink />}
     </a>

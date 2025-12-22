@@ -21,10 +21,10 @@ if (lastUpdated) {
 ---
 
 <footer class="footer">
-  { source && ' data: ' }
+  { source && <span>data: </span> }
   {source === 'caniuse' && (<a href={"https://caniuse.com/" + feature} target="_blank" rel="noopener noreferrer" aria-label="caniuse">caniuse</a>)}
   {source === 'mdn' && (<a href="https://github.com/mdn/browser-compat-data" target="_blank" rel="noopener noreferrer" aria-label="MDN">MDN</a>)}
-  { source && '| embed: ' }
+  { source && '| ' }{ source && <span>embed: </span> }
   { source && <a class="embed-link" href="https://caniuse-embed.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="caniuse-embed">caniuse-embed.vercel.app</a> }
-  { updated && <time datetime={dateStr}>updated: {updated}</time> }
+  { updated && <time datetime={dateStr}><span>updated: </span>{updated}</time> }
 </footer>

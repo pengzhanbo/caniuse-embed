@@ -33,7 +33,6 @@ body {
   font-weight: normal;
   background-size: 400px 400px, 10px 10px;
   color: black;
-  overflow: hidden;
 }
 
 @media (max-width: 736px) {

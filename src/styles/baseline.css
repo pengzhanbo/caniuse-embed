@@ -31,6 +31,8 @@
   --browser-edge: url(../assets/edge.svg);
   --browser-firefox: url(../assets/firefox.svg);
   --browser-safari: url(../assets/safari.svg);
+
+  --transition: background 0.25s ease, color 0.25s ease, border 0.25s ease;
 }
 
 .dark {
@@ -92,6 +94,7 @@
   padding: 12px 20px;
   background-color: var(--bg);
   color: var(--c-text);
+  transition: var(--transition);
 }
 
 @media (max-width: 500px) {
@@ -104,6 +107,7 @@
 .baseline h1 a {
   color: var(--c-text);
   font-size: 18px;
+  transition: var(--transition);
 }
 
 code {
@@ -211,6 +215,7 @@ code {
   font-size: 14px;
   color: var(--c-check);
   margin: 0 0 0 4px;
+  transition: var(--transition);
 }
 
 .content .browsers span.n::after {
@@ -225,6 +230,7 @@ code {
   mask: var(--icon) no-repeat center;
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
+  transition: var(--transition);
 }
 
 .baseline.low .label {
@@ -232,6 +238,7 @@ code {
   background-color: var(--bg-low-pill);
   padding: 2px 4px;
   border-radius: 4px;
+  transition: var(--transition);
 }
 
 .baseline.deprecated .logo {
