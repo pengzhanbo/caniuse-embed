@@ -6,6 +6,7 @@ import FeatureInfo from '../components/FeatureInfo.astro'
 import FeatureSupports from '../components/FeatureSupports.astro'
 import Layout from '../layouts/Layout.astro'
 import { getFeaturesList } from '../services/get-feature-list'
+import { formatId } from '../utils/format-id'
 
 import '../styles/globals.css'
 import '../styles/feature.css'
@@ -30,7 +31,7 @@ export async function getStaticPaths() {
       params: { feature: feature.id },
       props: { 
         data: feature,
-        status: baseline[feature.source === 'mdn' ? feature.paths.toLowerCase() : feature.id],
+        status: baseline[formatId(feature.source === 'mdn' ? feature.paths : feature.id)],
         bcdUpdated,
         ciuUpdated
       },

@@ -27,7 +27,7 @@ export function formatTitle(paths: string[], descriptions: string[]): string {
       if (!titles.length)
         return before
       const temp = titles.join(' ')
-      if (temp.includes('constructor'))
+      if (temp.includes('constructor') || temp.includes('@@'))
         titles.shift()
       if (titles.length <= 2) {
         return `${before}: ${(titles).join(' ')}`
@@ -85,7 +85,9 @@ export function formatTitle(paths: string[], descriptions: string[]): string {
     }
 
     case 'javascript':
-      return `Javascript ${withDescriptions(rest, descriptions)}` // checked
+      return `Javascript ${
+        withDescriptions(rest, descriptions)
+          .replace('@@iterator: ', '')}` // checked
 
     case 'manifests':
       return withDescriptions(rest, descriptions) // checked

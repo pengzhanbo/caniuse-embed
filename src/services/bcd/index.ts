@@ -1,6 +1,7 @@
 import type { CaniuseAgents, FeatureData, FeatureSupport, MDNCompatData } from '../../types'
 import { omit } from '@pengzhanbo/utils'
 import { FEATURE_IDENTIFIERS } from '../../common/constants'
+import { formatId } from '../../utils/format-id'
 import { computeUsage } from './compute-usage'
 import { flattenCompatData } from './flatten-compat-data'
 import { formatTitle } from './format-title'
@@ -16,7 +17,7 @@ export function* bcd2FeatureList(bcd: MDNCompatData, agents: CaniuseAgents): Gen
     const supports = getFeatureSupport(compat.support, agents)
     const stats = flattenSupportsStats(supports)
     yield {
-      id: `mdn-${paths.join('_')}`.toLowerCase(),
+      id: formatId(`mdn-${paths.join('_')}`),
       source: 'mdn',
       paths: paths.join('.'),
       title: formatTitle(paths, descriptions),

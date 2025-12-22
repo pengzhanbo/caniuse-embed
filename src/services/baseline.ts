@@ -1,4 +1,5 @@
 import type { BaselineFeatureData, Discouraged, FeatureStatus, Status } from '../types'
+import { formatId } from '../utils/format-id'
 
 export function getBaselineStatusData(
   features: Record<string, BaselineFeatureData>,
@@ -6,7 +7,7 @@ export function getBaselineStatusData(
   const res: Record<string, FeatureStatus> = {}
 
   const update = (feature: string, status: Status, discouraged?: Discouraged) => {
-    const id = feature.toLowerCase()
+    const id = formatId(feature)
     const prev = res[id] || {} as FeatureStatus
     const baseline = discouraged ? 'discouraged' : status.baseline || prev.baseline || false
     res[id] = { ...prev, baseline, support: status.support || prev.support }

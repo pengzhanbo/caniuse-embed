@@ -1,13 +1,14 @@
 import type { CaniuseCompatData, CaniuseData, FeatureData } from '../../types'
 import { uniq } from '@pengzhanbo/utils'
 import { FEATURE_IDENTIFIERS } from '../../common/constants'
+import { formatId } from '../../utils/format-id'
 import { getFeatureSupport } from './supports'
 
 export function* ciu2FeatureList({ data, agents }: CaniuseData): Generator<FeatureData> {
   for (const [featureName, compat] of Object.entries(data)) {
     const stats = flattenStatsValues(compat.stats)
     yield {
-      id: featureName.toLowerCase(),
+      id: formatId(featureName),
       source: 'caniuse',
       paths: featureName,
       title: compat.title,

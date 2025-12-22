@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro'
 import { getFeaturesList } from '../../services/get-feature-list'
 import { getBaselineStatus } from '../../services/get-baseline-status'
 import { markdownRender } from '../../utils/markdown'
+import {formatId} from '../../utils/format-id'
 
 import '../../styles/globals.css'
 import '../../styles/baseline.css'
@@ -26,7 +27,7 @@ export async function getStaticPaths() {
       params: { feature: feature.id },
       props: { 
         data: feature,
-        status: baseline[feature.source === 'mdn' ? feature.paths.toLowerCase() : feature.id],
+        status: baseline[formatId(feature.source === 'mdn' ? feature.paths : feature.id)],
       },
   })).filter(({ props }) => props.status || props.data.deprecated)
 }
