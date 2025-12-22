@@ -27,8 +27,12 @@ export function formatTitle(paths: string[], descriptions: string[]): string {
       if (!titles.length)
         return before
       const temp = titles.join(' ')
-      if (temp.includes('constructor') || temp.includes('@@'))
+      if (
+        (temp.includes('constructor') || temp.includes('@@'))
+        && titles.length > 1
+      ) {
         titles.shift()
+      }
       if (titles.length <= 2) {
         return `${before}: ${(titles).join(' ')}`
       }
