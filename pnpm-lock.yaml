@@ -19,8 +19,8 @@ importers:
         specifier: ^9.0.2
         version: 9.0.2(astro@5.16.6(@types/node@25.0.3)(@vercel/functions@2.2.13)(rollup@4.53.4)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(rollup@4.53.4)
       '@mdn/browser-compat-data':
-        specifier: latest
-        version: 7.2.1
+        specifier: ^7.2.2
+        version: 7.2.2
       '@pengzhanbo/utils':
         specifier: ^2.1.2
         version: 2.1.2
@@ -28,8 +28,8 @@ importers:
         specifier: ^5.16.6
         version: 5.16.6(@types/node@25.0.3)(@vercel/functions@2.2.13)(rollup@4.53.4)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
       caniuse-db:
-        specifier: latest
-        version: 1.0.30001760
+        specifier: ^1.0.30001761
+        version: 1.0.30001761
       choices.js:
         specifier: ^11.1.0
         version: 11.1.0
@@ -564,8 +564,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@mdn/browser-compat-data@7.2.1':
-    resolution: {integrity: sha512-t8gdzKeIHnPNACr18qlEpjLbbtazllkhwguEE3DSoGYL5OAKSqTacqNvXNLlXEjP1kTjT9Jkv3qNSMzNI4grPQ==}
+  '@mdn/browser-compat-data@7.2.2':
+    resolution: {integrity: sha512-RoFRC9IzU4E0aSV1HXVz5kO7nSXjuSwEIprwSUlVuKKgk+s+wgO5tbe2iYNPqGLn1+w9HnqhqTVzrGpAPARLRQ==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1215,8 +1215,8 @@ packages:
     resolution: {integrity: sha512-8WB3Jcas3swSvjIeA2yvCJ+Miyz5l1ZmB6HFb9R1317dt9LCQoswg/BGrmAmkWVEszSrrg4RwmO46qIm2OEnSA==}
     engines: {node: '>=16'}
 
-  caniuse-db@1.0.30001760:
-    resolution: {integrity: sha512-pMTtXP7Yb1RXqO9ddJwLOYQ5Mb1R4/vRx7j9v6MlSCf8anENKZHr9SLxS7FqqroeAkmfgMAmtEwt1kh8men/vg==}
+  caniuse-db@1.0.30001761:
+    resolution: {integrity: sha512-+9bww47nnIdkt8kf5HgwaSRQ/rKDZG1uU5zJ1Q38k89HfVLLBW+rBvQo6G7uOnV8MMOtA3jb2BqivS4ZfeOg+A==}
 
   caniuse-lite@1.0.30001760:
     resolution: {integrity: sha512-7AAMPcueWELt1p3mi13HR/LHH0TJLT11cnwDJEs3xA4+CK/PLKeO9Kl1oru24htkyUKtkGCvAx4ohB0Ttry8Dw==}
@@ -3976,7 +3976,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@mdn/browser-compat-data@7.2.1': {}
+  '@mdn/browser-compat-data@7.2.2': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -4738,7 +4738,7 @@ snapshots:
 
   camelcase@8.0.0: {}
 
-  caniuse-db@1.0.30001760: {}
+  caniuse-db@1.0.30001761: {}
 
   caniuse-lite@1.0.30001760: {}
 
