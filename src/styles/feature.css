@@ -365,7 +365,8 @@
 }
 
 .n,
-.p {
+.p,
+.d:not(.y) {
   background: var(--no-support-pattern);
   color: var(--no-support-fg);
   transition: var(--transition);
@@ -444,6 +445,7 @@
 }
 
 .legend .d {
+  background: none;
   background-color: var(--flag-bg);
   color: var(--flag-fg);
   transition: var(--transition);

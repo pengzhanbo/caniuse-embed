@@ -1,5 +1,6 @@
-import type { CaniuseAgents, FeatureData, MDNCompatData } from '../../types'
+import type { CaniuseAgents, FeatureData, FeatureSupport, MDNCompatData } from '../../types'
 import { omit } from '@pengzhanbo/utils'
+import { FEATURE_IDENTIFIERS } from '../../common/constants'
 import { computeUsage } from './compute-usage'
 import { flattenCompatData } from './flatten-compat-data'
 import { formatTitle } from './format-title'
@@ -12,6 +13,8 @@ export function* bcd2FeatureList(bcd: MDNCompatData, agents: CaniuseAgents): Gen
   const data = omit(bcd, ['__meta', 'browsers', 'mediatypes', 'webdriver', 'webextensions'])
 
   for (const { compat, paths, descriptions } of flattenCompatData(data)) {
+    const supports = getFeatureSupport(compat.support, agents)
+    const stats = flattenSupportsStats(supports)
     yield {
       id: `mdn-${paths.join('_')}`.toLowerCase(),
       source: 'mdn',
@@ -21,12 +24,15 @@ export function* bcd2FeatureList(bcd: MDNCompatData, agents: CaniuseAgents): Gen
       description: '', // mdn 的 description 实际上被用于 标题，因此这里为空
       deprecated: compat.status?.deprecated || false,
       experimental: compat.status?.experimental || false,
-      prefixed: false,
-      unknown: true,
-      flag: false,
+      prefixed: stats.includes(FEATURE_IDENTIFIERS.prefixed),
+      unknown: stats.includes(FEATURE_IDENTIFIERS.unknown),
+      flag: stats.includes(FEATURE_IDENTIFIERS.flagged),
       usage: computeUsage(compat.support, agents), // Not implemented 未实现
-      supports: getFeatureSupport(compat.support, agents),
-      // status,
+      supports,
     }
   }
+}
+
+function flattenSupportsStats(supports: FeatureSupport[]): string {
+  return supports.flatMap(support => support.periods.map(period => period.stats), Infinity).join(' ')
 }

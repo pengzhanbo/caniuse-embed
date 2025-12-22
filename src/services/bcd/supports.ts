@@ -165,8 +165,14 @@ function getCaniuseStats(supports: (SimpleSupportStatement | 'mirror')[], versio
   const stats: CaniuseStats[] = []
   const added = normalizeVersion(support.version_added)
 
-  if (!versionPattern.test(version) || compareVersion(added, version) <= 0)
-    stats.push(FEATURE_IDENTIFIERS.supported)
+  if (!versionPattern.test(version) || compareVersion(added, version) <= 0) {
+    if (support.flags?.length) {
+      stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
+    }
+    else {
+      stats.push(FEATURE_IDENTIFIERS.supported)
+    }
+  }
 
   for (const extra of supports.slice(1)) {
     if (extra === 'mirror' || extra.version_added === false)
@@ -176,9 +182,13 @@ function getCaniuseStats(supports: (SimpleSupportStatement | 'mirror')[], versio
     if (compareVersion(added, version) <= 0
       && (removed ? compareVersion(removed, version) > 0 : true)
     ) {
-      stats.push(FEATURE_IDENTIFIERS.supported)
+      if (extra.flags?.length) {
+        stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
+      }
+      else {
+        stats.push(FEATURE_IDENTIFIERS.supported)
+      }
     }
-    extra.flags?.length && stats.push(FEATURE_IDENTIFIERS.flagged)
     extra.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)
     extra.partial_implementation && stats.push(FEATURE_IDENTIFIERS.partial)
   }
