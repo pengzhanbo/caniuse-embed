@@ -22,8 +22,18 @@ export function formatTitle(paths: string[], descriptions: string[]): string {
 
   switch (root) {
     case 'api': {
-      const [title, ...titles] = withDescriptions(rest.slice(1), descriptions, ' ').split(/\s+/)
-      return `${title} API${titles.length ? `: ${titles.join(' ')}` : ''}`.trim() // checked
+      const [title, ...titles] = withDescriptions(rest, descriptions, ' ').split(/\s+/)
+      const before = `${title} API`
+      if (!titles.length)
+        return before
+      const temp = titles.join(' ')
+      if (temp.includes('constructor'))
+        titles.shift()
+      if (titles.length <= 2) {
+        return `${before}: ${(titles).join(' ')}`
+      }
+
+      return `${before}: ${cleanApiTitle(titles)}` // checked
     }
     case 'css': {
       const [type, ...css] = rest
@@ -90,4 +100,24 @@ export function formatTitle(paths: string[], descriptions: string[]): string {
   }
 
   return withDescriptions(rest, descriptions)
+}
+
+function cleanApiTitle(titles: string[]): string {
+  const res: string[] = []
+  let t: string | undefined
+  // eslint-disable-next-line no-cond-assign
+  while (t = titles.shift()) {
+    if (!t.includes('_'))
+      res.push(t)
+  }
+  let title = ''
+  for (let i = 0; i < res.length; i++) {
+    const temp = res[i]!
+    if (temp.includes('parameter') || temp.includes('constructor') || temp.includes('method'))
+      title += `${temp}: `
+    else
+      title += `${temp} `
+  }
+
+  return title.trim().replace(/:$/, '')
 }
