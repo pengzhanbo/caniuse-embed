@@ -15,11 +15,7 @@ export default defineConfig({
     enabled: false,
   },
   output: 'server',
-  adapter: vercel({
-    isr: {
-      expiration: 7 * 24 * 60 * 60, // 部署后页面最多缓存7天
-    },
-  }),
+  adapter: vercel(),
   integrations: [
     {
       name: 'ciu-embed-scripts',
