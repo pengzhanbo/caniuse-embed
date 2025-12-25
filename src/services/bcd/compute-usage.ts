@@ -1,57 +1,55 @@
+import type { BrowserName } from '@mdn/browser-compat-data'
 import type {
-  // Browser,
+  Browser,
   CaniuseAgents,
   FeatureUsage,
   SupportBlock,
 } from '../../types'
-// import { toArray } from '@pengzhanbo/utils'
-// import { compareVersion } from '../../utils/compare-version'
-// import { BCD_BROWSERS_TO_CANIUSE_BROWSERS } from '../data'
+import { toArray } from '@pengzhanbo/utils'
+import { FEATURE_IDENTIFIERS } from '../../common/constants'
+import { sumUsage } from '../../utils/sum-usage'
+import { getCaniuseStats } from './supports'
 
+const desktopBrowsers: Browser[] = [] // 仅统计桌面浏览器的使用情况
+let totalUsage = 0
 /**
- * TODO 计算 BCD 特性的使用情况
  * 计算特性的使用情况
- *
  */
-export function computeUsage(_support: SupportBlock, _agents: CaniuseAgents): FeatureUsage | undefined {
+export function computeUsage(support: SupportBlock, agents: CaniuseAgents): FeatureUsage | undefined {
+  if (desktopBrowsers.length === 0) {
+    for (const [name, { type, usage_global }] of Object.entries(agents)) {
+      if (type === 'desktop') {
+        desktopBrowsers.push(name as Browser)
+        totalUsage += Object.values(usage_global).reduce((a, b) => sumUsage(a, b), 0)
+      }
+    }
+  }
   // 由于不了解 caniuse.com 的计算规则
   // 无法计算出与之相符的结果
   // 实现待定
 
-  // let supported = 0
+  let supported = 0
+  let partial = 0
 
-  // for (const browser in support) {
-  //   const name = (BCD_BROWSERS_TO_CANIUSE_BROWSERS[browser] || browser) as Browser
-  //   const info = toArray(support[browser as keyof SupportBlock])[0]!
-  //   const agent = agents[name]
+  for (const browser of desktopBrowsers) {
+    const supports = toArray(support[browser as BrowserName])
+    const agent = agents[browser as Browser]
 
-  //   if (!agent || info === 'mirror' || info.version_added === false)
-  //     continue
+    if (!agent)
+      continue
 
-  //   const added = normalizeVersion(info.version_added)
-  //   // const removed = normalizeVersion(info.version_removed || '')
-
-  //   for (const { version, global_usage } of agent.version_list) {
-  //     const ver = normalizeVersion(version)
-  //     if (
-  //       compareVersion(ver, added) >= 0
-  //       // && (removed ? compareVersion(ver, removed) < 0 : true)
-  //     ) {
-  //       supported += global_usage * 10000000
-  //     }
-  //   }
-  // }
-  // if (supported > 0) {
-  //   supported = Math.round(supported / 100000) / 100
-  //   return { supported, partial: 0, total: supported }
-  // }
+    for (const { version, global_usage } of agent.version_list) {
+      const stats = getCaniuseStats(supports, version)
+      if (stats.includes(FEATURE_IDENTIFIERS.partial))
+        partial = sumUsage(partial, global_usage)
+      else if (stats.includes(FEATURE_IDENTIFIERS.supported))
+        supported = sumUsage(supported, global_usage)
+    }
+  }
+  if (supported > 0 || partial > 0) {
+    supported = (supported / totalUsage) * 100
+    partial = (partial / totalUsage) * 100
+    return { supported, partial, total: supported + partial }
+  }
   return undefined
 }
-
-// function normalizeVersion(version: string): string {
-//   if (version.includes('-'))
-//     version = version.split('-')[1]!
-//   if (version.startsWith('<='))
-//     return '0'
-//   return version
-// }

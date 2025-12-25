@@ -11,8 +11,8 @@ import type {
 } from '../../types'
 import { deepEqual, toArray, uniq } from '@pengzhanbo/utils'
 import {
-  BCD_BROWSERS_TO_CANIUSE_BROWSERS,
   BROWSERS,
+  CANIUSE_BROWSER_TO_BCD_BROWSERS,
   FEATURE_IDENTIFIERS,
   MAX_FUTURE,
   MAX_PAST,
@@ -26,7 +26,7 @@ export function getFeatureSupport(rawSupport: SupportBlock, agents: CaniuseAgent
   const supports: FeatureSupport[] = []
 
   for (const browser of BROWSERS) {
-    const name = (BCD_BROWSERS_TO_CANIUSE_BROWSERS[browser] || browser) as BrowserName
+    const name = (CANIUSE_BROWSER_TO_BCD_BROWSERS[browser] || browser) as BrowserName
     const support = toArray(rawSupport[name])
     const agent = agents[browser]
 
@@ -61,7 +61,7 @@ function getBrowserPeriods(support: (SimpleSupportStatement | 'mirror')[], agent
     if (!pastPeriod) {
       pastPeriod = {
         period: `past_${MAX_PAST - past + 1}` as PeriodType,
-        version: [version],
+        version: [normalizeVersion(version, 1)],
         usage: global_usage,
         ...partial,
       }
@@ -74,9 +74,9 @@ function getBrowserPeriods(support: (SimpleSupportStatement | 'mirror')[], agent
       if (deepEqual(pastPeriod.stats, partial.stats)) {
         pastPeriod.usage = sumUsage(pastPeriod.usage, global_usage)
         if (pastPeriod.version.length < 2)
-          pastPeriod.version.unshift(version)
+          pastPeriod.version.unshift(normalizeVersion(version))
         else
-          pastPeriod.version[0] = version
+          pastPeriod.version[0] = normalizeVersion(version)
       }
       else {
         pastPeriod = null
@@ -101,7 +101,7 @@ function getBrowserPeriods(support: (SimpleSupportStatement | 'mirror')[], agent
     if (!futurePeriod) {
       futurePeriod = {
         period: `future_${future}` as PeriodType,
-        version: [version],
+        version: [normalizeVersion(version)],
         usage: global_usage,
         ...partial,
       }
@@ -114,9 +114,9 @@ function getBrowserPeriods(support: (SimpleSupportStatement | 'mirror')[], agent
       if (deepEqual(futurePeriod.stats, partial.stats)) {
         futurePeriod.usage = sumUsage(futurePeriod.usage, global_usage)
         if (futurePeriod.version.length < 2)
-          futurePeriod.version.push(version)
+          futurePeriod.version.push(normalizeVersion(version, 1))
         else
-          futurePeriod.version[1] = version
+          futurePeriod.version[1] = normalizeVersion(version, 1)
       }
       else {
         futurePeriod = null
@@ -152,10 +152,12 @@ function getPartialPeriodAboutStats(
   }
 }
 
-function getCaniuseStats(supports: (SimpleSupportStatement | 'mirror')[], version: string): CaniuseStats[] {
+export function getCaniuseStats(supports: (SimpleSupportStatement | 'mirror')[], version: string): CaniuseStats[] {
   const support = supports[0]!
+
   if (!support)
     return [FEATURE_IDENTIFIERS.unknown]
+
   if (support === 'mirror')
     return [FEATURE_IDENTIFIERS.supported]
 
@@ -163,11 +165,14 @@ function getCaniuseStats(supports: (SimpleSupportStatement | 'mirror')[], versio
     return [FEATURE_IDENTIFIERS.unsupported]
 
   const stats: CaniuseStats[] = []
+  const currentVersion = normalizeVersion(version)
   const added = normalizeVersion(support.version_added)
 
-  if (!versionPattern.test(version) || compareVersion(added, version) <= 0) {
-    if (support.flags?.length) {
-      stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
+  if (!versionPattern.test(currentVersion) || compareVersion(added, currentVersion) <= 0) {
+    if (support.flags?.length || support.partial_implementation || support.alternative_name) {
+      support.flags?.length && stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
+      support.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)
+      support.partial_implementation && stats.push(FEATURE_IDENTIFIERS.partial)
     }
     else {
       stats.push(FEATURE_IDENTIFIERS.supported)
@@ -180,17 +185,17 @@ function getCaniuseStats(supports: (SimpleSupportStatement | 'mirror')[], versio
     const added = normalizeVersion(extra.version_added)
     const removed = normalizeVersion(extra.version_removed || '')
     if (compareVersion(added, version) <= 0
-      && (removed ? compareVersion(removed, version) > 0 : true)
+      && (removed ? compareVersion(removed, currentVersion) > 0 : true)
     ) {
-      if (extra.flags?.length) {
-        stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
+      if (extra.flags?.length || extra.partial_implementation || extra.alternative_name) {
+        extra.flags?.length && stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
+        extra.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)
+        extra.partial_implementation && stats.push(FEATURE_IDENTIFIERS.partial)
       }
       else {
         stats.push(FEATURE_IDENTIFIERS.supported)
       }
     }
-    extra.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)
-    extra.partial_implementation && stats.push(FEATURE_IDENTIFIERS.partial)
   }
 
   if (stats.length === 0)
@@ -199,10 +204,10 @@ function getCaniuseStats(supports: (SimpleSupportStatement | 'mirror')[], versio
   return uniq(stats)
 }
 
-function normalizeVersion(version: string): string {
+function normalizeVersion(version: string, index = 0): string {
   if (version.includes('-'))
-    version = version.split('-')[0]!
+    version = version.split('-')[index]!
   if (version.startsWith('<='))
-    return '0'
+    return version.slice(2)
   return version
 }

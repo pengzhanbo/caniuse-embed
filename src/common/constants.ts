@@ -50,7 +50,7 @@ export const PERIODS = [
 export const MAX_PAST = 5
 export const MAX_FUTURE = 3
 
-export const BCD_BROWSERS_TO_CANIUSE_BROWSERS: Record<string, string> = {
+export const CANIUSE_BROWSER_TO_BCD_BROWSERS: Record<string, string> = {
   ie: 'ie',
   edge: 'edge',
   firefox: 'firefox',
@@ -59,11 +59,11 @@ export const BCD_BROWSERS_TO_CANIUSE_BROWSERS: Record<string, string> = {
   ios_saf: 'safari_ios',
   op_mini: 'op_mini',
   and_chr: 'chrome_android',
-  android: 'android',
+  android: 'webview_android',
   samsung: 'samsunginternet_android',
 }
 
-export const CANIUSE_BROWSER_TO_BCD_BROWSERS: Record<string, string> = {
+export const BCD_BROWSERS_TO_CANIUSE_BROWSERS: Record<string, string> = {
   ie: 'ie',
   edge: 'edge',
   firefox: 'firefox',
@@ -72,7 +72,7 @@ export const CANIUSE_BROWSER_TO_BCD_BROWSERS: Record<string, string> = {
   safari_ios: 'ios_saf',
   op_mini: 'op_mini',
   chrome_android: 'and_chr',
-  android: 'android',
+  webview_android: 'android',
   samsunginternet_android: 'samsung',
 }
 

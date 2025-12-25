@@ -6,18 +6,20 @@ import { formatUsage } from '../utils/format-usage'
 
 interface Props {
   data: FeatureData
+  source: string
 }
 
 const data = Astro.props.data
+const source = Astro.props.source
 ---
 
 {(data.usage) && (
   <small class="note">
-    Globals:
+    Globals{source === 'mdn' ? '(tracked desktop)' : ''}:
     {data.usage.supported && <span class="y">{formatUsage(data.usage.supported)}</span>}
-    {data.usage.supported && data.usage.partial && ' + '}
-    {data.usage.partial && <span class="a">{formatUsage(data.usage.partial)}</span>}
-    {data.usage.total && ` = ${formatUsage(data.usage.total)}`}
+    {data.usage.supported && data.usage.partial ? ' + ' : ''}
+    {data.usage.partial ? <span class="a">{formatUsage(data.usage.partial)}</span> : ''}
+    {data.usage.total && data.usage.partial ? ` = ${formatUsage(data.usage.total)}` : ''}
   </small>
 )}
 {data.experimental && (<small class="note"><strong>Experimental</strong> feature</small>)}

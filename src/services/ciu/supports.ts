@@ -44,7 +44,7 @@ function getBrowserPeriods(stats: Record<string, CaniuseStats>, agent: CaniuseBr
     if (!pastPeriod) {
       pastPeriod = {
         period: `past_${MAX_PAST - past + 1}` as PeriodType,
-        version: [version],
+        version: [normalizeVersion(version, 1)],
         usage: global_usage,
         ...partial,
       }
@@ -56,9 +56,9 @@ function getBrowserPeriods(stats: Record<string, CaniuseStats>, agent: CaniuseBr
     else if (deepEqual(pastPeriod.stats, partial.stats)) {
       pastPeriod.usage = sumUsage(pastPeriod.usage, global_usage)
       if (pastPeriod.version.length < 2)
-        pastPeriod.version.unshift(version)
+        pastPeriod.version.unshift(normalizeVersion(version))
       else
-        pastPeriod.version[0] = version
+        pastPeriod.version[0] = normalizeVersion(version)
     }
     else {
       pastPeriod = null
@@ -82,7 +82,7 @@ function getBrowserPeriods(stats: Record<string, CaniuseStats>, agent: CaniuseBr
     if (!futurePeriod) {
       futurePeriod = {
         period: `future_${future}` as PeriodType,
-        version: [version],
+        version: [normalizeVersion(version)],
         usage: global_usage,
         ...partial,
       }
@@ -94,9 +94,9 @@ function getBrowserPeriods(stats: Record<string, CaniuseStats>, agent: CaniuseBr
     else if (deepEqual(futurePeriod.stats, partial.stats)) {
       futurePeriod.usage = sumUsage(futurePeriod.usage, global_usage)
       if (futurePeriod.version.length < 2)
-        futurePeriod.version.push(version)
+        futurePeriod.version.push(normalizeVersion(version, 1))
       else
-        futurePeriod.version[1] = version
+        futurePeriod.version[1] = normalizeVersion(version, 1)
     }
     else {
       futurePeriod = null
@@ -118,12 +118,18 @@ function getPartialPeriodAboutStats(stats = ''): Pick<
   FeatureSupportPeriod,
   'stats' | 'supported' | 'partialSupported' | 'prefixed' | 'unknown' | 'flag'
 > {
-  stats = stats.replace(/#\d+/g, '').trim()
+  stats = stats.replace(/#\d+/g, '').replaceAll('p', 'n').trim()
   return {
-    stats: stats.split(' ') as CaniuseStats[],
+    stats: stats.split(/\s+/) as CaniuseStats[],
     supported: stats.includes(FEATURE_IDENTIFIERS.supported),
     partialSupported: stats.includes(FEATURE_IDENTIFIERS.partial),
     unknown: stats.includes(FEATURE_IDENTIFIERS.unknown),
     flag: stats.includes(FEATURE_IDENTIFIERS.flagged),
   }
+}
+
+function normalizeVersion(version: string, index = 0): string {
+  if (version.includes('-'))
+    version = version.split('-')[index]!
+  return version
 }
