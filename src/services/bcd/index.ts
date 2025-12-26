@@ -12,9 +12,10 @@ import { getFeatureSupport } from './supports'
  */
 export function* bcd2FeatureList(bcd: MDNCompatData, agents: CaniuseAgents): Generator<FeatureData> {
   const data = omit(bcd, ['__meta', 'browsers', 'mediatypes', 'webdriver', 'webextensions'])
+  const browsers = bcd.browsers
 
   for (const { compat, paths, descriptions } of flattenCompatData(data)) {
-    const supports = getFeatureSupport(compat.support, agents)
+    const supports = getFeatureSupport(compat.support, agents, browsers)
     const stats = flattenSupportsStats(supports)
     yield {
       id: formatId(`mdn-${paths.join('_')}`),
@@ -28,7 +29,7 @@ export function* bcd2FeatureList(bcd: MDNCompatData, agents: CaniuseAgents): Gen
       prefixed: stats.includes(FEATURE_IDENTIFIERS.prefixed),
       unknown: stats.includes(FEATURE_IDENTIFIERS.unknown),
       flag: stats.includes(FEATURE_IDENTIFIERS.flagged),
-      usage: computeUsage(compat.support, agents), // Not implemented 未实现
+      usage: computeUsage(compat.support, agents, browsers), // Not implemented 未实现
       supports,
     }
   }

@@ -1,15 +1,15 @@
 import type {
   BrowserName,
+  Browsers,
   CaniuseAgents,
   CaniuseBrowserAgent,
-  CaniuseStats,
   FeatureSupport,
   FeatureSupportPeriod,
   PeriodType,
   SimpleSupportStatement,
   SupportBlock,
 } from '../../types'
-import { deepEqual, toArray, uniq } from '@pengzhanbo/utils'
+import { deepEqual } from '@pengzhanbo/utils'
 import {
   BROWSERS,
   CANIUSE_BROWSER_TO_BCD_BROWSERS,
@@ -17,17 +17,17 @@ import {
   MAX_FUTURE,
   MAX_PAST,
 } from '../../common/constants'
-import { compareVersion } from '../../utils/compare-version'
 import { sumUsage } from '../../utils/sum-usage'
+import { getCaniuseStats } from './caniuse-status'
+import { mirrorSupport } from './mirror-support'
+import { normalizeVersion } from './normalize-version'
 
-const versionPattern = /^\d+$|^\d+\.\d+$|^\d+\.\d+\.\d+$/
-
-export function getFeatureSupport(rawSupport: SupportBlock, agents: CaniuseAgents): FeatureSupport[] {
+export function getFeatureSupport(rawSupport: SupportBlock, agents: CaniuseAgents, browsers: Browsers): FeatureSupport[] {
   const supports: FeatureSupport[] = []
 
   for (const browser of BROWSERS) {
     const name = (CANIUSE_BROWSER_TO_BCD_BROWSERS[browser] || browser) as BrowserName
-    const support = toArray(rawSupport[name])
+    const support = mirrorSupport(rawSupport, browsers, name)
     const agent = agents[browser]
 
     supports.push({
@@ -39,7 +39,7 @@ export function getFeatureSupport(rawSupport: SupportBlock, agents: CaniuseAgent
   return supports
 }
 
-function getBrowserPeriods(support: (SimpleSupportStatement | 'mirror')[], agent: CaniuseBrowserAgent): FeatureSupportPeriod[] {
+function getBrowserPeriods(support: SimpleSupportStatement[], agent: CaniuseBrowserAgent): FeatureSupportPeriod[] {
   const { current_version, version_list } = agent
   const index = version_list.findIndex(({ version }) => version === current_version)
 
@@ -135,7 +135,7 @@ function getBrowserPeriods(support: (SimpleSupportStatement | 'mirror')[], agent
 }
 
 function getPartialPeriodAboutStats(
-  supports: (SimpleSupportStatement | 'mirror')[],
+  supports: SimpleSupportStatement[],
   version: string,
 ): Pick<
   FeatureSupportPeriod,
@@ -150,64 +150,4 @@ function getPartialPeriodAboutStats(
     prefixed: stats.includes(FEATURE_IDENTIFIERS.prefixed),
     stats,
   }
-}
-
-export function getCaniuseStats(supports: (SimpleSupportStatement | 'mirror')[], version: string): CaniuseStats[] {
-  const support = supports[0]!
-
-  if (!support)
-    return [FEATURE_IDENTIFIERS.unknown]
-
-  if (support === 'mirror')
-    return [FEATURE_IDENTIFIERS.supported]
-
-  if (support.version_added === false)
-    return [FEATURE_IDENTIFIERS.unsupported]
-
-  const stats: CaniuseStats[] = []
-  const currentVersion = normalizeVersion(version)
-  const added = normalizeVersion(support.version_added)
-
-  if (!versionPattern.test(currentVersion) || compareVersion(added, currentVersion) <= 0) {
-    if (support.flags?.length || support.partial_implementation || support.alternative_name) {
-      support.flags?.length && stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
-      support.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)
-      support.partial_implementation && stats.push(FEATURE_IDENTIFIERS.partial)
-    }
-    else {
-      stats.push(FEATURE_IDENTIFIERS.supported)
-    }
-  }
-
-  for (const extra of supports.slice(1)) {
-    if (extra === 'mirror' || extra.version_added === false)
-      continue
-    const added = normalizeVersion(extra.version_added)
-    const removed = normalizeVersion(extra.version_removed || '')
-    if (compareVersion(added, version) <= 0
-      && (removed ? compareVersion(removed, currentVersion) > 0 : true)
-    ) {
-      if (extra.flags?.length || extra.partial_implementation || extra.alternative_name) {
-        extra.flags?.length && stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
-        extra.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)
-        extra.partial_implementation && stats.push(FEATURE_IDENTIFIERS.partial)
-      }
-      else {
-        stats.push(FEATURE_IDENTIFIERS.supported)
-      }
-    }
-  }
-
-  if (stats.length === 0)
-    stats.push(FEATURE_IDENTIFIERS.unsupported)
-
-  return uniq(stats)
-}
-
-function normalizeVersion(version: string, index = 0): string {
-  if (version.includes('-'))
-    version = version.split('-')[index]!
-  if (version.startsWith('<='))
-    return version.slice(2)
-  return version
 }

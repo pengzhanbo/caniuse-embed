@@ -18,7 +18,7 @@ type VersionValue = string | false
 /**
  * 已知浏览器，以及每个浏览器的版本信息
  */
-type Browsers = Record<BrowserName, BrowserStatement>
+export type Browsers = Record<BrowserName, BrowserStatement>
 /**
  * 浏览器类型。
  * 用于 `definition` "browser_type".
