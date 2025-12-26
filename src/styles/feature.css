@@ -576,11 +576,28 @@
   --baseline-logo: url(../assets/baseline-discouraged-light.svg);
 }
 
+.baseline .logo.experimental,
 .baseline .logo.deprecated {
   width: 16px;
   height: 16px;
-  align-self: center;
+  align-self: baseline;
+  margin-top: 3px;
+}
+
+@media (max-width: 500px) {
+  .baseline .logo.experimental,
+  .baseline .logo.deprecated {
+    align-self: center;
+    margin-top: 0;
+  }
+}
+
+.baseline .logo.deprecated {
   --baseline-logo: url(../assets/baseline-deprecated-light.svg);
+}
+
+.baseline .logo.experimental {
+  --baseline-logo: url(../assets/baseline-experimental-light.svg);
 }
 
 .dark .baseline .logo.high {
@@ -601,4 +618,8 @@
 
 .dark .baseline .logo.deprecated {
   --baseline-logo: url(../assets/baseline-deprecated-dark.svg);
+}
+
+.baseline .logo.experimental {
+  --baseline-logo: url(../assets/baseline-experimental-dark.svg);
 }

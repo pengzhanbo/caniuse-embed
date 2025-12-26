@@ -1,16 +1,18 @@
 ---
-import type {  FeatureStatus } from '../types'
+import type {  FeatureData, FeatureStatus } from '../types'
 import { getBaselineStatus } from '../services/get-baseline-status'
 
 interface Props {
-  status: FeatureStatus
-  deprecated: boolean
+  status: FeatureStatus | undefined
+  data: FeatureData
 }
 
 const { type, title, label, description } = getBaselineStatus(
   Astro.props.status,
-  Astro.props.deprecated,
+  Astro.props.data,
 )
+
+console.log(Astro.props.data.title, type, title)
 ---
 
 <div class:list={["baseline", type]}>

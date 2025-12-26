@@ -1,10 +1,12 @@
-import type { FeatureStatus } from '../types'
+import type { FeatureData, FeatureStatus } from '../types'
 import { baselineInfo, months } from '../common/baseline'
 
-export function getBaselineStatus(status: FeatureStatus | undefined, deprecated: boolean) {
-  const type = deprecated
-    ? 'deprecated'
-    : status?.baseline === false ? 'limit' : (status?.baseline || 'limit')
+export function getBaselineStatus(status: FeatureStatus | undefined, { deprecated, experimental }: FeatureData) {
+  const type = experimental
+    ? 'experimental'
+    : deprecated
+      ? 'deprecated'
+      : status?.baseline === false ? 'limit' : (status?.baseline || 'limit')
   const { title, label, description } = baselineInfo[type]
   const [year, month] = status?.date?.split('-') || []
 

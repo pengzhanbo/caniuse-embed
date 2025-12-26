@@ -38,7 +38,7 @@ const { data, status } = Astro.props
 const source = feature.startsWith('mdn') ? 'mdn' : 'caniuse'
 
 const featureTitle = markdownRender(data.title, true)
-const { type, title, label, description, reason } = getBaselineStatus(status, data.deprecated)
+const { type, title, label, description, reason } = getBaselineStatus(status, data)
 const support = status?.support
 ---
 

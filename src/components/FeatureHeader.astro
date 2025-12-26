@@ -13,7 +13,6 @@ const data = Astro.props.data
 const status = Astro.props.status
 const title = markdownRender(data.title, true)
 const description = data.description ? markdownRender(data.description) : ''
-const deprecated = data.deprecated
 ---
 
 <header class="header">
@@ -23,6 +22,6 @@ const deprecated = data.deprecated
       {data.url && <IconExternalLink />}
     </a>
   </h1>
-  {status && <FeatureBaseline {status} {deprecated} />}
+  <FeatureBaseline {status} {data} />
   <div class="description" set:html={description}></div>
 </header>
