@@ -74,7 +74,7 @@ new Choices(pastVersionSelect, {
     { label: translate('noPast'), value: '0' },
     ...Array.from({ length: 5 }).fill(0).map((_, i) => ({
       label: translate('past', `${i + 1}`),
-      selected: i === 1,
+      selected: i === 4,
       value: i + 1,
     })),
   ],
@@ -88,7 +88,7 @@ new Choices(futureVersionSelect, {
     { label: translate('noFuture'), value: '0' },
     ...Array.from({ length: 3 }).fill(0).map((_, i) => ({
       label: translate('future', `${i + 1}`),
-      selected: i === 0,
+      selected: i === 2,
       value: i + 1,
     })),
   ],

@@ -28,8 +28,8 @@ function hashchange() {
 }
 
 function updatePeriod(search: URLSearchParams) {
-  const past = toNum(noNullable(search.get('past'), '2'))
-  const future = toNum(noNullable(search.get('future'), '1'))
+  const past = toNum(noNullable(search.get('past'), '5'))
+  const future = toNum(noNullable(search.get('future'), '3'))
   const list: string[] = []
 
   Array.from({ length: past }).fill(0).forEach((_, i) => list.push(`past_${i + 1}`))
