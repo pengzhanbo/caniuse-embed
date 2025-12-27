@@ -341,9 +341,9 @@
 
 .supports-item > div span.state {
   position: absolute;
-  top: 0;
+  top: 2px;
   left: 0;
-  right: 0;
+  right: 2px;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
@@ -406,20 +406,30 @@
 }
 
 .supports-item > div.x .state::after {
-  content: '';
+  content: '-';
   width: 8px;
-  height: 8px;
+  height: 7px;
+  font-size: 20px;
+  font-weight: light;
+  line-height: 3px;
+  text-align: center;
+  color: #666;
   background-color: var(--prefix-bg);
 }
 
 @media (max-width: 500px) {
+  .supports-item > div.d .state {
+    top: 1px;
+    right: 1px;
+  }
   .supports-item > div.d .state::before {
     width: 5px;
     height: 5px
   }
+
   .supports-item > div.x .state::after {
-    width: 4px;
-    height: 4px;
+    transform: scale(0.65);
+    transform-origin: top right;
   }
 }
 
