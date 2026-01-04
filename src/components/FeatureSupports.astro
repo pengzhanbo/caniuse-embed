@@ -27,7 +27,7 @@ function fontSize(version: [string] | [string, string]): string {
   if (!ver.includes('-'))
     return ''
   const len = ver.length
-  let styles = '--font-size:'
+  const styles = '--font-size:'
   if (len >= 9)
     return `${styles} 6px`
   if (len >= 7)

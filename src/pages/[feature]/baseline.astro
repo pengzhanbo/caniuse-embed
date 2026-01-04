@@ -1,10 +1,10 @@
 ---
 import type { FeatureData, FeatureStatus } from '../../types'
 import Layout from '../../layouts/Layout.astro'
-import { getFeaturesList } from '../../services/get-feature-list'
 import { getBaselineStatus } from '../../services/get-baseline-status'
+import { getFeaturesList } from '../../services/get-feature-list'
+import { formatId } from '../../utils/format-id'
 import { markdownRender } from '../../utils/markdown'
-import {formatId} from '../../utils/format-id'
 
 import '../../styles/globals.css'
 import '../../styles/baseline.css'
@@ -23,9 +23,9 @@ export const prerender = true
 export async function getStaticPaths() {
   const { featureList, baseline } = await getFeaturesList()
 
-  return featureList.map((feature) => ({
+  return featureList.map(feature => ({
       params: { feature: feature.id },
-      props: { 
+      props: {
         data: feature,
         status: baseline[formatId(feature.source === 'mdn' ? feature.paths : feature.id)],
       },
@@ -44,7 +44,7 @@ const support = status?.support
 
 <Layout title={data.title} {source}>
   <input class="feature_id" type="hidden" hidden value={feature} />
-  <main class:list={["main","baseline", type]}>
+  <main class:list={['main', 'baseline', type]}>
     <h1>
       <a href={data.url || 'javascript:;'} target="_blank" set:html={featureTitle}></a>
     </h1>
@@ -57,12 +57,14 @@ const support = status?.support
             {title && <span>{title}</span>}
             {label && <span class="label">{label}</span>}
           </h2>
-          {support && (<div class="browsers">
-            <span class:list={["chrome", 'chrome' in support ? 'y': 'n']} data-ver={support.chrome} />
-            <span class:list={["edge", 'edge' in support ? 'y': 'n']} data-ver={support.edge} />
-            <span class:list={["firefox", 'firefox' in support ? 'y': 'n']} data-ver={support.firefox} />
-            <span class:list={["safari", 'safari' in support ? 'y': 'n']} data-ver={support.safari} />
-          </div>)}
+          {support && (
+<div class="browsers">
+            <span class:list={['chrome', 'chrome' in support ? 'y' : 'n']} data-ver={support.chrome} />
+            <span class:list={['edge', 'edge' in support ? 'y' : 'n']} data-ver={support.edge} />
+            <span class:list={['firefox', 'firefox' in support ? 'y' : 'n']} data-ver={support.firefox} />
+            <span class:list={['safari', 'safari' in support ? 'y' : 'n']} data-ver={support.safari} />
+          </div>
+)}
         </div>
         <article>
           {description}

@@ -19,7 +19,7 @@ export interface Props {
   data: FeatureData
   status: FeatureStatus | undefined
   bcdUpdated: number
-  ciuUpdated: number,
+  ciuUpdated: number
 }
 
 export const prerender = true
@@ -27,13 +27,13 @@ export const prerender = true
 export async function getStaticPaths() {
   const { featureList, bcdUpdated, ciuUpdated, baseline } = await getFeaturesList()
 
-  return featureList.map((feature) => ({
+  return featureList.map(feature => ({
       params: { feature: feature.id },
-      props: { 
+      props: {
         data: feature,
         status: baseline[formatId(feature.source === 'mdn' ? feature.paths : feature.id)],
         bcdUpdated,
-        ciuUpdated
+        ciuUpdated,
       },
   }))
 }

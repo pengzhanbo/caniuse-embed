@@ -1,5 +1,5 @@
 ---
-import type {  FeatureData, FeatureStatus } from '../types'
+import type { FeatureData, FeatureStatus } from '../types'
 import { getBaselineStatus } from '../services/get-baseline-status'
 
 interface Props {
@@ -11,12 +11,10 @@ const { type, title, label, description } = getBaselineStatus(
   Astro.props.status,
   Astro.props.data,
 )
-
-console.log(Astro.props.data.title, type, title)
 ---
 
-<div class:list={["baseline", type]}>
-  <span class:list={["logo", type]}></span>
+<div class:list={['baseline', type]}>
+  <span class:list={['logo', type]}></span>
   <section>
     <p class="title">
       {title && <strong>{title}</strong>}

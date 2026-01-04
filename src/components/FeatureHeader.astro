@@ -1,8 +1,8 @@
 ---
 import type { FeatureData, FeatureStatus } from '../types'
 import { markdownRender } from '../utils/markdown'
-import IconExternalLink from './icons/ExternalLink.astro'
 import FeatureBaseline from './FeatureBaseline.astro'
+import IconExternalLink from './icons/ExternalLink.astro'
 
 interface Props {
   data: FeatureData
@@ -17,7 +17,7 @@ const description = data.description ? markdownRender(data.description) : ''
 
 <header class="header">
   <h1 class="title">
-    <a href={data.url || 'javascript:void;'} target={data.url ?"_blank" : undefined}>
+    <a href={data.url || 'javascript:void;'} target={data.url ? '_blank' : undefined}>
       <span class="title" set:html={title}></span>
       {data.url && <IconExternalLink />}
     </a>
