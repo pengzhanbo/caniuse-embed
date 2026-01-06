@@ -1,5 +1,7 @@
 import { getFeaturesList } from '../services/get-feature-list'
 
+export const prerender = true
+
 export async function GET() {
   const { featureList } = await getFeaturesList()
 
