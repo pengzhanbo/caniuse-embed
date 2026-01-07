@@ -9,7 +9,7 @@
  * future: number - future browser version  range: 0 - 3
  * theme: optional string - light /dark / auto
  */
-import { el, initSearch, initTheme, noNullable, on, onFontLoading, resize, toNum, updateMeta, updateThemeWithSearch } from './shared'
+import { $, el, initSearch, initTheme, noNullable, on, onFontLoading, resize, toNum, updateMeta, updateThemeWithSearch } from './shared'
 
 initTheme()
 
@@ -18,6 +18,10 @@ on('resize', resize)
 onFontLoading(resize)
 // delay execution to make Safari happy
 requestAnimationFrame(() => setTimeout(hashchange, 0))
+
+const embed = $('.embed-link') as HTMLAnchorElement
+embed.href = location.origin
+embed.innerHTML = location.hostname
 
 function hashchange() {
   const search = initSearch()
