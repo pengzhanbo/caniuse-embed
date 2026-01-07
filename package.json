@@ -38,6 +38,7 @@
   },
   "resolutions": {
     "cross-spawn": ">=7.0.6",
-    "esbuild": "^0.27.2"
+    "esbuild": "^0.27.2",
+    "path-to-regexp": "^6.3.0"
   }
 }
