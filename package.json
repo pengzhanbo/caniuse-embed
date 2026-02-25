@@ -38,6 +38,7 @@
   },
   "resolutions": {
     "cross-spawn": ">=7.0.6",
+    "devalue": ">=5.6.3",
     "esbuild": "^0.27.3",
     "lodash": ">=4.17.23",
     "minimatch": ">=9.0.6",
