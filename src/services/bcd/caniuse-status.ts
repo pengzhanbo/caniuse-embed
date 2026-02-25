@@ -36,8 +36,7 @@ export function getCaniuseStats(supports: SimpleSupportStatement[], version: str
     const added = normalizeVersion(extra.version_added)
     const removed = normalizeVersion(extra.version_removed || '')
     if (compareVersion(added, version) <= 0
-      && (removed ? compareVersion(removed, currentVersion) > 0 : true)
-    ) {
+      && (removed ? compareVersion(removed, currentVersion) > 0 : true)) {
       if (extra.flags?.length || extra.partial_implementation || extra.alternative_name) {
         extra.flags?.length && stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
         extra.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)
