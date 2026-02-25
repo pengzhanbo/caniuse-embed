@@ -39,6 +39,7 @@
   "resolutions": {
     "cross-spawn": ">=7.0.6",
     "esbuild": "^0.27.3",
-    "path-to-regexp": "6.3.0"
+    "path-to-regexp": "6.3.0",
+    "tar": ">=7.5.8"
   }
 }
