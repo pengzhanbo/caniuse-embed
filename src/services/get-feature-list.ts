@@ -6,6 +6,7 @@ import { API } from '../common/constants'
 import { fetchData } from '../utils/fetch-data'
 import { getBaselineStatusData } from './baseline'
 import { bcd2FeatureList } from './bcd'
+import { clearStatsCache } from './bcd/caniuse-status'
 import { ciu2FeatureList } from './ciu'
 
 const cacheDir = path.join(process.cwd(), 'data')
@@ -78,6 +79,9 @@ export async function getFeaturesList(): Promise<{
     baseline: getBaselineStatusData(baseline),
   }
   cache.updated = Date.now()
+
+  // 初始化完成，清除 stats 缓存
+  clearStatsCache()
 
   if (import.meta.env?.DEV) {
     // 写入本地缓存文件

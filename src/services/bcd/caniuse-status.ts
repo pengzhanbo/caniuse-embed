@@ -14,6 +14,10 @@ function getCacheKey(supports: SimpleSupportStatement[], version: string): strin
   return `${supports.length}:${first?.version_added}:${last?.version_added}:${version}`
 }
 
+export function clearStatsCache(): void {
+  statsCache.clear()
+}
+
 export function getCaniuseStats(supports: SimpleSupportStatement[], version: string): CaniuseStats[] {
   const cacheKey = getCacheKey(supports, version)
   const cached = statsCache.get(cacheKey)
