@@ -3,13 +3,13 @@ import type {
   Browsers,
   CaniuseAgents,
   CaniuseBrowserAgent,
+  CaniuseStats,
   FeatureSupport,
   FeatureSupportPeriod,
   PeriodType,
   SimpleSupportStatement,
   SupportBlock,
 } from '../../types'
-import { deepEqual } from '@pengzhanbo/utils'
 import {
   BROWSERS,
   CANIUSE_BROWSER_TO_BCD_BROWSERS,
@@ -21,6 +21,16 @@ import { sumUsage } from '../../utils/sum-usage'
 import { getCaniuseStats } from './caniuse-status'
 import { mirrorSupport } from './mirror-support'
 import { normalizeVersion } from './normalize-version'
+
+function statsEqual(a: CaniuseStats[] | undefined, b: CaniuseStats[] | undefined): boolean {
+  if (a === b)
+    return true
+  if (!a || !b)
+    return false
+  if (a.length !== b.length)
+    return false
+  return a.join(',') === b.join(',')
+}
 
 export function getFeatureSupport(rawSupport: SupportBlock, agents: CaniuseAgents, browsers: Browsers): FeatureSupport[] {
   const supports: FeatureSupport[] = []
@@ -71,7 +81,7 @@ function getBrowserPeriods(support: SimpleSupportStatement[], agent: CaniuseBrow
         break
     }
     else {
-      if (deepEqual(pastPeriod.stats, partial.stats)) {
+      if (statsEqual(pastPeriod.stats, partial.stats)) {
         pastPeriod.usage = sumUsage(pastPeriod.usage, global_usage)
         if (pastPeriod.version.length < 2)
           pastPeriod.version.unshift(normalizeVersion(version))
@@ -111,7 +121,7 @@ function getBrowserPeriods(support: SimpleSupportStatement[], agent: CaniuseBrow
         break
     }
     else {
-      if (deepEqual(futurePeriod.stats, partial.stats)) {
+      if (statsEqual(futurePeriod.stats, partial.stats)) {
         futurePeriod.usage = sumUsage(futurePeriod.usage, global_usage)
         if (futurePeriod.version.length < 2)
           futurePeriod.version.push(normalizeVersion(version, 1))

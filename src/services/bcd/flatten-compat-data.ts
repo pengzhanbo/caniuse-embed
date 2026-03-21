@@ -8,23 +8,25 @@ export interface CompatData {
 
 /**
  * 扁平化处理
+ * 使用 push/pop 模式替代数组复制，减少内存分配
  */
-export function* flattenCompatData(
-  data: Identifier,
-  list: CompatData[] = [],
-  paths: string[] = [],
-  descriptions: string[] = [],
-): Generator<CompatData> {
-  const { __compat: compat, ...apis } = data
-  if (compat)
-    yield { compat, paths: [...paths], descriptions: [...descriptions] }
+export function* flattenCompatData(data: Identifier): Generator<CompatData> {
+  const paths: string[] = []
+  const descriptions: string[] = []
 
-  for (const key in apis) {
-    yield* flattenCompatData(
-      apis[key]!,
-      list,
-      [...paths, key],
-      [...descriptions, apis[key]!.__compat?.description || ''],
-    )
+  function* traverse(node: Identifier): Generator<CompatData> {
+    const { __compat: compat, ...apis } = node
+    if (compat)
+      yield { compat, paths: paths.slice(), descriptions: descriptions.slice() }
+
+    for (const key in apis) {
+      paths.push(key)
+      descriptions.push(apis[key]!.__compat?.description || '')
+      yield* traverse(apis[key]!)
+      paths.pop()
+      descriptions.pop()
+    }
   }
+
+  yield* traverse(data)
 }

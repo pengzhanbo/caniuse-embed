@@ -1,5 +1,4 @@
 import type { CaniuseAgents, CaniuseBrowserAgent, CaniuseBrowserStats, CaniuseStats, FeatureSupport, FeatureSupportPeriod, PeriodType } from '../../types'
-import { deepEqual } from '@pengzhanbo/utils'
 import {
   BROWSERS,
   FEATURE_IDENTIFIERS,
@@ -7,6 +6,16 @@ import {
   MAX_PAST,
 } from '../../common/constants'
 import { sumUsage } from '../../utils/sum-usage'
+
+function statsEqual(a: CaniuseStats[] | undefined, b: CaniuseStats[] | undefined): boolean {
+  if (a === b)
+    return true
+  if (!a || !b)
+    return false
+  if (a.length !== b.length)
+    return false
+  return a.join(',') === b.join(',')
+}
 
 export function getFeatureSupport(
   rawSupport: CaniuseBrowserStats,
@@ -53,7 +62,7 @@ function getBrowserPeriods(stats: Record<string, CaniuseStats>, agent: CaniuseBr
       if (past === 0)
         break
     }
-    else if (deepEqual(pastPeriod.stats, partial.stats)) {
+    else if (statsEqual(pastPeriod.stats, partial.stats)) {
       pastPeriod.usage = sumUsage(pastPeriod.usage, global_usage)
       if (pastPeriod.version.length < 2)
         pastPeriod.version.unshift(normalizeVersion(version))
@@ -91,7 +100,7 @@ function getBrowserPeriods(stats: Record<string, CaniuseStats>, agent: CaniuseBr
       if (future > MAX_FUTURE)
         break
     }
-    else if (deepEqual(futurePeriod.stats, partial.stats)) {
+    else if (statsEqual(futurePeriod.stats, partial.stats)) {
       futurePeriod.usage = sumUsage(futurePeriod.usage, global_usage)
       if (futurePeriod.version.length < 2)
         futurePeriod.version.push(normalizeVersion(version, 1))

@@ -36,5 +36,12 @@ export function* bcd2FeatureList(bcd: MDNCompatData, agents: CaniuseAgents): Gen
 }
 
 function flattenSupportsStats(supports: FeatureSupport[]): string {
-  return supports.flatMap(support => support.periods.map(period => period.stats), Infinity).join(' ')
+  const result: string[] = []
+  for (const support of supports) {
+    for (const period of support.periods) {
+      if (period.stats?.length)
+        result.push(...period.stats)
+    }
+  }
+  return [...new Set(result)].join(' ')
 }

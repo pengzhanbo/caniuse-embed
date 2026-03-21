@@ -1,5 +1,4 @@
 import type { CaniuseCompatData, CaniuseData, FeatureData } from '../../types'
-import { uniq } from '@pengzhanbo/utils'
 import { FEATURE_IDENTIFIERS } from '../../common/constants'
 import { formatId } from '../../utils/format-id'
 import { getFeatureSupport } from './supports'
@@ -38,9 +37,17 @@ function getCiuLink(name: string, links: CaniuseCompatData['links']): string {
 }
 
 function flattenStatsValues(stats: CaniuseCompatData['stats']): string {
+  const seen = new Set<string>()
   const result: string[] = []
   for (const versions of Object.values(stats)) {
-    result.push(...Object.values(versions).flatMap(value => value.split(' ')))
+    for (const value of Object.values(versions)) {
+      for (const stat of value.split(' ')) {
+        if (stat && !seen.has(stat)) {
+          seen.add(stat)
+          result.push(stat)
+        }
+      }
+    }
   }
-  return uniq(result).join(' ')
+  return result.join(' ')
 }

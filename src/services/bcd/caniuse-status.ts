@@ -6,14 +6,33 @@ import { normalizeVersion } from './normalize-version'
 
 const versionPattern = /^\d+$|^\d+\.\d+$|^\d+\.\d+\.\d+$/
 
+const statsCache = new Map<string, CaniuseStats[]>()
+
+function getCacheKey(supports: SimpleSupportStatement[], version: string): string {
+  const first = supports[0]
+  const last = supports[supports.length - 1]
+  return `${supports.length}:${first?.version_added}:${last?.version_added}:${version}`
+}
+
 export function getCaniuseStats(supports: SimpleSupportStatement[], version: string): CaniuseStats[] {
+  const cacheKey = getCacheKey(supports, version)
+  const cached = statsCache.get(cacheKey)
+  if (cached)
+    return cached
+
   const support = supports[0]!
 
-  if (!support)
-    return [FEATURE_IDENTIFIERS.unknown]
+  if (!support) {
+    const result = [FEATURE_IDENTIFIERS.unknown]
+    statsCache.set(cacheKey, result)
+    return result
+  }
 
-  if (support.version_added === false)
-    return [FEATURE_IDENTIFIERS.unsupported]
+  if (support.version_added === false) {
+    const result = [FEATURE_IDENTIFIERS.unsupported]
+    statsCache.set(cacheKey, result)
+    return result
+  }
 
   const stats: CaniuseStats[] = []
   const currentVersion = normalizeVersion(version)
@@ -51,5 +70,7 @@ export function getCaniuseStats(supports: SimpleSupportStatement[], version: str
   if (stats.length === 0)
     stats.push(FEATURE_IDENTIFIERS.unsupported)
 
-  return uniq(stats)
+  const result = uniq(stats)
+  statsCache.set(cacheKey, result)
+  return result
 }
