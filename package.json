@@ -37,12 +37,18 @@
     "tsx": "^4.21.0"
   },
   "resolutions": {
+    "brace-expansion": ">=5.0.5",
     "cross-spawn": ">=7.0.6",
     "devalue": ">=5.6.4",
     "esbuild": "^0.27.4",
+    "flatted": ">=3.4.2",
+    "h3": ">=1.15.9",
     "lodash": ">=4.17.23",
     "minimatch": ">=9.0.9",
     "path-to-regexp": "6.3.0",
-    "tar": ">=7.5.13"
+    "picomatch": ">=2.3.2",
+    "smol-toml": ">=1.6.1",
+    "tar": ">=7.5.13",
+    "yaml": ">=2.8.3"
   }
 }
