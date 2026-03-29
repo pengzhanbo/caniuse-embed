@@ -4,12 +4,17 @@ import IconGithub from '../components/icons/Github.astro'
 import IconMoon from '../components/icons/Moon.astro'
 import IconSun from '../components/icons/Sun.astro'
 import Layout from '../layouts/Layout.astro'
+import { getFeaturesList } from '../services/get-feature-list'
+import { formatDate } from '../utils/format-date'
 
 import 'normalize.css'
 import 'choices.js/public/assets/styles/choices.min.css'
 import '../styles/home.css'
 
 export const prerender = true
+const { bcdUpdated, ciuUpdated } = await getFeaturesList()
+const [bcdUpdatedDate] = formatDate(bcdUpdated)
+const [ciuUpdatedDate] = formatDate(ciuUpdated)
 ---
 
 <Layout lang="zh-CN">
@@ -45,6 +50,8 @@ export const prerender = true
     <p>
       <a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> 开发
     </p>
+    <p>Can I Use 更新于: <code>{ciuUpdatedDate}</code></p>
+    <p>Browser Compat Data 更新于: <code>{bcdUpdatedDate}</code></p>
 
     <div class="wrapper">
       <div class="theme">

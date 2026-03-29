@@ -2,6 +2,7 @@ import type { BaselineFeatureData, CaniuseData, FeatureData, FeatureStatus, MDNC
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
+import { createSingletonPromise } from '@pengzhanbo/utils'
 import { API } from '../common/constants'
 import { fetchData } from '../utils/fetch-data'
 import { getBaselineStatusData } from './baseline'
@@ -25,12 +26,12 @@ const cache: {
   maxAge: (import.meta.env?.DEV ? 3 : 24) * 60 * 60 * 1000,
 }
 
-export async function getFeaturesList(): Promise<{
+export const getFeaturesList = createSingletonPromise(async (): Promise<{
   featureList: FeatureData[]
   baseline: Record<string, FeatureStatus>
   bcdUpdated: string
   ciuUpdated: number
-}> {
+}> => {
   // 直接从内存缓存中读取
   if (cache.data && Date.now() - cache.updated < cache.maxAge)
     return cache.data
@@ -43,6 +44,7 @@ export async function getFeaturesList(): Promise<{
         const current = Date.now()
         cache.data = JSON.parse(featuresContent)
         cache.updated = current
+        getFeaturesList.reset()
         return cache.data!
       }
     }
@@ -88,5 +90,6 @@ export async function getFeaturesList(): Promise<{
     await fs.writeFile(path.join(cacheDir, 'cached.json'), JSON.stringify(cache.data), 'utf-8')
   }
 
+  getFeaturesList.reset()
   return cache.data
-}
+})

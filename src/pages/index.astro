@@ -4,11 +4,17 @@ import IconGithub from '../components/icons/Github.astro'
 import IconMoon from '../components/icons/Moon.astro'
 import IconSun from '../components/icons/Sun.astro'
 import Layout from '../layouts/Layout.astro'
+import { getFeaturesList } from '../services/get-feature-list'
+import { formatDate } from '../utils/format-date'
 import 'normalize.css'
 import 'choices.js/public/assets/styles/choices.min.css'
 import '../styles/home.css'
 
 export const prerender = true
+
+const { bcdUpdated, ciuUpdated } = await getFeaturesList()
+const [bcdUpdatedDate] = formatDate(bcdUpdated)
+const [ciuUpdatedDate] = formatDate(ciuUpdated)
 ---
 
 <Layout lang="en-US">
@@ -42,6 +48,8 @@ export const prerender = true
       </a> .
     </p>
     <p>Deloy with <a href="https://vercel.com/" target="_blank">Vercel</a>.</p>
+    <p>Can I Use Data updated: <code>{ciuUpdatedDate}</code></p>
+    <p>Browser Compat Data updated: <code>{bcdUpdatedDate}</code></p>
 
     <div class="wrapper">
       <div class="theme">
