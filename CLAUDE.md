@@ -11,6 +11,7 @@ This is an Astro SSR project that generates static pages for embedding browser c
 ```bash
 pnpm dev        # Start dev server
 pnpm build      # Build: runs astro check + astro build
+pnpm preview    # Preview production build locally
 pnpm lint       # Run ESLint
 pnpm gendata    # Regenerate data from scripts/datagen.ts
 ```
