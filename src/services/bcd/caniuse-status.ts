@@ -1,8 +1,10 @@
 import type { CaniuseStats, SimpleSupportStatement } from '../../types'
-import { uniq } from '@pengzhanbo/utils'
+import { memoize, uniq } from '@pengzhanbo/utils'
 import { FEATURE_IDENTIFIERS } from '../../common/constants'
 import { compareVersion } from '../../utils/compare-version'
 import { normalizeVersion } from './normalize-version'
+
+const memoizeCompareVersion = memoize(compareVersion)
 
 const versionPattern = /^\d+$|^\d+\.\d+$|^\d+\.\d+\.\d+$/
 
@@ -42,7 +44,7 @@ export function getCaniuseStats(supports: SimpleSupportStatement[], version: str
   const currentVersion = normalizeVersion(version)
   const added = normalizeVersion(support.version_added)
 
-  if (!versionPattern.test(currentVersion) || compareVersion(added, currentVersion) <= 0) {
+  if (!versionPattern.test(currentVersion) || memoizeCompareVersion(added, currentVersion) <= 0) {
     if (support.flags?.length || support.partial_implementation || support.alternative_name) {
       support.flags?.length && stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
       support.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)
@@ -58,8 +60,8 @@ export function getCaniuseStats(supports: SimpleSupportStatement[], version: str
       continue
     const added = normalizeVersion(extra.version_added)
     const removed = normalizeVersion(extra.version_removed || '')
-    if (compareVersion(added, version) <= 0
-      && (removed ? compareVersion(removed, currentVersion) > 0 : true)) {
+    if (memoizeCompareVersion(added, version) <= 0
+      && (removed ? memoizeCompareVersion(removed, currentVersion) > 0 : true)) {
       if (extra.flags?.length || extra.partial_implementation || extra.alternative_name) {
         extra.flags?.length && stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
         extra.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)

@@ -10,6 +10,7 @@ import type {
   SimpleSupportStatement,
   SupportBlock,
 } from '../../types'
+import { decimalAdd } from '@pengzhanbo/utils'
 import {
   BROWSERS,
   CANIUSE_BROWSER_TO_BCD_BROWSERS,
@@ -17,7 +18,6 @@ import {
   MAX_FUTURE,
   MAX_PAST,
 } from '../../common/constants'
-import { sumUsage } from '../../utils/sum-usage'
 import { getCaniuseStats } from './caniuse-status'
 import { mirrorSupport } from './mirror-support'
 import { normalizeVersion } from './normalize-version'
@@ -82,7 +82,7 @@ function getBrowserPeriods(support: SimpleSupportStatement[], agent: CaniuseBrow
     }
     else {
       if (statsEqual(pastPeriod.stats, partial.stats)) {
-        pastPeriod.usage = sumUsage(pastPeriod.usage, global_usage)
+        pastPeriod.usage = decimalAdd(pastPeriod.usage, global_usage)
         if (pastPeriod.version.length < 2)
           pastPeriod.version.unshift(normalizeVersion(version))
         else
@@ -122,7 +122,7 @@ function getBrowserPeriods(support: SimpleSupportStatement[], agent: CaniuseBrow
     }
     else {
       if (statsEqual(futurePeriod.stats, partial.stats)) {
-        futurePeriod.usage = sumUsage(futurePeriod.usage, global_usage)
+        futurePeriod.usage = decimalAdd(futurePeriod.usage, global_usage)
         if (futurePeriod.version.length < 2)
           futurePeriod.version.push(normalizeVersion(version, 1))
         else

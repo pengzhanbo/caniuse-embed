@@ -90,6 +90,7 @@ export const getFeaturesList = createSingletonPromise(async (): Promise<{
     await fs.writeFile(path.join(cacheDir, 'cached.json'), JSON.stringify(cache.data), 'utf-8')
   }
 
+  // 完成请求后重置单例锁
   getFeaturesList.reset()
   return cache.data
 })

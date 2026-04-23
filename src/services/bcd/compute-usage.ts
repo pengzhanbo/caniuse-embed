@@ -6,8 +6,8 @@ import type {
   FeatureUsage,
   SupportBlock,
 } from '../../types'
+import { decimalAdd } from '@pengzhanbo/utils'
 import { CANIUSE_BROWSER_TO_BCD_BROWSERS, FEATURE_IDENTIFIERS } from '../../common/constants'
-import { sumUsage } from '../../utils/sum-usage'
 import { getCaniuseStats } from './caniuse-status'
 import { mirrorSupport } from './mirror-support'
 
@@ -27,7 +27,7 @@ function computedGlobalUsage(agents: CaniuseAgents, device: Device) {
     for (const [name, { type, usage_global }] of Object.entries(agents)) {
       if (type === device) {
         global.browserList.push(name as Browser)
-        global.total += Object.values(usage_global).reduce((a, b) => sumUsage(a, b), 0)
+        global.total += Object.values(usage_global).reduce((a, b) => decimalAdd(a, b), 0)
       }
     }
   }
@@ -48,9 +48,9 @@ function computedUsageWithDevice(support: SupportBlock, agents: CaniuseAgents, b
     for (const { version, global_usage } of agent.version_list) {
       const stats = getCaniuseStats(supports, version)
       if (stats.includes(FEATURE_IDENTIFIERS.partial))
-        partial = sumUsage(partial, global_usage)
+        partial = decimalAdd(partial, global_usage)
       else if (stats.includes(FEATURE_IDENTIFIERS.supported))
-        supported = sumUsage(supported, global_usage)
+        supported = decimalAdd(supported, global_usage)
     }
   }
   if (supported > 0 || partial > 0) {
