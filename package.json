@@ -16,7 +16,7 @@
     "@astrojs/check": "^0.9.8",
     "@astrojs/vercel": "^10.0.4",
     "@mdn/browser-compat-data": "^7.3.12",
-    "@pengzhanbo/utils": "^3.5.0",
+    "@pengzhanbo/utils": "^3.5.1",
     "astro": "^6.1.8",
     "caniuse-db": "^1.0.30001790",
     "choices.js": "^11.2.2",
