@@ -46,7 +46,7 @@ const support = status?.support
   <input class="feature_id" type="hidden" hidden value={feature} />
   <main class:list={['main', 'baseline', type]}>
     <h1>
-      <a href={data.url || 'javascript:;'} target="_blank" set:html={featureTitle}></a>
+      <a href={data.url || 'javascript:void(0)'} target="_blank" set:html={featureTitle}></a>
     </h1>
 
     <div class="container">

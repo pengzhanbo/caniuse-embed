@@ -24,8 +24,8 @@ const data = Astro.props.data
 
 <div class="legend">
   <div class="y" aria-label="Supported" title="Support">&#x2713;</div>
-  <div class="n" aria-lablel="Not Supported" title="Not Support">&#x2717;</div>
-  {data.unknown && (<div class="u" aria-lablel="Unknown Support" title="Unknown Support">?</div>)}
+  <div class="n" aria-label="Not Supported" title="Not Support">&#x2717;</div>
+  {data.unknown && (<div class="u" aria-label="Unknown Support" title="Unknown Support">?</div>)}
   <div class="a">Partial support</div>
   {data.prefixed && <div class="x">Prefixed</div>}
   {data.flag && (
