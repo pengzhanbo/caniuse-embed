@@ -1,0 +1,181 @@
+---
+import Layout from '../layouts/Layout.astro'
+import IconAuto from './icons/Auto.astro'
+import IconGithub from './icons/Github.astro'
+import IconMoon from './icons/Moon.astro'
+import IconSun from './icons/Sun.astro'
+
+import 'normalize.css'
+import 'choices.js/public/assets/styles/choices.min.css'
+import '../styles/home.css'
+
+export interface Props {
+  lang: string
+  locale: {
+    description: string
+    madeWith: string
+    deployWith: string
+    canIUseUpdated: string
+    bcdUpdated: string
+    examples: string
+    featureSupportTitle: string
+    featureSupportDesc: string
+    baselineTitle: string
+    baselineDesc: string
+    createEmbed: string
+    selectType: string
+    featureSupportType: string
+    baselineType: string
+    selectFeature: string
+    selectFeatureDesc: string
+    additionalSettings: string
+    pastVersions: string
+    futureVersions: string
+    includeScript: string
+    includeScriptDesc: string
+    getEmbedCode: string
+    getEmbedCodeDesc: string
+    parameters: string
+    featureName: string
+    pastDesc: string
+    futureDesc: string
+    themeDesc: string
+    originDesc: string
+    originExample: string
+    embedPreview: string
+  }
+  bcdUpdatedDate: string
+  ciuUpdatedDate: string
+}
+
+const { lang, locale, bcdUpdatedDate, ciuUpdatedDate } = Astro.props
+---
+
+<Layout lang={lang}>
+  <a href="https://github.com/pengzhanbo/caniuse-embed" target="_blank" class="fork">
+    <IconGithub />
+  </a>
+  <main class="container">
+    <h1>The CanIUse Embed</h1>
+
+    <p class="description" set:html={locale.description} />
+
+    <p set:html={locale.madeWith} />
+
+    <p set:html={locale.deployWith} />
+
+    <p>{locale.canIUseUpdated} <code>{ciuUpdatedDate}</code></p>
+    <p>{locale.bcdUpdated} <code>{bcdUpdatedDate}</code></p>
+
+    <div class="wrapper">
+      <div class="theme">
+        <IconAuto class="auto" />
+        <IconMoon class="moon" />
+        <IconSun class="sun" />
+      </div>
+      <select class="lang-select" name="lang">
+        <option value="" selected={lang === 'en-US'}>English</option>
+        <option value="zh-CN" selected={lang === 'zh-CN'}>简体中文</option>
+      </select>
+    </div>
+
+    <h2>{locale.examples}</h2>
+
+    <h3>{locale.featureSupportTitle}</h3>
+
+    <p>{locale.featureSupportDesc}</p>
+
+    <p class="ciu-embed" data-feature="css-grid"></p>
+
+    <p class="ciu-embed" data-feature="mdn-css_properties_z-index"></p>
+
+    <h3>{locale.baselineTitle}</h3>
+
+    <p>{locale.baselineDesc}</p>
+
+    <p class="ciu-baseline-embed" data-feature="css-grid"></p>
+
+    <p class="ciu-baseline-embed" data-feature="mdn-css_at-rules_counter-style"></p>
+
+    <p class="ciu-baseline-embed" data-feature="mdn-css_at-rules_view-transition"></p>
+
+    <p class="ciu-baseline-embed" data-feature="mdn-api_document_write"></p>
+
+    <h2>{locale.createEmbed}</h2>
+
+    <h3>{locale.selectType}</h3>
+
+    <p>
+      <label for="embed-type-1">
+        <input id="embed-type-1" type="radio" name="embed-type" value="caniuse" checked /> {locale.featureSupportType}
+      </label>
+    </p>
+
+    <p>
+      <label for="embed-type-2">
+        <input id="embed-type-2" type="radio" name="embed-type" value="baseline" /> {locale.baselineType}
+      </label>
+    </p>
+
+    <h3>{locale.selectFeature}</h3>
+
+    <p>{locale.selectFeatureDesc}</p>
+
+    <select id="featuresSelect"></select>
+
+    <div class="range-setting">
+      <h3>{locale.additionalSettings}</h3>
+
+      <p>{locale.pastVersions}</p>
+
+      <select id="pastSelect"></select>
+
+      <p>{locale.futureVersions}</p>
+
+      <select id="futureSelect"></select>
+    </div>
+
+    <div class="embed-config" style="display:none">
+      <h3>{locale.includeScript}</h3>
+
+      <p>{locale.includeScriptDesc}</p>
+
+      <pre
+        id="embedScript"
+      ><code>&lt;script type="module" src="https://caniuse-embed.vercel.app/embed.js"&gt;&lt;/script&gt;</code></pre>
+
+      <h3>{locale.getEmbedCode}</h3>
+
+      <p>{locale.getEmbedCodeDesc}</p>
+
+      <pre id="embedCode"></pre>
+
+      <h4>{locale.parameters}</h4>
+
+      <p><code>data-feature="feature_name"</code>: {locale.featureName}</p>
+
+      <div class="range-attr">
+        <p><code>data-past="2"</code>: {locale.pastDesc}</p>
+
+        <p><code>data-future="1"</code>: {locale.futureDesc}</p>
+      </div>
+
+      <p><code>data-theme="dark"</code>: {locale.themeDesc}</p>
+
+      <p>
+        <code>data-origin=""</code>: {locale.originDesc} <code>{locale.originExample}</code>.
+      </p>
+    </div>
+
+    <div id="output">
+      <h3>{locale.embedPreview}</h3>
+
+      <p class="ciu-embed">
+        <iframe class="ciu-embed-iframe" width="100%" height="330px"></iframe>
+      </p>
+    </div>
+  </main>
+</Layout>
+
+<script src="../scripts/home.ts"></script>
+<script src="../scripts/embed.ts"></script>

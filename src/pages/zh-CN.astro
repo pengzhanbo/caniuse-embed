@@ -1,165 +1,47 @@
 ---
-import IconAuto from '../components/icons/Auto.astro'
-import IconGithub from '../components/icons/Github.astro'
-import IconMoon from '../components/icons/Moon.astro'
-import IconSun from '../components/icons/Sun.astro'
-import Layout from '../layouts/Layout.astro'
+import HomeTemplate from '../components/HomeTemplate.astro'
 import { getFeaturesList } from '../services/get-feature-list'
 import { formatDate } from '../utils/format-date'
 
-import 'normalize.css'
-import 'choices.js/public/assets/styles/choices.min.css'
-import '../styles/home.css'
-
 export const prerender = true
+
 const { bcdUpdated, ciuUpdated } = await getFeaturesList()
 const [bcdUpdatedDate] = formatDate(bcdUpdated)
 const [ciuUpdatedDate] = formatDate(ciuUpdated)
+
+const locale = {
+  description: `从 <a href="https://caniuse.com/" target="_blank">caniuse.com</a>，<a href="https://github.com/mdn/browser-compat-data" target="_blank">mozilla's browser compat data</a> 和 <a href="https://github.com/web-platform-dx/web-features" target="_blank">web-platform-dx/web-features</a> 嵌入最新数据。<br /> 显示10个主要浏览器多个版本的功能支持数据。<br /> 可配置、可靠且完全响应。`,
+  madeWith: `由 <a href="https://astro.build/" target="_blank">Astro</a> 构建 | 部署在 <a href="https://vercel.com/" target="_blank">Vercel</a>`,
+  deployWith: `<a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> 开发`,
+  canIUseUpdated: 'Can I Use 更新于:',
+  bcdUpdated: 'Browser Compat Data 更新于:',
+  examples: '示例',
+  featureSupportTitle: '嵌入浏览器各版本的功能支持',
+  featureSupportDesc: '默认情况下，嵌入将显示当前版本、未来1个版本以及过去2个版本 的功能支持。',
+  baselineTitle: '嵌入功能支持基线',
+  baselineDesc: '该功能在当前主流浏览器中的支持程度。',
+  createEmbed: '生成嵌入代码',
+  selectType: '选择嵌入类型',
+  featureSupportType: '浏览器各版本的功能支持',
+  baselineType: '功能支持基线',
+  selectFeature: '选择特性',
+  selectFeatureDesc: '你想展示什么特性？',
+  additionalSettings: '附加设置',
+  pastVersions: '选择您想要显示的旧版本',
+  futureVersions: '选择您想要显示的未来版本',
+  includeScript: '嵌入脚本',
+  includeScriptDesc: '在您的文档中嵌入以下 JavaScript 文件。',
+  getEmbedCode: '获取嵌入代码',
+  getEmbedCodeDesc: '将此片段粘贴到您希望嵌入显示的位置：',
+  parameters: '参数说明',
+  featureName: '特性名称',
+  pastDesc: '显示过去 2 个版本, 范围为 0 - 5',
+  futureDesc: '显示未来 1 个版本, 范围为 0 - 3',
+  themeDesc: '使用深色主题，支持 light / dark / auto。',
+  originDesc: '[可选] 数据源，例如：',
+  originExample: 'https://caniuse.pengzhanbo.cn',
+  embedPreview: '嵌入预览',
+}
 ---
 
-<Layout lang="zh-CN">
-  <a href="https://github.com/pengzhanbo/caniuse-embed" target="_blank" class="fork">
-    <IconGithub />
-  </a>
-  <main class="container">
-    <h1>The CanIUse Embed</h1>
-
-    <p class="description">
-      从
-      <a href="https://caniuse.com/" target="_blank">caniuse.com</a>
-      ，
-      <a href="https://github.com/mdn/browser-compat-data" target="_blank">
-        mozilla's browser compat data
-      </a>
-      和
-      <a href="https://github.com/web-platform-dx/web-features" target="_blank">
-        web-platform-dx/web-features
-      </a>
-      嵌入最新数据。
-      <br />
-      显示10个主要浏览器多个版本的功能支持数据。
-      <br /> 可配置、可靠且完全响应。
-    </p>
-
-    <p>
-      由
-      <a href="https://astro.build/" target="_blank">Astro</a>
-      构建 | 部署在
-      <a href="https://vercel.com/" target="_blank">Vercel</a>
-    </p>
-    <p>
-      <a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> 开发
-    </p>
-    <p>Can I Use 更新于: <code>{ciuUpdatedDate}</code></p>
-    <p>Browser Compat Data 更新于: <code>{bcdUpdatedDate}</code></p>
-
-    <div class="wrapper">
-      <div class="theme">
-        <IconAuto class="auto" />
-        <IconMoon class="moon" />
-        <IconSun class="sun" />
-      </div>
-      <select class="lang-select" name="lang">
-        <option value="zh-CN" selected>简体中文</option>
-        <option value="">English</option>
-      </select>
-    </div>
-
-    <h2>示例</h2>
-
-    <h3>嵌入浏览器各版本的功能支持</h3>
-
-    <p>默认情况下，嵌入将显示当前版本、未来1个版本以及过去2个版本 的功能支持。</p>
-
-    <p class="ciu-embed" data-feature="css-grid"></p>
-
-    <p class="ciu-embed" data-feature="mdn-css_properties_z-index"></p>
-
-    <h3>嵌入功能支持基线</h3>
-
-    <p>该功能在当前主流浏览器中的支持程度。</p>
-
-    <p class="ciu-baseline-embed" data-feature="css-grid"></p>
-
-    <p class="ciu-baseline-embed" data-feature="mdn-css_at-rules_counter-style"></p>
-
-    <p class="ciu-baseline-embed" data-feature="mdn-css_at-rules_view-transition"></p>
-
-    <p class="ciu-baseline-embed" data-feature="mdn-api_document_write"></p>
-
-    <h2>生成嵌入代码</h2>
-
-    <h3>选择嵌入类型</h3>
-
-    <p>
-      <label for="embed-type-1">
-        <input id="embed-type-1" type="radio" name="embed-type" value="caniuse" checked /> 浏览器各版本的功能支持
-      </label>
-    </p>
-
-    <p>
-      <label for="embed-type-2">
-        <input id="embed-type-2" type="radio" name="embed-type" value="baseline" /> 功能支持基线
-      </label>
-    </p>
-
-    <h3>选择特性</h3>
-
-    <p>你想展示什么特性？</p>
-
-    <select id="featuresSelect"></select>
-
-    <div class="range-setting">
-      <h3>附加设置</h3>
-
-      <p>选择您想要显示的旧版本</p>
-
-      <select id="pastSelect"></select>
-
-      <p>选择您想要显示的未来版本</p>
-
-      <select id="futureSelect"></select>
-    </div>
-
-    <div class="embed-config" style="display:none">
-      <h3>嵌入脚本</h3>
-
-      <p>在您的文档中嵌入以下 JavaScript 文件。</p>
-
-      <pre
-        id="embedScript"
-      ><code>&lt;script type="module" src="https://caniuse-embed.vercel.app/embed.js"&gt;&lt;/script&gt;</code></pre>
-
-      <h3>获取嵌入代码</h3>
-
-      <p>将此片段粘贴到您希望嵌入显示的位置：</p>
-
-      <pre id="embedCode"></pre>
-
-      <h4>参数说明</h4>
-
-      <p><code>data-feature="feature_name"</code>: 特性名称</p>
-
-      <div class="range-attr">
-        <p><code>data-past="2"</code>: 显示过去 2 个版本, 范围为 0 - 5</p>
-
-        <p><code>data-future="1"</code>: 显示未来 1 个版本, 范围为 0 - 3</p>
-      </div>
-
-      <p><code>data-theme="dark"</code>: 使用深色主题，支持 <code>light / dark / auto</code>。</p>
-
-      <p><code>data-origin=""</code>: [可选] 数据源，例如：<code>https://caniuse.pengzhanbo.cn</code>。</p>
-    </div>
-
-    <div id="output">
-      <h3>嵌入预览</h3>
-
-      <p class="ciu-embed">
-        <iframe class="ciu-embed-iframe" width="100%" height="330px"></iframe>
-      </p>
-    </div>
-  </main>
-</Layout>
-
-<script src="../scripts/home.ts"></script>
-<script src="../scripts/embed.ts"></script>
+<HomeTemplate lang="zh-CN" {locale} {bcdUpdatedDate} {ciuUpdatedDate} />

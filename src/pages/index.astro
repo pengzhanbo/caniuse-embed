@@ -1,168 +1,47 @@
 ---
-import IconAuto from '../components/icons/Auto.astro'
-import IconGithub from '../components/icons/Github.astro'
-import IconMoon from '../components/icons/Moon.astro'
-import IconSun from '../components/icons/Sun.astro'
-import Layout from '../layouts/Layout.astro'
+import HomeTemplate from '../components/HomeTemplate.astro'
 import { getFeaturesList } from '../services/get-feature-list'
 import { formatDate } from '../utils/format-date'
-import 'normalize.css'
-import 'choices.js/public/assets/styles/choices.min.css'
-import '../styles/home.css'
 
 export const prerender = true
 
 const { bcdUpdated, ciuUpdated } = await getFeaturesList()
 const [bcdUpdatedDate] = formatDate(bcdUpdated)
 const [ciuUpdatedDate] = formatDate(ciuUpdated)
+
+const locale = {
+  description: `Embed up-to-date data from <a href="https://caniuse.com/" target="_blank">caniuse.com</a>, <a href="https://github.com/mdn/browser-compat-data" target="_blank">mozilla's browser compat data</a> and <a href="https://github.com/web-platform-dx/web-features" target="_blank">web-platform-dx/web-features</a>. Displays feature support data for multiple versions of the 10 major browsers. Configurable, reliable, and fully responsive.`,
+  madeWith: `Made with <a href="https://astro.build/" target="_blank">Astro</a> by <a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> .`,
+  deployWith: `Deloy with <a href="https://vercel.com/" target="_blank">Vercel</a>.`,
+  canIUseUpdated: 'Can I Use Data updated:',
+  bcdUpdated: 'Browser Compat Data updated:',
+  examples: 'Examples',
+  featureSupportTitle: 'Feature support in various browser versions',
+  featureSupportDesc: 'By default, the interactive embed will display the feature support for the current version, 1 version in the future, and 2 versions back.',
+  baselineTitle: 'Embedded feature supports baseline',
+  baselineDesc: 'The baseline of support for this feature in current mainstream browsers.',
+  createEmbed: 'Create your Embed',
+  selectType: 'Select Type',
+  featureSupportType: 'Feature support in various browser versions',
+  baselineType: 'Embedded feature supports baseline',
+  selectFeature: 'Select Feature',
+  selectFeatureDesc: 'What feature are you trying to display?',
+  additionalSettings: 'Additional Settings',
+  pastVersions: 'Select the past versions you want to display',
+  futureVersions: 'Select the future versions you want to display',
+  includeScript: 'Include Script',
+  includeScriptDesc: 'Include the following javascript file in your document.',
+  getEmbedCode: 'Get the Embed Code',
+  getEmbedCodeDesc: 'Paste this snippet where you want the embed to be displayed:',
+  parameters: 'Parameters',
+  featureName: 'Feature name',
+  pastDesc: 'Show 2 versions back, range is 0 - 5',
+  futureDesc: 'Show 1 version in the future, range is 0 - 3',
+  themeDesc: 'Change the theme to light / dark / auto.',
+  originDesc: '[Optional] Data source origin, e.g.:',
+  originExample: 'https://caniuse-embed.vercel.app',
+  embedPreview: 'Embed Preview',
+}
 ---
 
-<Layout lang="en-US">
-  <a href="https://github.com/pengzhanbo/caniuse-embed" target="_blank" class="fork">
-    <IconGithub />
-  </a>
-  <main class="container">
-    <h1>The CanIUse Embed</h1>
-
-    <p class="description">
-      Embed up-to-date data from
-      <a href="https://caniuse.com/" target="_blank">caniuse.com</a>
-      ,
-      <a href="https://github.com/mdn/browser-compat-data" target="_blank">
-        mozilla's browser compat data
-      </a>
-      and
-      <a href="https://github.com/web-platform-dx/web-features" target="_blank">
-        web-platform-dx/web-features
-      </a>
-      .
-      Displays feature support data for multiple versions of the 10 major browsers. Configurable, reliable, and fully responsive.
-    </p>
-
-    <p>
-      Made with
-      <a href="https://astro.build/" target="_blank">Astro</a>
-      by {' '}
-      <a href="https://github.com/pengzhanbo" target="_blank">
-        @pengzhanbo
-      </a> .
-    </p>
-    <p>Deloy with <a href="https://vercel.com/" target="_blank">Vercel</a>.</p>
-    <p>Can I Use Data updated: <code>{ciuUpdatedDate}</code></p>
-    <p>Browser Compat Data updated: <code>{bcdUpdatedDate}</code></p>
-
-    <div class="wrapper">
-      <div class="theme">
-        <IconAuto class="auto" />
-        <IconMoon class="moon" />
-        <IconSun class="sun" />
-      </div>
-      <select class="lang-select" name="lang">
-        <option value="" selected>English</option>
-        <option value="zh-CN">简体中文</option>
-      </select>
-    </div>
-
-    <h2>Examples</h2>
-
-    <h3>Feature support in various browser versions</h3>
-
-    <p>
-      By default, the interactive embed will display the feature support for the current version, 1 version in the
-      future, and 2 versions back.
-    </p>
-
-    <p class="ciu-embed" data-feature="css-grid"></p>
-
-    <p class="ciu-embed" data-feature="mdn-css_properties_z-index"></p>
-
-    <h3>Embedded feature supports baseline</h3>
-
-    <p>The baseline of support for this feature in current mainstream browsers.</p>
-
-    <p class="ciu-baseline-embed" data-feature="css-grid"></p>
-
-    <p class="ciu-baseline-embed" data-feature="mdn-css_at-rules_counter-style"></p>
-
-    <p class="ciu-baseline-embed" data-feature="mdn-css_at-rules_view-transition"></p>
-
-    <p class="ciu-baseline-embed" data-feature="mdn-api_document_write"></p>
-
-    <h2>Create your Embed</h2>
-
-    <h3>Select Type</h3>
-
-    <p>
-      <label for="embed-type-1">
-        <input id="embed-type-1" type="radio" name="embed-type" value="caniuse" checked /> Feature support in various browser versions
-      </label>
-    </p>
-
-    <p>
-      <label for="embed-type-2">
-        <input id="embed-type-2" type="radio" name="embed-type" value="baseline" /> Embedded feature supports baseline
-      </label>
-    </p>
-
-    <h3>Select Feature</h3>
-
-    <p>What feature are you trying to display?</p>
-
-    <select id="featuresSelect"></select>
-
-    <div class="range-setting">
-      <h3>Additional Settings</h3>
-
-      <p>Select the past versions you want to display</p>
-
-      <select id="pastSelect"></select>
-
-      <p>Select the future versions you want to display</p>
-
-      <select id="futureSelect"></select>
-    </div>
-
-    <div class="embed-config" style="display:none">
-      <h3>Include Script</h3>
-
-      <p>Include the following javascript file in your document.</p>
-
-      <pre
-        id="embedScript"
-      ><code>&lt;script type="module" src="https://caniuse-embed.vercel.app/embed.js"&gt;&lt;/script&gt;</code></pre>
-
-      <h3>Get the Embed Code</h3>
-
-      <p>Paste this snippet where you want the embed to be displayed:</p>
-
-      <pre id="embedCode"></pre>
-
-      <h4>Parameters</h4>
-
-      <p><code>data-feature="feature_name"</code>: Feature name</p>
-
-      <div class="range-attr">
-        <p><code>data-past="2"</code>: Show 2 versions back, range is 0 - 5</p>
-
-        <p><code>data-future="1"</code>: Show 1 version in the future, range is 0 - 3</p>
-      </div>
-
-      <p><code>data-theme="dark"</code>: Change the theme to <code>light / dark / auto</code>。</p>
-
-      <p>
-        <code>data-origin=""</code>: [Optional] Data source origin, e.g.: <code>https://caniuse-embed.vercel.app</code>.
-      </p>
-    </div>
-
-    <div id="output">
-      <h3>Embed Preview</h3>
-
-      <p class="ciu-embed">
-        <iframe class="ciu-embed-iframe" width="100%" height="330px"></iframe>
-      </p>
-    </div>
-  </main>
-</Layout>
-
-<script src="../scripts/home.ts"></script>
-<script src="../scripts/embed.ts"></script>
+<HomeTemplate lang="en-US" {locale} {bcdUpdatedDate} {ciuUpdatedDate} />
