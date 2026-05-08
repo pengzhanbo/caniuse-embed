@@ -14,7 +14,7 @@ export async function GET() {
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/json;charset=utf-8',
-      'Cache-Control': `no-cache,max-age=${import.meta.env?.DEV ? 0 : 3 * 24 * 60 * 60}`,
+      'Cache-Control': `public,max-age=${import.meta.env?.DEV ? 0 : 7 * 24 * 60 * 60}`,
     },
   })
 }
