@@ -16,6 +16,7 @@ export default defineConfig({
   },
   output: 'server',
   adapter: vercel(),
+
   integrations: [
     {
       name: 'ciu-embed-scripts',

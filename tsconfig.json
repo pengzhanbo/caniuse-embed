@@ -3,6 +3,6 @@
   "compilerOptions": {
     "verbatimModuleSyntax": true
   },
-  "include": [".astro/types.d.ts", "src", "scripts"],
-  "exclude": ["node_modules", "data/**", ".vercel"]
+  "include": [".astro/types.d.ts", "src/**/*", "scripts/**/*"],
+  "exclude": ["data/**", ".vercel", "dist/**"]
 }

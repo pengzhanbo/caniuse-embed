@@ -48,7 +48,6 @@ const support = status?.support
     <h1>
       <a href={data.url || 'javascript:void(0)'} target="_blank" set:html={featureTitle}></a>
     </h1>
-
     <div class="container">
       <span class="logo"></span>
       <div class="content">
@@ -68,7 +67,8 @@ const support = status?.support
         </div>
         <article>
           {description}
-          {reason ? <br /> + reason : ''}
+          {reason ? <br /> : null}
+          {reason ? reason : null}
         </article>
       </div>
     </div>
