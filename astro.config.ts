@@ -1,12 +1,23 @@
-import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import vercel from '@astrojs/vercel'
 import { defineConfig } from 'astro/config'
-import { transform } from 'esbuild'
+import { build } from 'rolldown'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const readEmbedFile = async () => await fs.readFile(path.join(__dirname, 'src/scripts/embed.ts'), 'utf-8')
+
+async function buildEmbedScript() {
+  const result = await build({
+    input: 'src/scripts/embed.ts',
+    cwd: __dirname,
+    write: false,
+    output: { format: 'esm', sourcemap: false, file: 'out.js', minify: true },
+    platform: 'browser',
+    treeshake: true,
+    tsconfig: true,
+  })
+  return result.output[0].code
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -24,10 +35,8 @@ export default defineConfig({
         'astro:server:setup': ({ server }) => {
           server.middlewares.use(async (req, res, next) => {
             if (req.url === '/embed.js') {
-              const source = await readEmbedFile()
               res.setHeader('Content-Type', 'text/javascript;charset=utf-8')
-              const transformed = await transform(source, { loader: 'ts' })
-              res.end(transformed.code)
+              res.end(await buildEmbedScript())
             }
             else {
               next()
@@ -39,18 +48,10 @@ export default defineConfig({
           vite.plugins.push({
             name: 'ciu-home-script-bundle',
             async buildEnd() {
-              const source = await readEmbedFile()
-              const transformed = await transform(source, {
-                loader: 'ts',
-                format: 'esm',
-                target: 'ES2020',
-                platform: 'browser',
-                minify: true,
-              })
               this.emitFile({
                 fileName: 'embed.js',
                 type: 'asset',
-                source: transformed.code,
+                source: await buildEmbedScript(),
               })
               console.log('Embed script bundle generated')
             },

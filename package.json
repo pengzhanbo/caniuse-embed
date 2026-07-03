@@ -20,11 +20,11 @@
     "astro": "^7.0.6",
     "caniuse-db": "^1.0.30001800",
     "choices.js": "^11.2.3",
-    "esbuild": "^0.28.1",
     "markdown-it": "^14.3.0",
     "markdown-it-link-attributes": "^4.0.1",
     "nanoid": "^5.1.16",
     "normalize.css": "^8.0.1",
+    "rolldown": "^1.1.4",
     "sharp": "^0.35.3",
     "typescript": "^6.0.3",
     "web-features": "^3.32.0"
