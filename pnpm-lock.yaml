@@ -27,7 +27,7 @@ importers:
         version: 8.0.10
       '@pengzhanbo/utils':
         specifier: ^3.10.0
-        version: 3.10.0
+        version: 3.11.0
       astro:
         specifier: ^7.2.0
         version: 7.2.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.2)(@vercel/functions@3.7.2)(tsx@4.23.10)(yaml@2.9.0)
@@ -923,8 +923,8 @@ packages:
       vue-eslint-parser:
         optional: true
 
-  '@pengzhanbo/utils@3.10.0':
-    resolution: {integrity: sha512-AY68WuXD85ZiHnMVsJEwEcnO917ctiW/kU+AisL2PfqfRIe2b2QV0Il9bHEsx4RecaQ8Ec5404TBTFX+KGud6A==}
+  '@pengzhanbo/utils@3.11.0':
+    resolution: {integrity: sha512-EUuj3hR9pmEMuZY429c0keqCgD919dcNrpS2XVsaiUPYgvFSU/BwMNb3tvyXNdsupNCRqvCytpdV1Vk61VF0Og==}
 
   '@pkgr/core@0.3.6':
     resolution: {integrity: sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA==}
@@ -4654,7 +4654,7 @@ snapshots:
       - typescript
       - vitest
 
-  '@pengzhanbo/utils@3.10.0': {}
+  '@pengzhanbo/utils@3.11.0': {}
 
   '@pkgr/core@0.3.6': {}
 
