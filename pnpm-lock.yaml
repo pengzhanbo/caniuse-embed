@@ -24,7 +24,7 @@ importers:
         version: 11.0.5(astro@7.2.0(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@26.1.2)(@vercel/functions@3.7.2)(tsx@4.23.10)(yaml@2.9.0))
       '@mdn/browser-compat-data':
         specifier: ^8.0.10
-        version: 8.0.10
+        version: 8.0.13
       '@pengzhanbo/utils':
         specifier: ^3.10.0
         version: 3.10.0
@@ -809,8 +809,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@mdn/browser-compat-data@8.0.10':
-    resolution: {integrity: sha512-JY21DqjGNZIZKTKSHFZ2M1bC1oWrAqN0uhzFvBe0kkItTbftsOkW/fC0Gwx7286Lsns8IayfIz157SUbQBM71g==}
+  '@mdn/browser-compat-data@8.0.13':
+    resolution: {integrity: sha512-jR1x+1UHDwYUBr2JLOuLucZGyAF7XphpxFbWQoUSwKgHt2zlMidfRSJ/0C3yC7vRBxMOjJF2edptu8kz0BGWrw==}
 
   '@napi-rs/wasm-runtime@1.1.6':
     resolution: {integrity: sha512-ZLv/JdUfkvOy9eCnnBaGfiO+XimbjebAeO+MRQqD/B+FR1tnRN0tpKSJHRbE8sFfS6aqsXZ67TQjfwfsxULVbg==}
@@ -4529,7 +4529,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@mdn/browser-compat-data@8.0.10': {}
+  '@mdn/browser-compat-data@8.0.13': {}
 
   '@napi-rs/wasm-runtime@1.1.6(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
     dependencies:
