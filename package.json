@@ -2,7 +2,7 @@
   "name": "caniuse-embed",
   "type": "module",
   "version": "1.0.0",
-  "packageManager": "pnpm@11.20.0",
+  "packageManager": "pnpm@11.25.0",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -14,26 +14,25 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
-    "@astrojs/vercel": "^11.0.5",
-    "@mdn/browser-compat-data": "^8.0.10",
-    "@pengzhanbo/utils": "^3.10.0",
-    "astro": "^7.2.0",
-    "caniuse-db": "^1.0.30001809",
-    "choices.js": "^11.2.3",
-    "markdown-it": "^15.0.0",
+    "@astrojs/vercel": "^11.0.8",
+    "@mdn/browser-compat-data": "^8.0.13",
+    "@pengzhanbo/utils": "^3.11.0",
+    "astro": "^7.2.9",
+    "caniuse-db": "^1.0.30001810",
+    "choices.js": "^11.2.4",
+    "markdown-it": "^15.0.1",
     "markdown-it-link-attributes": "^4.0.1",
     "nanoid": "^6.0.1",
     "normalize.css": "^8.0.1",
-    "rolldown": "^1.2.3",
-    "sharp": "^0.35.3",
+    "rolldown": "^1.2.6",
+    "sharp": "^0.35.4",
     "typescript": "6.0.3",
-    "web-features": "^3.34.3"
+    "web-features": "^3.36.0"
   },
   "devDependencies": {
-    "@pengzhanbo/eslint-config-astro": "^2.8.5",
-    "@types/markdown-it": "^14.1.2",
-    "@types/node": "^26.1.2",
-    "eslint": "^10.8.0",
-    "tsx": "^4.23.10"
+    "@pengzhanbo/eslint-config-astro": "^2.9.0",
+    "@types/node": "^26.4.0",
+    "eslint": "^10.9.1",
+    "tsx": "^4.23.13"
   }
 }
