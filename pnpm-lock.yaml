@@ -60,7 +60,7 @@ importers:
         version: 6.0.3
       web-features:
         specifier: ^3.36.0
-        version: 3.36.0
+        version: 3.38.0
     devDependencies:
       '@pengzhanbo/eslint-config-astro':
         specifier: ^2.9.0
@@ -3761,8 +3761,8 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
 
-  web-features@3.36.0:
-    resolution: {integrity: sha512-B5W9HbyXT76soRG7Fn3AELZkuDQpmpSxszSmJZLIPUHYxIGkufNz0vcoEhfqnUF1HAfaducWIBaaKuusq9Am2g==}
+  web-features@3.38.0:
+    resolution: {integrity: sha512-FfexTigrIL9tVr/JgX9kBlzIlMfBG4eD38crZQiJPIo46PJ3Qj8RVUM7zmpsozooq2ImHM7xiUY6gIv5mo/7rQ==}
 
   web-worker@1.5.0:
     resolution: {integrity: sha512-RiMReJrTAiA+mBjGONMnjVDP2u3p9R1vkcGz6gDIrOMT3oGuYwX2WRMYI9ipkphSuE5XKEhydbhNEJh4NY9mlw==}
@@ -7863,7 +7863,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  web-features@3.36.0: {}
+  web-features@3.38.0: {}
 
   web-worker@1.5.0: {}
 
