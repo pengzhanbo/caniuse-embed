@@ -2,7 +2,7 @@
   "name": "caniuse-embed",
   "type": "module",
   "version": "1.0.0",
-  "packageManager": "pnpm@11.25.0",
+  "packageManager": "pnpm@12.4.1",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
