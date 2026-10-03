@@ -14,7 +14,7 @@ const data = Astro.props.data
 
 {(data.usage) && (
   <small class="note">
-    Globals:
+    Globals:{' '}
     {data.usage.supported && <span class="y">{formatUsage(data.usage.supported)}</span>}
     {data.usage.supported && data.usage.partial ? ' + ' : ''}
     {data.usage.partial ? <span class="a">{formatUsage(data.usage.partial)}</span> : ''}
