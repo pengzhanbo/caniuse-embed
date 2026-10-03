@@ -1,6 +1,5 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import vercel from '@astrojs/vercel'
 import { defineConfig } from 'astro/config'
 import { build } from 'rolldown'
 
@@ -25,8 +24,6 @@ export default defineConfig({
   devToolbar: {
     enabled: false,
   },
-  output: 'server',
-  adapter: vercel(),
 
   integrations: [
     {

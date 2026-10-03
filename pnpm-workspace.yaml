@@ -5,11 +5,6 @@ trustPolicyExclude:
   - cached-factory
   - chokidar
   - nanoid
-  - '@vercel/functions'
-  - '@vercel/routing-utils'
-  - '@vercel/oidc'
-  - '@vercel/cli-config'
-  - '@vercel/cli-exec'
 
 shellEmulator: true
 
