@@ -188,7 +188,7 @@ importers:
         version: 7.3.5(@types/node@26.6.4)(tsx@4.23.15)(yaml@2.9.1)
       caniuse-db:
         specifier: ^1.0.30001814
-        version: 1.0.30001814
+        version: 1.0.30001815
       choices.js:
         specifier: ^11.2.4
         version: 11.2.4
@@ -1541,8 +1541,8 @@ packages:
     resolution: {integrity: sha512-+ys997U96po4Kx/ABpBCqhA9EuxJaQWDQg7295H4hBphv3IZg0boBKuwYpt4YXp6MZ5AmZQnU/tyMTlRpaSejg==}
     engines: {node: '>= 0.4'}
 
-  caniuse-db@1.0.30001814:
-    resolution: {integrity: sha512-y2/m5It24F8Dbu6NXxs3sghP/yqmIaF5LxxQX3W2n2yRl+iXsGAgPQoqHkchc559emJzo0OohhmArrq3tp1L7w==}
+  caniuse-db@1.0.30001815:
+    resolution: {integrity: sha512-sxwHqtoI0+CNqgHSws7VSs7fB5bHUjHA7wv6q/EA3HzxdRxQ2ySHD+bVVKyGNAOwBW6W9IFX2rQfZgwX1TUQgQ==}
 
   caniuse-lite@1.0.30001814:
     resolution: {integrity: sha512-/Uaf1lAzr59XcMpW0o96WoEfr+VXK2OX4U9AgFoiSHsVJ4HppnIFUjtYzsyDH2+tgANaQb2/oxYGwCPapN1FpA==}
@@ -4948,7 +4948,7 @@ snapshots:
       call-bind-apply-helpers: 1.0.2
       get-intrinsic: 1.3.0
 
-  caniuse-db@1.0.30001814: {}
+  caniuse-db@1.0.30001815: {}
 
   caniuse-lite@1.0.30001814: {}
 
