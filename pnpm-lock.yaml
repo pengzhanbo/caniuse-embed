@@ -215,7 +215,7 @@ importers:
         version: 6.0.3
       web-features:
         specifier: ^3.40.1
-        version: 3.40.1
+        version: 3.43.0
     devDependencies:
       '@pengzhanbo/eslint-config-astro':
         specifier: ^2.10.0
@@ -3580,8 +3580,8 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
 
-  web-features@3.40.1:
-    resolution: {integrity: sha512-HRdUYqZRNawtIEI39iKjk6E6g1yO/bct/8bFcD/O+bNGYsbG475PV80+HTrpkYOiZnoEaVSMu5Q/LTVwnBH5ag==}
+  web-features@3.43.0:
+    resolution: {integrity: sha512-nxisNw9bZc+q186ptMsJ/qRBuXH78h918eS6/CeKeGH28kK/1Qfyu/ETG2cSgYTPqvbGFQ9s/8n3XBdpBYv3DA==}
 
   which-boxed-primitive@1.1.1:
     resolution: {integrity: sha512-TbX3mj8n0odCBFVlY8AxkqcHASw3L60jIuF8jFP78az3C2YhmGvqbHBpAjTRH2/xqYunrJ9g1jSyjCjpoWzIAA==}
@@ -7341,7 +7341,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  web-features@3.40.1: {}
+  web-features@3.43.0: {}
 
   which-boxed-primitive@1.1.1:
     dependencies:
