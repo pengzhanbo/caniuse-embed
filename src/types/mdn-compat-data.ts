@@ -33,14 +33,14 @@ type BrowserEngine = 'Blink' | 'EdgeHTML' | 'Gecko' | 'Presto' | 'Trident' | 'We
  * 浏览器状态
  * via the `definition` "browser_status".
  */
-type BrowserStatus
-  = | 'retired' // 已不再支持
-    | 'deprecated' // 已废弃
-    | 'current' // 当前正式支持
-    | 'beta' // 测试中的新版本
-    | 'nightly' // 开发中的新版本
-    | 'esr' // 维护中的旧版本
-    | 'planned' // 计划支持
+type BrowserStatus =
+  | 'retired' // 已不再支持
+  | 'deprecated' // 已废弃
+  | 'current' // 当前正式支持
+  | 'beta' // 测试中的新版本
+  | 'nightly' // 开发中的新版本
+  | 'esr' // 维护中的旧版本
+  | 'planned' // 计划支持
 
 /**
  * 浏览器状态信息
@@ -122,10 +122,10 @@ export type SupportBlock = Partial<Record<BrowserName, SupportStatement>>
 /**
  * 用于 `definition` "support_statement".
  */
-export type SupportStatement
-  = | SimpleSupportStatement
-    | [SimpleSupportStatement, SimpleSupportStatement, ...SimpleSupportStatement[]]
-    | 'mirror'
+export type SupportStatement =
+  | SimpleSupportStatement
+  | [SimpleSupportStatement, SimpleSupportStatement, ...SimpleSupportStatement[]]
+  | 'mirror'
 
 /**
  * 特性的兼容信息

@@ -167,14 +167,14 @@ export interface CaniuseCats {
   'SVG': string[]
 }
 
-export type CaniuseStats
-  = | 'n' // 不支持
-    | 'a' // 仅部分支持，即表示该特性仅部分可用
-    | 'u' // 未知
-    | 'y' // 支持
-    | 'x' // 支持，但是需要前缀
-    | 'd' // 通过浏览器标识启用
-    | `${'a' | 'x' | 'd'} #${number}` // 仅部分支持，后面 `#1` 表示关联的 notes_by_num 序号
+export type CaniuseStats =
+  | 'n' // 不支持
+  | 'a' // 仅部分支持，即表示该特性仅部分可用
+  | 'u' // 未知
+  | 'y' // 支持
+  | 'x' // 支持，但是需要前缀
+  | 'd' // 通过浏览器标识启用
+  | `${'a' | 'x' | 'd'} #${number}` // 仅部分支持，后面 `#1` 表示关联的 notes_by_num 序号
 
 export type CaniuseAgents = Record<Browser, CaniuseBrowserAgent>
 
