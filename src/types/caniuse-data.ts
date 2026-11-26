@@ -167,6 +167,13 @@ export interface CaniuseCats {
   'SVG': string[]
 }
 
+/**
+ * 特性的支持状态标识
+ *
+ * 注意：caniuse 原始数据中的形态是空格分隔的字符串，例如 `'a x #1 #3'`，
+ * 其中 `#n` 是 `notes_by_num` 的引用。本项目在转换阶段会去掉 note 标记，
+ * 因此这里的类型只包含单个状态字符。
+ */
 export type CaniuseStats =
   | 'n' // 不支持
   | 'a' // 仅部分支持，即表示该特性仅部分可用
@@ -174,7 +181,7 @@ export type CaniuseStats =
   | 'y' // 支持
   | 'x' // 支持，但是需要前缀
   | 'd' // 通过浏览器标识启用
-  | `${'a' | 'x' | 'd'} #${number}` // 仅部分支持，后面 `#1` 表示关联的 notes_by_num 序号
+  | 'p' // 需要 polyfill（caniuse 旧版本使用，转换时按不支持处理）
 
 export type CaniuseAgents = Record<Browser, CaniuseBrowserAgent>
 

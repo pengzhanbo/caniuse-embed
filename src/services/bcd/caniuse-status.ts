@@ -1,82 +1,96 @@
 import type { CaniuseStats, SimpleSupportStatement } from '../../types'
-import { memoize, uniq } from '@pengzhanbo/utils'
 import { FEATURE_IDENTIFIERS } from '../../common/constants'
 import { compareVersion } from '../../utils/compare-version'
-import { normalizeVersion } from './normalize-version'
+import { normalizeVersion } from '../../utils/normalize-version'
 
-const memoizeCompareVersion = memoize(compareVersion)
+type StatsCache = WeakMap<SimpleSupportStatement[], Map<string, CaniuseStats[]>>
 
-const versionPattern = /^\d+$|^\d+\.\d+$|^\d+\.\d+\.\d+$/
-
-const statsCache = new Map<string, CaniuseStats[]>()
-
-function getCacheKey(supports: SimpleSupportStatement[], version: string): string {
-  const first = supports[0]
-  const last = supports[supports.length - 1]
-  return `${supports.length}:${first?.version_added}:${last?.version_added}:${version}`
-}
+/**
+ * 以 support 数组的引用作为缓存键。
+ */
+let statsCache: StatsCache = new WeakMap()
 
 export function clearStatsCache(): void {
-  statsCache.clear()
+  statsCache = new WeakMap()
+}
+
+/**
+ * 判断某条 support 语句是否覆盖指定版本
+ *
+ * 数组语义是「按优先级描述的多个版本区间」，对某个具体版本
+ * 应当取数组中第一个覆盖该版本的语句，而不是把所有命中语句的状态取并集。
+ */
+function coversVersion(statement: SimpleSupportStatement, version: string): boolean {
+  // `version_added: false` 表示该浏览器明确不支持此特性
+  if (statement.version_added === false)
+    return true
+
+  const added = normalizeVersion(statement.version_added)
+  if (added && compareVersion(added, version) > 0)
+    return false
+
+  const removed = statement.version_removed
+    ? normalizeVersion(statement.version_removed)
+    : ''
+  if (removed && compareVersion(version, removed) >= 0)
+    return false
+
+  return true
+}
+
+function toStats(statement: SimpleSupportStatement): CaniuseStats[] {
+  // 明确不支持
+  if (statement.version_added === false)
+    return [FEATURE_IDENTIFIERS.unsupported]
+
+  const stats: CaniuseStats[] = []
+  const flagged = Boolean(statement.flags?.length)
+
+  // flag 未开启时特性不可用，同时标注「可通过浏览器标识启用」
+  if (flagged)
+    stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
+
+  // 别名实现说明标准名称不可用，按部分支持处理
+  if (statement.partial_implementation || statement.alternative_name)
+    stats.push(FEATURE_IDENTIFIERS.partial)
+
+  // 需要前缀时，仅在支持前缀写法的引擎中可用
+  if (statement.prefix)
+    stats.push(FEATURE_IDENTIFIERS.prefixed)
+
+  if (stats.length === 0)
+    stats.push(FEATURE_IDENTIFIERS.supported)
+
+  return stats
+}
+
+function hasValidStatement(supports: SimpleSupportStatement[]): boolean {
+  return supports.some(statement => Boolean(statement.version_added))
 }
 
 export function getCaniuseStats(supports: SimpleSupportStatement[], version: string): CaniuseStats[] {
-  const cacheKey = getCacheKey(supports, version)
-  const cached = statsCache.get(cacheKey)
+  if (!supports?.length)
+    return [FEATURE_IDENTIFIERS.unknown]
+
+  let byVersion = statsCache.get(supports)
+  const cached = byVersion?.get(version)
   if (cached)
     return cached
 
-  const support = supports[0]!
+  const statement = supports.find(item => coversVersion(item, version))
 
-  if (!support) {
-    const result = [FEATURE_IDENTIFIERS.unknown]
-    statsCache.set(cacheKey, result)
-    return result
+  // 没有任何语句覆盖该版本时，通常是「尚未实现」（早于首个 version_added）
+  // 或「已被移除」（晚于 version_removed 且没有后续语句），都应展示为不支持。
+  // 只有数据本身缺失（version_added 为空）才是真正的未知。
+  const result = statement
+    ? Array.from(new Set(toStats(statement)))
+    : [hasValidStatement(supports) ? FEATURE_IDENTIFIERS.unsupported : FEATURE_IDENTIFIERS.unknown]
+
+  if (!byVersion) {
+    byVersion = new Map()
+    statsCache.set(supports, byVersion)
   }
+  byVersion.set(version, result)
 
-  if (support.version_added === false) {
-    const result = [FEATURE_IDENTIFIERS.unsupported]
-    statsCache.set(cacheKey, result)
-    return result
-  }
-
-  const stats: CaniuseStats[] = []
-  const currentVersion = normalizeVersion(version)
-  const added = normalizeVersion(support.version_added)
-
-  if (!versionPattern.test(currentVersion) || memoizeCompareVersion(added, currentVersion) <= 0) {
-    if (support.flags?.length || support.partial_implementation || support.alternative_name) {
-      support.flags?.length && stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
-      support.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)
-      support.partial_implementation && stats.push(FEATURE_IDENTIFIERS.partial)
-    }
-    else {
-      stats.push(FEATURE_IDENTIFIERS.supported)
-    }
-  }
-
-  for (const extra of supports.slice(1)) {
-    if (extra.version_added === false)
-      continue
-    const added = normalizeVersion(extra.version_added)
-    const removed = normalizeVersion(extra.version_removed || '')
-    if (memoizeCompareVersion(added, version) <= 0
-      && (removed ? memoizeCompareVersion(removed, currentVersion) > 0 : true)) {
-      if (extra.flags?.length || extra.partial_implementation || extra.alternative_name) {
-        extra.flags?.length && stats.push(FEATURE_IDENTIFIERS.unsupported, FEATURE_IDENTIFIERS.flagged)
-        extra.prefix && stats.push(FEATURE_IDENTIFIERS.prefixed)
-        extra.partial_implementation && stats.push(FEATURE_IDENTIFIERS.partial)
-      }
-      else {
-        stats.push(FEATURE_IDENTIFIERS.supported)
-      }
-    }
-  }
-
-  if (stats.length === 0)
-    stats.push(FEATURE_IDENTIFIERS.unsupported)
-
-  const result = uniq(stats)
-  statsCache.set(cacheKey, result)
   return result
 }

@@ -1,13 +1,15 @@
 import type { CaniuseStats } from '../types'
 
-export const API = {
-  // @mdn/browser-compat-data
-  bcd: 'https://cdn.jsdelivr.net/npm/@mdn/browser-compat-data',
-  // Fyrd/caniuse
-  caniuse: 'https://cdn.jsdelivr.net/gh/Fyrd/caniuse@master/fulldata-json/data-2.0.json',
-  // web-features
-  baseline: 'https://cdn.jsdelivr.net/npm/web-features/data.json',
-}
+/**
+ * 站点域名
+ *
+ * 默认域名是 `caniuse-embed.vercel.app`；
+ * `caniuse.pengzhanbo.cn` 是同一站点的镜像域名，服务于网络无法访问
+ * `vercel.app` 的用户（主要是国内用户），二者内容完全一致。
+ */
+export const SITE_ORIGIN = 'https://caniuse-embed.vercel.app'
+export const SITE_HOST = 'caniuse-embed.vercel.app'
+export const SITE_URL = `${SITE_ORIGIN}/`
 
 export const BROWSERS = [
   'ie',

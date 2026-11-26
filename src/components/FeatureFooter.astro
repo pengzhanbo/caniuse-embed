@@ -1,4 +1,5 @@
 ---
+import { SITE_HOST, SITE_URL } from '../common/constants'
 import { formatDate } from '../utils/format-date'
 
 interface Props {
@@ -22,6 +23,6 @@ if (lastUpdated) {
   {source === 'mdn' && (<a href="https://github.com/mdn/browser-compat-data" target="_blank" rel="noopener noreferrer" aria-label="MDN">MDN</a>)}
   { source && ' | ' }
   { source && <span>embed: </span> }
-  { source && <a class="embed-link" href="https://caniuse-embed.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="caniuse-embed">caniuse-embed.vercel.app</a> }
+  { source && <a class="embed-link" href={SITE_URL} target="_blank" rel="noopener noreferrer" aria-label="caniuse-embed">{SITE_HOST}</a> }
   { updated && <time datetime={dateStr}><span>updated: </span>{updated}</time> }
 </footer>

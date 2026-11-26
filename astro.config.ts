@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'astro/config'
@@ -40,19 +41,11 @@ export default defineConfig({
             }
           })
         },
-        'astro:build:setup': ({ vite }) => {
-          vite.plugins ??= []
-          vite.plugins.push({
-            name: 'ciu-home-script-bundle',
-            async buildEnd() {
-              this.emitFile({
-                fileName: 'embed.js',
-                type: 'asset',
-                source: await buildEmbedScript(),
-              })
-              console.log('Embed script bundle generated')
-            },
-          })
+        // 只在产物生成后打包一次
+        // （`astro:build:setup` 会对 client / SSR 两个构建各触发一次，导致重复打包）
+        'astro:build:done': async ({ dir, logger }) => {
+          await fs.writeFile(new URL('embed.js', dir), await buildEmbedScript())
+          logger.info('embed.js generated')
         },
       },
     },

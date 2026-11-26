@@ -40,7 +40,7 @@ export async function getStaticPaths() {
 const { feature } = Astro.params
 const { data, bcdUpdated, ciuUpdated, status } = Astro.props
 
-const source = feature.startsWith('mdn') ? 'mdn' : 'caniuse'
+const source = data.source
 const lastUpdated = source === 'mdn' ? bcdUpdated : ciuUpdated
 const supports = data.supports
 ---
@@ -48,7 +48,7 @@ const supports = data.supports
 <Layout title={data.title} {source}>
   <input class="feature_id" type="hidden" hidden value={feature} />
 
-  <main class="main feature past_1 past_2 past_3 past_4 past_5 future_1 future_2 future_3">
+  <main class="main feature past_1 past_2 future_1">
     <FeatureHeader {data} {status} />
 
     <div class="main">

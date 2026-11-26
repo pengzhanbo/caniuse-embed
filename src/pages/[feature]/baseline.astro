@@ -5,6 +5,7 @@ import { getBaselineStatus } from '../../services/get-baseline-status'
 import { getFeaturesList } from '../../services/get-feature-list'
 import { formatId } from '../../utils/format-id'
 import { markdownRender } from '../../utils/markdown'
+import { safeHttpUrl } from '../../utils/safe-url'
 
 import '../../styles/globals.css'
 import '../../styles/baseline.css'
@@ -15,7 +16,7 @@ export interface Params {
 
 export interface Props {
   data: FeatureData
-  status: FeatureStatus
+  status: FeatureStatus | undefined
 }
 
 export const prerender = true
@@ -35,9 +36,11 @@ export async function getStaticPaths() {
 const { feature } = Astro.params
 const { data, status } = Astro.props
 
-const source = feature.startsWith('mdn') ? 'mdn' : 'caniuse'
+const source = data.source
 
-const featureTitle = markdownRender(data.title, true)
+// 标题处于 `<a>` 内部，不能再嵌套链接
+const featureTitle = markdownRender(data.title, true, { links: false })
+const url = safeHttpUrl(data.url)
 const { type, title, label, description, reason } = getBaselineStatus(status, data)
 const support = status?.support
 ---
@@ -46,7 +49,9 @@ const support = status?.support
   <input class="feature_id" type="hidden" hidden value={feature} />
   <main class:list={['main', 'baseline', type]}>
     <h1>
-      <a href={data.url || 'javascript:void(0)'} target="_blank" set:html={featureTitle}></a>
+      {url
+        ? <a href={url} target="_blank" rel="noopener noreferrer" set:html={featureTitle}></a>
+        : <span set:html={featureTitle}></span>}
     </h1>
     <div class="container">
       <span class="logo"></span>

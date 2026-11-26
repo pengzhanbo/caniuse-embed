@@ -1,7 +1,8 @@
 # CanIUse Embed
 
-Embed up-to-date data from [caniuse.com](https://caniuse.com/) and
-[mozilla's browser compat data](https://github.com/mdn/browser-compat-data).
+Embed up-to-date data from [caniuse.com](https://caniuse.com/),
+[mozilla's browser compat data](https://github.com/mdn/browser-compat-data) and
+[web-platform-dx/web-features](https://github.com/web-platform-dx/web-features).
 
 Displays feature support data for multiple versions of the 10 major browsers.
 
@@ -19,10 +20,17 @@ Include the following javascript file in your document.
 <script type="module" src="https://caniuse-embed.vercel.app/embed.js"></script>
 ```
 
+For users in China, `vercel.app` may be unreachable. The same site is also served from a
+mirror domain, which can be used instead:
+
+```html
+<script type="module" src="https://caniuse.pengzhanbo.cn/embed.js"></script>
+```
+
 Paste this snippet where you want the embed `caniuse` to be displayed:
 
 ```html
-<p class="ciu-embed" data-feature="{feature}" data-past="2" data-future="3"></p>
+<p class="ciu-embed" data-feature="{feature}" data-past="2" data-future="1"></p>
 ```
 
 Or use the following snippet for `baseline` data:
@@ -30,6 +38,19 @@ Or use the following snippet for `baseline` data:
 ```html
 <p class="ciu-baseline-embed" data-feature="{feature}"></p>
 ```
+
+### Parameters
+
+| Attribute | Description | Default |
+| --- | --- | --- |
+| `data-feature` | Feature id, e.g. `css-grid` / `mdn-css_properties_z-index` | - |
+| `data-past` | Number of past versions to display, `0 - 5` | `2` |
+| `data-future` | Number of future versions to display, `0 - 3` | `1` |
+| `data-theme` | `light` / `dark` / `auto` | `auto` |
+| `data-origin` | Optional data source origin, must be an absolute `http(s)` URL | `https://caniuse-embed.vercel.app` |
+
+`embed.js` is a bundled module script without top-level imports, so it also works
+when the `type="module"` attribute is omitted.
 
 ## Example
 
@@ -45,15 +66,47 @@ In the past, I often embedded CanIUse data in my technical documents using [http
 
 Therefore, I decided to redevelop using [Astro](https://astro.build/) and deploy to [Vercel](https://vercel.com/).
 
-By using **Astro** SSR, a completely independent static page is generated for each feature without requesting any data, and each page is no more than 20kb in size!
+By using **Astro** static site generation, a completely independent static page is generated for each feature without requesting any data, and each page is around 12–16 KB in size!
 
-Meanwhile, using Github Actions to trigger **Vercel**'s **deployment hooks** every weekend, regenerating new pages and caching them as static files every 7 days to ensure data timeliness.
+Meanwhile, a Github Actions cron job triggers the **Vercel** deployment hook every weekend, regenerating pages so that the data stays up to date.
+
+## Development
+
+```bash
+pnpm install
+pnpm dev      # start dev server
+pnpm gendata  # regenerate data/cached.json from remote data
+pnpm test     # run unit tests (vitest)
+pnpm check:data # data sanity assertions against the installed datasets
+pnpm check    # astro check (type check)
+pnpm lint     # eslint
+pnpm build    # astro check + astro build
+```
+
+Data sources:
+
+- `@mdn/browser-compat-data` (npm)
+- `caniuse-db` (npm, `fulldata-json/data-2.0.json`)
+- `web-features` (npm)
+
+Production builds always use the **latest published version** of each package: the version is
+resolved through jsDelivr before fetching, so the weekly automated build always ships the
+freshest compatibility data (`@master` style moving branches are avoided). The resolved
+versions are printed in the build log.
+
+Local development reads the packages installed in `node_modules` (fast, works offline).
+To reproduce an older build, pin the versions explicitly:
+
+```bash
+CIU_BCD_VERSION=8.1.11 CIU_CANIUSE_VERSION=1.0.30001828 CIU_WEBFEATURES_VERSION=3.48.0 pnpm build
+```
 
 ## Thanks
 
 - [mdn-browser-compat-data](https://github.com/mdn/browser-compat-data)
 - [Fyrd/caniuse](https://github.com/Fyrd/caniuse)
 - [web-platform-dx/web-features](https://github.com/web-platform-dx/web-features)
+- [ireade/caniuse-embed](https://github.com/ireade/caniuse-embed)
 
 ## LICENSE
 

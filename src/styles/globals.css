@@ -76,7 +76,7 @@ h2 {
 
 code {
   padding: 1px 4px;
-  font-family: Inconsolata, monospace;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   background-color: var(--code-bg);
   transition: background .25s ease;
 }
@@ -85,4 +85,17 @@ code {
 [hidden],
 .hidden {
   display: none;
+}
+
+/* 仅供屏幕阅读器的文本 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }

@@ -17,7 +17,7 @@ export function zipFeatureSupports(
     }
   }
 
-  return PERIODS.map(period => [period, map[period]!] as const)
+  return PERIODS.map(period => [period, map[period] ?? []] as const)
     // 过滤掉没有支持情况的版本
-    .filter(([, periods]) => !periods.every(period => !period.version[0]))
+    .filter(([, periods]) => periods.length > 0 && !periods.every(period => !period.version?.[0]))
 }

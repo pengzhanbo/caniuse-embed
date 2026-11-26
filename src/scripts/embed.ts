@@ -8,6 +8,12 @@
   const style = (h: number) => `display:block;width:100%;height:${h}px;border:none;border-radius:0;`
   const qs = ['script[src*="caniuse"][src*="/embed.js"]', 'script[src*="/embed.js"]']
 
+  // 无法从 script 标签推导地址时的兜底数据源（站点默认域名）
+  // 国内镜像：https://caniuse.pengzhanbo.cn
+  const DEFAULT_ORIGIN = 'https://caniuse-embed.vercel.app'
+  // 嵌入内容的高度上限，避免异常消息把宿主页面撑高
+  const MAX_HEIGHT = 4000
+
   const origin = getEmbedOrigin()
 
   /**
@@ -33,55 +39,100 @@
 
   function onmessage(ev: MessageEvent): void {
     const data = parseData(ev.data)
-    const { type, payload = {} } = data
-    if (type === ciu) {
-      const embeds = $$(ce)
-      for (const embed of embeds) {
-        if (payload[ft] === attr(embed, ft) && payload[m] === attr(embed, m)) {
-          const iframe = $(`.${cei}`, embed) as HTMLIFrameElement
-          if (iframe)
-            iframe.style.height = `${Math.ceil(payload.height)}px`
-        }
-      }
+    if (!data || typeof data !== 'object' || data.type !== ciu)
+      return
+
+    const payload = data.payload && typeof data.payload === 'object' ? data.payload : {}
+    const height = Number(payload.height)
+    if (!Number.isFinite(height) || height <= 0)
+      return
+
+    for (const embed of $$(ce)) {
+      const iframe = $(`.${cei}`, embed) as HTMLIFrameElement | null
+      if (!iframe)
+        continue
+      // 只接受来自本组件 iframe 的消息，防止任意窗口伪造高度
+      if (ev.source && ev.source !== iframe.contentWindow)
+        continue
+      if (ev.origin && ev.origin !== getOrigin(iframe.src))
+        continue
+      if (payload[ft] !== attr(embed, ft) || payload[m] !== attr(embed, m))
+        continue
+
+      iframe.style.height = `${Math.min(Math.ceil(height), MAX_HEIGHT)}px`
+      return
     }
   }
 
   function observer(embed: Element, iframe: HTMLIFrameElement) {
     if (typeof window.MutationObserver === 'undefined')
       return
-    const obs = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        if (mutation.type === 'attributes') {
-          const source = genSource(embed)
-          if (source)
-            iframe.src = source
-        }
-      }
+    const obs = new MutationObserver(() => {
+      const source = genSource(embed)
+      // 只有真正影响显示的属性变化才重载 iframe
+      if (source && source !== iframe.src)
+        iframe.src = source
     })
-    obs.observe(embed, { attributes: true })
+    obs.observe(embed, {
+      attributes: true,
+      attributeFilter: [`data-${ft}`, `data-${p}`, `data-${f}`, `data-${t}`, 'data-origin'],
+    })
   }
 
   /**
    * 获取 embed.js 所在数据源
-   * 对于国内的用户，使用 caniuse.pengzhanbo.cn 作为替代，解决 vercel.app 网站无法访问的问题
+   *
+   * 默认域名是 caniuse-embed.vercel.app，国内镜像域名是 caniuse.pengzhanbo.cn，
+   * 两者内容一致，直接使用 script 标签上的地址即可（无需写死域名）。
    */
-  function getEmbedOrigin() {
-    const currentScript = (document.currentScript || $(qs[0]!) || $(qs[1]!)) as HTMLScriptElement
-    if (currentScript) {
-      const src = currentScript.src
-      if (src) {
-        const source = new URL(src)
-        if (source.pathname.includes('/embed.js')) {
-          return source.origin
-        }
+  function getEmbedOrigin(): string {
+    const candidates = [
+      document.currentScript as HTMLScriptElement | null,
+      $(qs[0]!) as HTMLScriptElement | null,
+      $(qs[1]!) as HTMLScriptElement | null,
+    ]
+
+    for (const script of candidates) {
+      const src = script?.src
+      if (!src)
+        continue
+      try {
+        const url = new URL(src, location.href)
+        if (url.pathname.includes('/embed.js'))
+          return url.origin
       }
-      return 'https://caniuse.pengzhanbo.cn'
+      catch {}
     }
-    return ''
+
+    return DEFAULT_ORIGIN
+  }
+
+  function getOrigin(src: string): string {
+    try {
+      return new URL(src, location.href).origin
+    }
+    catch {
+      return ''
+    }
+  }
+
+  function resolveOrigin(embed: Element): string {
+    const custom = attr(embed, 'origin').trim()
+    if (!custom)
+      return origin
+
+    try {
+      const url = new URL(custom, location.href)
+      if (url.protocol === 'https:' || url.protocol === 'http:')
+        return url.origin
+    }
+    catch {}
+
+    return origin
   }
 
   function genSource(embed: Element) {
-    const feature = attr(embed, ft)
+    const feature = attr(embed, ft).trim()
     if (!feature)
       return ''
 
@@ -93,19 +144,24 @@
     const params = [p, f, t]
       .map(k => [k, attr(embed, k)])
       .filter(([, v]) => v)
-      .map(([k, v]) => `${k}=${v}`)
+      .map(([k, v]) => `${k}=${encodeURIComponent(v!)}`)
       .join('&')
 
-    return `${attr(embed, 'origin') || origin}/${feature}${isBaseline ? '/baseline' : ''}#${m}=${meta}${params ? `&${params}` : ''}`
+    return `${resolveOrigin(embed)}/${encodeURIComponent(feature)}${isBaseline ? '/baseline' : ''}#${m}=${meta}${params ? `&${params}` : ''}`
   }
 
   function createIframe(embed: Element, source: string) {
     const iframe = document.createElement('iframe') as HTMLIFrameElement
     const isBaseline = embed.classList.contains(cbe)
+    const feature = attr(embed, ft)
     iframe.src = source
     iframe.className = cei
+    iframe.title = isBaseline
+      ? `Baseline support for ${feature}`
+      : `Browser support for ${feature}`
+    iframe.loading = 'lazy'
     iframe.style.cssText = style(isBaseline ? 150 : 350)
-    iframe.allow = 'fullscreen'
+    iframe.setAttribute('allow', 'fullscreen')
     embed.appendChild(iframe)
     return iframe
   }
