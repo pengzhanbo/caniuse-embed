@@ -1,8 +1,6 @@
 /**
  * https://caniuse-embed.vercel.app/{feature}/baseline?meta={meta}&theme={theme}
  *
- * https://caniuse.pengzhanbo.cn/{feature}?meta={meta}&theme={theme}
- *
  * feature: string
  * meta: string -  uuid
  * theme: optional string - light /dark / auto

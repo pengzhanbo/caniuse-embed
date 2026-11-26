@@ -35,6 +35,9 @@ function computedGlobalUsage(agents: CaniuseAgents, device: Device) {
 
 function computedUsageWithDevice(support: SupportBlock, agents: CaniuseAgents, browsers: Browsers, device: Device): FeatureUsage | undefined {
   const { browserList, total } = globalUsages[device]
+  if (!total)
+    return undefined
+
   let supported = 0
   let partial = 0
   for (const browser of browserList) {
@@ -47,6 +50,8 @@ function computedUsageWithDevice(support: SupportBlock, agents: CaniuseAgents, b
 
     for (const { version, global_usage } of agent.version_list) {
       const stats = getCaniuseStats(supports, version)
+      if (stats.includes(FEATURE_IDENTIFIERS.flagged))
+        continue
       if (stats.includes(FEATURE_IDENTIFIERS.partial))
         partial = decimalAdd(partial, global_usage)
       else if (stats.includes(FEATURE_IDENTIFIERS.supported))

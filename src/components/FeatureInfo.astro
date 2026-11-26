@@ -10,27 +10,38 @@ interface Props {
 }
 
 const data = Astro.props.data
+const usage = data.usage
+const usageLabel = usage
+  ? [
+      `Globals: ${formatUsage(usage.total)} of all users can use this feature`,
+      `${formatUsage(usage.supported)} fully supported`,
+      `${formatUsage(usage.partial)} partially supported`,
+    ].join(', ')
+  : ''
 ---
 
-{(data.usage) && (
+{usage && (
   <small class="note">
-    Globals:{' '}
-    {data.usage.supported && <span class="y">{formatUsage(data.usage.supported)}</span>}
-    {data.usage.supported && data.usage.partial ? ' + ' : ''}
-    {data.usage.partial ? <span class="a">{formatUsage(data.usage.partial)}</span> : ''}
-    {data.usage.total && data.usage.partial ? ` = ${formatUsage(data.usage.total)}` : ''}
+    <span class="sr-only">{usageLabel}</span>
+    <span aria-hidden="true">
+      Globals:{' '}
+      {usage.supported && <span class="y">{formatUsage(usage.supported)}</span>}
+      {usage.supported && usage.partial ? ' + ' : ''}
+      {usage.partial ? <span class="a">{formatUsage(usage.partial)}</span> : ''}
+      {usage.total && usage.partial ? ` = ${formatUsage(usage.total)}` : ''}
+    </span>
   </small>
 )}
 
-<div class="legend">
-  <div class="y" aria-label="Supported" title="Support">&#x2713;</div>
-  <div class="n" aria-label="Not Supported" title="Not Support">&#x2717;</div>
-  {data.unknown && (<div class="u" aria-label="Unknown Support" title="Unknown Support">?</div>)}
+<div class="legend" aria-label="Legend">
+  <div class="y" title="Support">&#x2713;<span class="sr-only">Supported</span></div>
+  <div class="n" title="Not Support">&#x2717;<span class="sr-only">Not supported</span></div>
+  {data.unknown && (<div class="u" title="Unknown Support">?<span class="sr-only">Unknown support</span></div>)}
   <div class="a">Partial support</div>
   {data.prefixed && <div class="x">Prefixed</div>}
   {data.flag && (
     <div class="d" id="legendD">
-      <Image src={FlagImg} alt="Behind a browser flags" />
+      <Image src={FlagImg} alt="" aria-hidden="true" />
       Behind a Flag
     </div>
   )}

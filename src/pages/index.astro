@@ -1,4 +1,5 @@
 ---
+import { SITE_ORIGIN } from '../common/constants'
 import HomeTemplate from '../components/HomeTemplate.astro'
 import { getFeaturesList } from '../services/get-feature-list'
 import { formatDate } from '../utils/format-date'
@@ -10,9 +11,9 @@ const [bcdUpdatedDate] = formatDate(bcdUpdated)
 const [ciuUpdatedDate] = formatDate(ciuUpdated)
 
 const locale = {
-  description: `Embed up-to-date data from <a href="https://caniuse.com/" target="_blank">caniuse.com</a>, <a href="https://github.com/mdn/browser-compat-data" target="_blank">mozilla's browser compat data</a> and <a href="https://github.com/web-platform-dx/web-features" target="_blank">web-platform-dx/web-features</a>. Displays feature support data for multiple versions of the 10 major browsers. Configurable, reliable, and fully responsive.`,
-  madeWith: `Made with <a href="https://astro.build/" target="_blank">Astro</a> by <a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> .`,
-  deployWith: `Deloy with <a href="https://vercel.com/" target="_blank">Vercel</a>.`,
+  description: `Embed up-to-date data from <a href="https://caniuse.com/" target="_blank" rel="noopener noreferrer">caniuse.com</a>, <a href="https://github.com/mdn/browser-compat-data" target="_blank" rel="noopener noreferrer">mozilla's browser compat data</a> and <a href="https://github.com/web-platform-dx/web-features" target="_blank" rel="noopener noreferrer">web-platform-dx/web-features</a>. Displays feature support data for multiple versions of the 10 major browsers. Configurable, reliable, and fully responsive.`,
+  madeWith: `Made with <a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> by <a href="https://github.com/pengzhanbo" target="_blank" rel="noopener noreferrer">@pengzhanbo</a> .`,
+  deployWith: `Deloy with <a href="https://vercel.com/" target="_blank" rel="noopener noreferrer">Vercel</a>.`,
   canIUseUpdated: 'Can I Use Data updated:',
   bcdUpdated: 'Browser Compat Data updated:',
   examples: 'Examples',
@@ -35,11 +36,11 @@ const locale = {
   getEmbedCodeDesc: 'Paste this snippet where you want the embed to be displayed:',
   parameters: 'Parameters',
   featureName: 'Feature name',
-  pastDesc: 'Show 2 versions back, range is 0 - 5',
-  futureDesc: 'Show 1 version in the future, range is 0 - 3',
+  pastDesc: 'Show 2 versions back, range is 0 - 5 (default: 2)',
+  futureDesc: 'Show 1 version in the future, range is 0 - 3 (default: 1)',
   themeDesc: 'Change the theme to light / dark / auto.',
   originDesc: '[Optional] Data source origin, e.g.:',
-  originExample: 'https://caniuse-embed.vercel.app',
+  originExample: SITE_ORIGIN,
   embedPreview: 'Embed Preview',
 }
 ---

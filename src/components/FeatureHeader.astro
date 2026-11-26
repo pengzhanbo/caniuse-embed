@@ -1,6 +1,7 @@
 ---
 import type { FeatureData, FeatureStatus } from '../types'
 import { markdownRender } from '../utils/markdown'
+import { safeHttpUrl } from '../utils/safe-url'
 import FeatureBaseline from './FeatureBaseline.astro'
 import IconExternalLink from './icons/ExternalLink.astro'
 
@@ -11,16 +12,22 @@ interface Props {
 
 const data = Astro.props.data
 const status = Astro.props.status
-const title = markdownRender(data.title, true)
+// 标题处于 `<a>` 内部，不能再嵌套链接
+const title = markdownRender(data.title, true, { links: false })
 const description = data.description ? markdownRender(data.description) : ''
+const url = safeHttpUrl(data.url)
 ---
 
 <header class="header">
   <h1 class="title">
-    <a href={data.url || 'javascript:void(0)'} target={data.url ? '_blank' : undefined}>
-      <span class="title" set:html={title}></span>
-      {data.url && <IconExternalLink />}
-    </a>
+    {url
+      ? (
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          <span class="title" set:html={title}></span>
+          <IconExternalLink />
+        </a>
+        )
+      : <span class="title" set:html={title}></span>}
   </h1>
   <FeatureBaseline {status} {data} />
   <div class="description" set:html={description}></div>

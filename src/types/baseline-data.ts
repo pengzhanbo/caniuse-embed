@@ -133,7 +133,6 @@ export interface Status {
    * 最近引入该功能的浏览器版本
    */
   support: BaselineSupport
-  [property: string]: any
 }
 
 /**

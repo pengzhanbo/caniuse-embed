@@ -1,5 +1,5 @@
 ---
-import type { FeatureSupport } from '../types'
+import type { CaniuseStats, FeatureSupport } from '../types'
 import { BROWSERS, BROWSERS_NAME } from '../common/constants'
 import { zipFeatureSupports } from '../services/zip-feature-supports'
 import { formatUsage } from '../utils/format-usage'
@@ -36,23 +36,51 @@ function fontSize(version: [string] | [string, string]): string {
     return `${styles} 8px`
   return `${styles} 10px`
 }
+
+function describeStats(stats: CaniuseStats[] | undefined): string {
+  if (!stats?.length)
+    return 'no data'
+
+  const parts: string[] = []
+  if (stats.includes('n'))
+    parts.push('not supported')
+  if (stats.includes('a'))
+    parts.push('partial support')
+  if (stats.includes('x'))
+    parts.push('requires a vendor prefix')
+  if (stats.includes('d'))
+    parts.push('behind a flag')
+  if (stats.includes('u'))
+    parts.push('unknown support')
+  if (stats.includes('y'))
+    parts.push('supported')
+
+  return parts.join(', ') || 'not supported'
+}
+
+function cellLabel(browser: string, period: { version: [string] | [string, string], stats?: CaniuseStats[], usage: number }): string {
+  const name = BROWSERS_NAME[browser as keyof typeof BROWSERS_NAME] || browser
+  const version = formatVersion(period.version) || 'unknown version'
+  const usage = period.version[0] ? `, ${formatUsage(period.usage)} usage` : ''
+  return `${name} ${version}: ${describeStats(period.stats)}${usage}`
+}
 ---
 
-<div class="supports">
-  <header class="supports-header">
+<div class="supports" role="table" aria-label="Browser support by version">
+  <header class="supports-header" role="row">
     {BROWSERS.map(browser => (
-      <h4 class={`browser--${browser}`}>
+      <div class={`browser--${browser}`} role="columnheader">
         <span class="browser-title">{BROWSERS_NAME[browser]}</span>
-      </h4>
+      </div>
     ))}
   </header>
   {supports.map(([periodName, periods]) => (
-    <article class:list={['supports-item', 'statistics', periodName]}>
+    <article class:list={['supports-item', 'statistics', periodName]} role="row">
       {periods.map(period => (
-        <div class:list={[period.browser, ...(period.stats || [])]}>
-          <span class="version" style={fontSize(period.version)}>{formatVersion(period.version)}</span>
-          <span class="state"></span>
-          {period.version[0] && (<span class="usage">{formatUsage(period.usage)}</span>)}
+        <div class:list={[period.browser, ...(period.stats || [])]} role="cell" aria-label={cellLabel(period.browser, period)}>
+          <span class="version" style={fontSize(period.version)} aria-hidden="true">{formatVersion(period.version)}</span>
+          <span class="state" aria-hidden="true"></span>
+          {period.version[0] && (<span class="usage" aria-hidden="true">{formatUsage(period.usage)}</span>)}
         </div>
       ))}
     </article>

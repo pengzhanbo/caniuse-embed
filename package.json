@@ -2,14 +2,22 @@
   "name": "caniuse-embed",
   "type": "module",
   "version": "1.0.0",
+  "private": true,
   "packageManager": "pnpm@12.23.0",
+  "engines": {
+    "node": "^22.23.4 || ^24 || >=26"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
+    "check": "astro check",
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check:data": "tsx scripts/check-data.ts",
     "gendata": "tsx scripts/datagen.ts"
   },
   "dependencies": {
@@ -30,8 +38,9 @@
   },
   "devDependencies": {
     "@pengzhanbo/eslint-config-astro": "^2.15.1",
-    "@types/node": "^26.6.6",
+    "@types/node": "^26.6.10",
     "eslint": "^10.15.0",
-    "tsx": "^4.23.15"
+    "tsx": "^4.23.15",
+    "vitest": "^5.1.2"
   }
 }

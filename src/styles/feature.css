@@ -235,7 +235,7 @@
   margin-bottom: 2px;
 }
 
-.supports-header > h4 {
+.supports-header > [role="columnheader"] {
   position: relative;
   width: 100%;
   border-bottom-width: 5px;
@@ -254,7 +254,7 @@
 
 
 @media (max-width: 540px) {
-  .supports-header > h4 {
+  .supports-header > [role="columnheader"] {
     height: 130px;
   }
   .supports-header .browser-title {
@@ -271,7 +271,7 @@
 }
 
 @media (max-width: 500px) {
-  .supports-header > h4 {
+  .supports-header > [role="columnheader"] {
     height: 110px;
   }
 }

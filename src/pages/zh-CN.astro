@@ -1,4 +1,5 @@
 ---
+import { SITE_ORIGIN } from '../common/constants'
 import HomeTemplate from '../components/HomeTemplate.astro'
 import { getFeaturesList } from '../services/get-feature-list'
 import { formatDate } from '../utils/format-date'
@@ -10,9 +11,9 @@ const [bcdUpdatedDate] = formatDate(bcdUpdated)
 const [ciuUpdatedDate] = formatDate(ciuUpdated)
 
 const locale = {
-  description: `从 <a href="https://caniuse.com/" target="_blank">caniuse.com</a>，<a href="https://github.com/mdn/browser-compat-data" target="_blank">mozilla's browser compat data</a> 和 <a href="https://github.com/web-platform-dx/web-features" target="_blank">web-platform-dx/web-features</a> 嵌入最新数据。<br /> 显示10个主要浏览器多个版本的功能支持数据。<br /> 可配置、可靠且完全响应。`,
-  madeWith: `由 <a href="https://astro.build/" target="_blank">Astro</a> 构建 | 部署在 <a href="https://vercel.com/" target="_blank">Vercel</a>`,
-  deployWith: `<a href="https://github.com/pengzhanbo" target="_blank">@pengzhanbo</a> 开发`,
+  description: `从 <a href="https://caniuse.com/" target="_blank" rel="noopener noreferrer">caniuse.com</a>，<a href="https://github.com/mdn/browser-compat-data" target="_blank" rel="noopener noreferrer">mozilla's browser compat data</a> 和 <a href="https://github.com/web-platform-dx/web-features" target="_blank" rel="noopener noreferrer">web-platform-dx/web-features</a> 嵌入最新数据。<br /> 显示10个主要浏览器多个版本的功能支持数据。<br /> 可配置、可靠且完全响应。`,
+  madeWith: `由 <a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> 构建 | 部署在 <a href="https://vercel.com/" target="_blank" rel="noopener noreferrer">Vercel</a>`,
+  deployWith: `<a href="https://github.com/pengzhanbo" target="_blank" rel="noopener noreferrer">@pengzhanbo</a> 开发`,
   canIUseUpdated: 'Can I Use 更新于:',
   bcdUpdated: 'Browser Compat Data 更新于:',
   examples: '示例',
@@ -35,11 +36,11 @@ const locale = {
   getEmbedCodeDesc: '将此片段粘贴到您希望嵌入显示的位置：',
   parameters: '参数说明',
   featureName: '特性名称',
-  pastDesc: '显示过去 2 个版本, 范围为 0 - 5',
-  futureDesc: '显示未来 1 个版本, 范围为 0 - 3',
+  pastDesc: '显示过去 2 个版本, 范围为 0 - 5（默认 2）',
+  futureDesc: '显示未来 1 个版本, 范围为 0 - 3（默认 1）',
   themeDesc: '使用深色主题，支持 light / dark / auto。',
   originDesc: '[可选] 数据源，例如：',
-  originExample: 'https://caniuse.pengzhanbo.cn',
+  originExample: SITE_ORIGIN,
   embedPreview: '嵌入预览',
 }
 ---

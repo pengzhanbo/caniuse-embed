@@ -1,6 +1,6 @@
 export const on = (ev: string, cb: EventListener) => window.addEventListener(ev, cb)
 
-export const toNum = (v: string) => Number.parseInt(v)
+export const toNum = (v: string) => Number.parseInt(v, 10)
 
 export const $ = <T extends Element>(query: string) => document.querySelector<T>(query)
 
@@ -23,11 +23,29 @@ export function updateMeta(search: URLSearchParams) {
   meta = noNullable(search.get('meta'), '')
 }
 
+// 拖动窗口会在短时间内触发大量 resize 事件，使用 rAF 合并，避免高频 postMessage
+let pendingFrame = 0
+
 export function resize() {
-  const height = el?.getBoundingClientRect().height
+  if (pendingFrame)
+    return
+  pendingFrame = requestAnimationFrame(() => {
+    pendingFrame = 0
+    postHeight()
+  })
+}
+
+function postHeight() {
+  if (!el)
+    return
+
+  const height = el.getBoundingClientRect().height
+  if (!Number.isFinite(height) || height <= 0)
+    return
+
   const data = {
     type: 'ciu-embed',
-    payload: { feature: featureName, height, meta },
+    payload: { feature: featureName, height: Math.ceil(height), meta },
   }
   window.parent?.postMessage(data, '*')
 }
@@ -49,6 +67,8 @@ export function initTheme() {
 
 export function updateThemeWithSearch(search: URLSearchParams) {
   themeMode = noNullable(search.get('theme'), 'auto')
+  if (!['auto', 'light', 'dark'].includes(themeMode))
+    themeMode = 'auto'
   const media = darkMather()
   updateTheme(themeMode === 'auto' ? media.matches : themeMode === 'dark')
 }

@@ -9,12 +9,12 @@ trustPolicyExclude:
 shellEmulator: true
 
 overrides:
-  brace-expansion: '>=5.0.12'
-  fast-uri: '>=4.2.1'
-  path-to-regexp: '>=8.4.2'
-  postcss: '>=8.5.28'
+  brace-expansion: '>=5.1.0'
+  fast-uri: '>=4.2.4'
+  path-to-regexp: '>=9.0.0'
+  postcss: '>=8.5.33'
   svgo: '>=4.1.0'
-  tar: '>=7.5.22'
+  tar: '>=7.5.23'
 
 allowBuilds:
   esbuild: true

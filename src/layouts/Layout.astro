@@ -1,28 +1,43 @@
 ---
+import { markdownToPlainText } from '../utils/markdown'
+
 interface Props {
   title?: string
   source?: string
   lang?: string
+  allowInlineScripts?: boolean
 }
 
-const { title, source, lang = 'en-US' } = Astro.props;
----
+const { title, source, lang = 'en-US', allowInlineScripts = false } = Astro.props
 
+const plainTitle = title ? markdownToPlainText(title) : ''
+
+const csp = [
+  'default-src \'self\'',
+  allowInlineScripts ? 'script-src \'self\' \'unsafe-inline\'' : 'script-src \'self\'',
+  'style-src \'self\' \'unsafe-inline\'',
+  'img-src \'self\' data:',
+  'font-src \'self\'',
+  'connect-src \'self\'',
+  'base-uri \'self\'',
+  'form-action \'none\'',
+].join('; ')
+---
 <!doctype html>
 <html lang={lang} dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, user-scalable=no"
+      content="width=device-width, initial-scale=1"
     />
     <link rel="icon" href="/favicon-128.png" sizes="16x16 32x32 64x64 128x128" type="image/png" />
     <link rel="apple-touch-icon" href="/favicon-128.png" />
-    <link href="//fonts.googleapis.com/css?family=Inconsolata&amp;display=swap" rel="stylesheet" />
     <meta name="Description" content="&quot;Can I use&quot; provides up-to-date browser support tables for support of front-end web technologies on desktop and mobile web browsers." />
     <meta name="keywords" content="web browser compatibility support html css svg html5 css3 opera chrome firefox safari internet explorer" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title ? `${title} | ` : ''} Can I use... Support tables for HTML5, CSS3, etc</title>
+    {import.meta.env.PROD && <meta http-equiv="Content-Security-Policy" content={csp} />}
+    <title>{plainTitle ? `${plainTitle} | ` : ''} Can I use... Support tables for HTML5, CSS3, etc</title>
   </head>
   <body class={source}>
     <slot />
