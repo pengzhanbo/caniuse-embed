@@ -50,6 +50,8 @@ function computedUsageWithDevice(support: SupportBlock, agents: CaniuseAgents, b
 
     for (const { version, global_usage } of agent.version_list) {
       const stats = getCaniuseStats(supports, version)
+      if (stats.includes(FEATURE_IDENTIFIERS.flagged))
+        continue
       if (stats.includes(FEATURE_IDENTIFIERS.partial))
         partial = decimalAdd(partial, global_usage)
       else if (stats.includes(FEATURE_IDENTIFIERS.supported))

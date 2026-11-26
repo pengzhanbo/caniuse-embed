@@ -33,6 +33,23 @@ describe('markdownRender', () => {
     expect(html).not.toContain('<a ')
     expect(html).toMatch(/<code>x<\/code>/)
   })
+
+  it('标题场景下不会把 markdown 链接与裸 URL 渲染成 <a>', () => {
+    const html = markdownRender(
+      '[docs](https://example.com) https://example.org <https://example.net>',
+      true,
+      { links: false },
+    )
+    expect(html).not.toContain('<a')
+    expect(html).toBe('docs https://example.org https://example.net')
+  })
+
+  it('保留 code 内容中的反引号', () => {
+    expect(markdownRender('<code>use `backticks` here</code>', true))
+      .toBe('<code>use `backticks` here</code>')
+    expect(markdownRender('<code>``a``</code>', true))
+      .toBe('<code>``a``</code>')
+  })
 })
 
 describe('markdownToPlainText', () => {

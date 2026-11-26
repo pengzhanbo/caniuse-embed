@@ -74,6 +74,28 @@ describe('getBaselineStatusData', () => {
     expect(res['api.document.write']?.date).toBe('2029-12-31')
     expect(res['document-write-command']?.baseline).toBe('discouraged')
   })
+
+  it('discouraged 条目即使没有 status 也会下发到 compat key', () => {
+    const features = {
+      'legacy-thing': {
+        kind: 'feature',
+        compat_features: ['api.legacy.thing', 'css.property.thing'],
+        discouraged: {
+          according_to: [],
+          reason: 'Obsolete.',
+          reason_html: '',
+          removal_date: '2030-01-01',
+        },
+      },
+    } as unknown as Record<string, BaselineFeatureData>
+
+    const res = getBaselineStatusData(features)
+
+    expect(res['api.legacy.thing']?.baseline).toBe('discouraged')
+    expect(res['api.legacy.thing']?.reason).toBe('Obsolete.')
+    expect(res['css.property.thing']?.baseline).toBe('discouraged')
+    expect(res['legacy-thing']?.baseline).toBe('discouraged')
+  })
 })
 
 describe('caniuse supports', () => {
@@ -128,6 +150,20 @@ describe('caniuse supports', () => {
       } as any,
     )
     expect(supports.find(item => item.browser === 'chrome')).toBeDefined()
+  })
+
+  it('current_version 缺失时，current 周期使用版本列表中的条目版本', () => {
+    const supports = getCiuFeatureSupport(
+      { chrome: { 120: 'y' } } as any,
+      {
+        chrome: { ...agents.chrome, current_version: 'unknown' },
+      } as any,
+    )
+    const periods = supports.find(item => item.browser === 'chrome')?.periods || []
+    const current = periods.find(period => period.period === 'current')
+    expect(current?.version).toEqual(['120'])
+    expect(current?.usage).toBe(2)
+    expect(current?.supported).toBe(true)
   })
 })
 

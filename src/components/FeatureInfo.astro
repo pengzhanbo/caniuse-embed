@@ -21,7 +21,8 @@ const usageLabel = usage
 ---
 
 {usage && (
-  <small class="note" aria-label={usageLabel}>
+  <small class="note">
+    <span class="sr-only">{usageLabel}</span>
     <span aria-hidden="true">
       Globals:{' '}
       {usage.supported && <span class="y">{formatUsage(usage.supported)}</span>}

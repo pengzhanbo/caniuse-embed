@@ -56,7 +56,7 @@
         continue
       if (ev.origin && ev.origin !== getOrigin(iframe.src))
         continue
-      if (payload[ft] !== attr(embed, ft) || payload[m] !== attr(embed, m))
+      if (payload[ft] !== getFeature(embed) || payload[m] !== attr(embed, m))
         continue
 
       iframe.style.height = `${Math.min(Math.ceil(height), MAX_HEIGHT)}px`
@@ -69,13 +69,13 @@
       return
     const obs = new MutationObserver(() => {
       const source = genSource(embed)
-      // 只有真正影响显示的属性变化才重载 iframe
+      iframe.title = getIframeTitle(embed)
       if (source && source !== iframe.src)
         iframe.src = source
     })
     obs.observe(embed, {
       attributes: true,
-      attributeFilter: [`data-${ft}`, `data-${p}`, `data-${f}`, `data-${t}`, 'data-origin'],
+      attributeFilter: [`data-${ft}`, `data-${p}`, `data-${f}`, `data-${t}`, 'data-origin', 'class'],
     })
   }
 
@@ -131,8 +131,23 @@
     return origin
   }
 
+  function getFeature(embed: Element): string {
+    return attr(embed, ft).trim()
+  }
+
+  function isBaselineEmbed(embed: Element): boolean {
+    return embed.classList.contains(cbe)
+  }
+
+  function getIframeTitle(embed: Element): string {
+    const feature = getFeature(embed)
+    return isBaselineEmbed(embed)
+      ? `Baseline support for ${feature}`
+      : `Browser support for ${feature}`
+  }
+
   function genSource(embed: Element) {
-    const feature = attr(embed, ft).trim()
+    const feature = getFeature(embed)
     if (!feature)
       return ''
 
@@ -140,7 +155,7 @@
     if (!meta)
       attr(embed, m, meta = `${Date.now()}-${uuid++}`)
 
-    const isBaseline = embed.classList.contains(cbe)
+    const isBaseline = isBaselineEmbed(embed)
     const params = [p, f, t]
       .map(k => [k, attr(embed, k)])
       .filter(([, v]) => v)
@@ -152,15 +167,11 @@
 
   function createIframe(embed: Element, source: string) {
     const iframe = document.createElement('iframe') as HTMLIFrameElement
-    const isBaseline = embed.classList.contains(cbe)
-    const feature = attr(embed, ft)
     iframe.src = source
     iframe.className = cei
-    iframe.title = isBaseline
-      ? `Baseline support for ${feature}`
-      : `Browser support for ${feature}`
+    iframe.title = getIframeTitle(embed)
     iframe.loading = 'lazy'
-    iframe.style.cssText = style(isBaseline ? 150 : 350)
+    iframe.style.cssText = style(isBaselineEmbed(embed) ? 150 : 350)
     iframe.setAttribute('allow', 'fullscreen')
     embed.appendChild(iframe)
     return iframe

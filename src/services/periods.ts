@@ -53,11 +53,14 @@ export function getBrowserPeriods(
   if (index < 0)
     return []
 
+  const current = version_list[index]
+  const currentVersion = current?.version || current_version
+
   const periods: FeatureSupportPeriod[] = [{
     period: 'current',
-    version: [current_version],
-    usage: version_list[index]?.global_usage ?? 0,
-    ...getStats(current_version),
+    version: [currentVersion],
+    usage: current?.global_usage ?? 0,
+    ...getStats(currentVersion),
   }]
 
   let pastPeriod: FeatureSupportPeriod | null = null

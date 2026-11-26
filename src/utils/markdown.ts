@@ -13,7 +13,9 @@ import linkAttr from 'markdown-it-link-attributes'
 const ANCHOR_PATTERN = /<a\s[^>]*>([\s\S]*?)<\/a>/gi
 const ANCHOR_HREF_PATTERN = /href\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i
 const CODE_PATTERN = /<code>([\s\S]*?)<\/code>/gi
-const TAG_PATTERN = /<\/?[a-z][^>]*>/gi
+// 只匹配真正的标签：标签名之后必须是空白、`/` 或 `>`，
+// 避免把 `<https://example.com>` 这类 autolink 当成标签删除
+const TAG_PATTERN = /<\/?[a-z][\w-]*(?=[\s/>])[^>]*>/gi
 
 function isSafeHref(href: string): boolean {
   return /^https?:\/\//i.test(href.trim())
@@ -39,6 +41,25 @@ interface PreprocessOptions {
   links?: boolean
 }
 
+/**
+ * 转换为 markdown 行内代码
+ *
+ * 需要根据内容中连续反引号的最大长度选择分隔符，
+ * 并保留原始文本中的反引号，而不是把它们删掉。
+ */
+function toCodeSpan(content: string): string {
+  const text = stripTags(content)
+  if (!text)
+    return ''
+
+  const longest = (text.match(/`+/g) || []).reduce((max, run) => Math.max(max, run.length), 0)
+  const fence = '`'.repeat(longest + 1)
+  // 内容以空格或反引号开头/结尾时，两侧各补一个空格，渲染时会被去掉
+  const padded = /^[` ]|[` ]$/.test(text) ? ` ${text} ` : text
+
+  return `${fence}${padded}${fence}`
+}
+
 function preprocess(content: string, { links = true }: PreprocessOptions = {}): string {
   return content
     // 外链转换为 markdown 链接，仅允许 http(s)，其余保留链接文本
@@ -53,28 +74,39 @@ function preprocess(content: string, { links = true }: PreprocessOptions = {}): 
       return isSafeHref(href) ? `[${text}](${href})` : text
     })
     // 行内代码转换为 markdown 反引号
-    .replace(CODE_PATTERN, (_, code: string) => `\`${stripTags(code).replaceAll('`', '')}\``)
+    .replace(CODE_PATTERN, (_, code: string) => toCodeSpan(code))
     // 其余 HTML 标签全部丢弃
     .replace(TAG_PATTERN, '')
 }
 
-const md = markdown({
-  html: false,
-  linkify: true,
-})
+function createMarkdown(linkify: boolean) {
+  const instance = markdown({ html: false, linkify })
+  instance.use(linkAttr, {
+    attrs: {
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    },
+  })
+  return instance
+}
 
-md.use(linkAttr, {
-  attrs: {
-    target: '_blank',
-    rel: 'noopener noreferrer',
-  },
-})
+const md = createMarkdown(true)
+
+/**
+ * 标题专用实例：标题本身已经处于 `<a>` 内，
+ * 这里不解析裸 URL（`linkify: false`），并把 `[text](url)` / autolink 渲染为纯文本，
+ * 避免嵌套链接，也避免临时修改共享实例的选项。
+ */
+const mdPlain = createMarkdown(false)
+mdPlain.renderer.rules.link_open = () => ''
+mdPlain.renderer.rules.link_close = () => ''
 
 export function markdownRender(content: string, inline = false, options?: PreprocessOptions): string {
   const source = preprocess(content, options)
+  const instance = options?.links === false ? mdPlain : md
   if (inline)
-    return md.renderInline(source)
-  return md.render(source)
+    return instance.renderInline(source)
+  return instance.render(source)
 }
 
 /**
