@@ -57,6 +57,10 @@ function describeStats(stats: CaniuseStats[] | undefined): string {
   return parts.join(', ') || 'not supported'
 }
 
+function columnIndex(browser: string): number {
+  return BROWSERS.indexOf(browser as (typeof BROWSERS)[number]) + 1
+}
+
 function cellLabel(browser: string, period: { version: [string] | [string, string], stats?: CaniuseStats[], usage: number }): string {
   const name = BROWSERS_NAME[browser as keyof typeof BROWSERS_NAME] || browser
   const version = formatVersion(period.version) || 'unknown version'
@@ -65,11 +69,11 @@ function cellLabel(browser: string, period: { version: [string] | [string, strin
 }
 ---
 
-<div class="supports" role="table" aria-label="Browser support by version">
+<div class="supports" role="table" aria-label="Browser support by version" aria-colcount={BROWSERS.length}>
   <div role="rowgroup">
     <header class="supports-header" role="row">
-      {BROWSERS.map(browser => (
-        <div class={`browser--${browser}`} role="columnheader">
+      {BROWSERS.map((browser, index) => (
+        <div class={`browser--${browser}`} role="columnheader" aria-colindex={index + 1}>
           <span class="browser-title">{BROWSERS_NAME[browser]}</span>
         </div>
       ))}
@@ -84,8 +88,8 @@ function cellLabel(browser: string, period: { version: [string] | [string, strin
             <div
               class:list={[period.browser, ...(period.stats || []), fontSizeClass(period.version)]}
               role="cell"
-              aria-label={hasVersion ? cellLabel(period.browser, period) : undefined}
-              aria-hidden={hasVersion ? undefined : 'true'}
+              aria-colindex={columnIndex(period.browser)}
+              aria-label={cellLabel(period.browser, period)}
               tabindex={hasVersion && period.usage > 0 ? 0 : undefined}
             >
               <span class="version" aria-hidden="true">{formatVersion(period.version)}</span>

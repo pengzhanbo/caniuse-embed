@@ -4,7 +4,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { buildFeatureData } from '../src/services/build-feature-data'
 import { getTransformVersion } from '../src/services/cache-version'
-import { resolveDataSources } from '../src/services/data-source'
+import { resolveDataSources, toDataVersion } from '../src/services/data-source'
 import { fetchData } from '../src/utils/fetch-data'
 import { writeFileAtomic } from '../src/utils/write-file'
 
@@ -26,9 +26,9 @@ const [bcd, caniuse, webFeatures] = await Promise.all([
 const data = {
   ...buildFeatureData(bcd, caniuse, webFeatures),
   versions: {
-    bcd: sources.bcd.version,
-    caniuse: sources.caniuse.version,
-    webFeatures: sources.baseline.version,
+    bcd: toDataVersion(sources.bcd.version),
+    caniuse: toDataVersion(sources.caniuse.version),
+    webFeatures: toDataVersion(sources.baseline.version),
   },
 }
 const version = await getTransformVersion()

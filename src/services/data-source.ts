@@ -7,6 +7,19 @@ const CDN = 'https://cdn.jsdelivr.net/npm'
 const RESOLVE_API = 'https://data.jsdelivr.com/v1/packages/npm'
 
 /**
+ * 已解析的具体版本号（`8.1.11`、`1.0.30001828`、`3.48.0-rc.1`）
+ *
+ * 版本选择器（`latest`、tag、`^1.0.0` 等）不能作为「本次构建使用的版本」写入
+ * 缓存或产物，否则会让人误以为可以据此复现。
+ */
+const CONCRETE_VERSION = /^\d+\.\d+\.\d+(?:-[0-9a-z.-]+)?(?:\+[0-9a-z.-]+)?$/i
+
+export function toDataVersion(version: string | undefined): string {
+  const value = version?.trim()
+  return value && CONCRETE_VERSION.test(value) ? value : 'unknown'
+}
+
+/**
  * 远程数据源
  *
  * 本项目的自动构建（GitHub Actions 每周触发的部署钩子）目标是
@@ -113,7 +126,7 @@ export async function getLocalDataVersions(): Promise<FeatureDataVersions> {
     try {
       const file = path.join(process.cwd(), 'node_modules', pkg, 'package.json')
       const pkgJson = JSON.parse(await fs.readFile(file, 'utf-8')) as { version?: string }
-      return pkgJson.version || 'unknown'
+      return toDataVersion(pkgJson.version)
     }
     catch {
       return 'unknown'

@@ -9,7 +9,7 @@ import { clearStatsCache } from './bcd/caniuse-status'
 import { resetUsageCaches } from './bcd/compute-usage'
 import { buildFeatureData, type FeatureDataBundle } from './build-feature-data'
 import { getTransformVersion } from './cache-version'
-import { getLocalDataVersions, resolveDataSources } from './data-source'
+import { getLocalDataVersions, resolveDataSources, toDataVersion } from './data-source'
 
 const cacheDir = path.join(process.cwd(), 'data')
 const cacheFile = path.join(cacheDir, 'cached.json')
@@ -101,9 +101,9 @@ export const getFeaturesList = createSingletonPromise(async (): Promise<FeatureD
       caniuse = caniuseData
       webFeatures = baselineData.features
       versions = {
-        bcd: sources.bcd.version,
-        caniuse: sources.caniuse.version,
-        webFeatures: sources.baseline.version,
+        bcd: toDataVersion(sources.bcd.version),
+        caniuse: toDataVersion(sources.caniuse.version),
+        webFeatures: toDataVersion(sources.baseline.version),
       }
     }
     catch (error) {

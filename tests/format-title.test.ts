@@ -51,4 +51,11 @@ describe('formatTitle', () => {
   it('描述缺失时回退到路径', () => {
     expect(formatTitle(['css', 'properties', 'gap'], ['', '', ''])).toBe('CSS Property: gap')
   })
+
+  it('没有更深子路径时保留当前特性的描述', () => {
+    expect(formatTitle(['css', 'at-rules', 'media'], ['', '', '<code>@media</code>']))
+      .toBe('CSS at-rule: <code>@media</code>')
+    expect(formatTitle(['css', 'types', 'length'], ['', '', '<code>&lt;length&gt;</code>']))
+      .toBe('types: <code>&lt;length&gt;</code>')
+  })
 })

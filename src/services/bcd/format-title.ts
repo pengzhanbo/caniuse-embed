@@ -6,6 +6,11 @@
  * 不能多取一位，否则每个描述都会与「上一层」的路径错位。
  */
 function withDescriptions(paths: string[], descriptions: string[], sep = ': '): string {
+  // 没有更深子路径时，保留当前特性自身的描述（通常是最后一项），
+  // 避免 offset 把 descriptions 全部截掉（如 `css.at-rules.media`）
+  if (paths.length === 0)
+    return (descriptions[descriptions.length - 1] || '').trim()
+
   const offset = descriptions.length - paths.length
   const list = offset > 0 ? descriptions.slice(offset) : descriptions
 

@@ -220,7 +220,7 @@ function applyFeatureChoices() {
   try {
     const selected = featureSelect.value
     const list = buildFeatureChoices()
-    featureChoices.setChoices(list, 'value', 'label', true)
+    featureChoices.setChoices(list, 'value', 'label', true, true, true)
     const valid = selected && list.some(item => item.value === selected)
     featureChoices.setChoiceByValue(valid ? selected : '')
   }
