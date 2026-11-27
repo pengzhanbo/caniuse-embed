@@ -50,6 +50,22 @@ export const PERIODS = [
   'future_3',
 ] as const
 
+/**
+ * 周期对应的 DOM class
+ *
+ * 数据层仍使用可读的 `past_1` / `future_1`，但每个页面会重复输出这些 class，
+ * 因此渲染时压缩为 `p1` / `f1`；`current` 使用 `cur`。
+ */
+export function periodClass(period: string): string {
+  if (period === 'current')
+    return 'cur'
+  if (period.startsWith('past_'))
+    return `p${period.slice(5)}`
+  if (period.startsWith('future_'))
+    return `f${period.slice(7)}`
+  return period
+}
+
 export const MAX_PAST = 5
 export const MAX_FUTURE = 3
 export const DEFAULT_PAST = 2

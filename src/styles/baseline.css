@@ -134,7 +134,7 @@ code {
 }
 
 .logo {
-  display: inline-block;;
+  display: inline-block;
   width: 36px;
   height: 30px;
   background-image: var(--img);
@@ -146,6 +146,7 @@ code {
 .baseline.deprecated .logo {
   width: 18px;
   height: 18px;
+  margin-top: 3px;
 }
 
 .container {
@@ -153,7 +154,7 @@ code {
   align-items: flex-start;
   justify-content: flex-start;
   gap: 12px;
-  padding-top: 12px;;
+  padding-top: 12px;
 }
 
 .content {
@@ -257,8 +258,4 @@ code {
   padding: 2px 4px;
   border-radius: 4px;
   transition: var(--transition);
-}
-
-.baseline.deprecated .logo {
-  margin-top: 3px;
 }

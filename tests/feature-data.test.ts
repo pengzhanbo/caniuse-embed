@@ -1,5 +1,6 @@
 import type { BaselineFeatureData, FeatureData, FeatureSupport } from '../src/types'
 import { describe, expect, it } from 'vitest'
+import { BROWSERS, periodClass } from '../src/common/constants'
 import { getBaselineStatusData } from '../src/services/baseline'
 import { getFeatureSupport as getCiuFeatureSupport } from '../src/services/ciu/supports'
 import { ensureUniqueFeatureIds } from '../src/services/ensure-unique-ids'
@@ -194,9 +195,15 @@ describe('zipFeatureSupports', () => {
     const zipped = zipFeatureSupports(supports)
     expect(zipped).toHaveLength(1)
     expect(zipped[0]?.[0]).toBe('current')
-    // 渲染层补齐空单元格，保证 10 列网格连续
+    // 渲染层补齐空单元格，顺序必须与 BROWSERS 一致（CSS 依赖 nth-child 定位列）
+    expect(zipped[0]?.[1].map(item => item.browser)).toEqual([...BROWSERS])
     expect(zipped[0]?.[1]).toHaveLength(10)
     expect(zipped[0]?.[1].find(item => item.browser === 'chrome')?.version).toEqual(['120'])
     expect(zipped[0]?.[1].find(item => item.browser === 'safari')?.version).toEqual([''])
+  })
+
+  it('周期 class 与数据名保持一一对应', () => {
+    expect(['past_5', 'past_1', 'current', 'future_1', 'future_3'].map(periodClass))
+      .toEqual(['p5', 'p1', 'cur', 'f1', 'f3'])
   })
 })

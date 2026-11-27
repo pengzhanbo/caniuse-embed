@@ -1,6 +1,6 @@
 ---
 import type { CaniuseStats, FeatureSupport } from '../types'
-import { BROWSERS, BROWSERS_NAME, FEATURE_IDENTIFIERS } from '../common/constants'
+import { BROWSERS, BROWSERS_NAME, FEATURE_IDENTIFIERS, periodClass } from '../common/constants'
 import { zipFeatureSupports } from '../services/zip-feature-supports'
 import { formatUsage } from '../utils/format-usage'
 
@@ -28,12 +28,17 @@ function fontSizeClass(version: [string] | [string, string]): string {
     return ''
   const len = ver.length
   if (len >= 9)
-    return 'version-6'
+    return 'fs6'
   if (len >= 7)
-    return 'version-7'
+    return 'fs7'
   if (len === 6)
-    return 'version-8'
-  return 'version-10'
+    return 'fs8'
+  return 'fs10'
+}
+
+/** 只有 flag / 前缀标记才需要空的状态占位 span */
+function hasState(stats: CaniuseStats[] | undefined): boolean {
+  return Boolean(stats?.includes(FEATURE_IDENTIFIERS.flagged) || stats?.includes(FEATURE_IDENTIFIERS.prefixed))
 }
 
 function describeStats(stats: CaniuseStats[] | undefined): string {
@@ -71,30 +76,30 @@ function cellLabel(browser: string, period: { version: [string] | [string, strin
 
 <div class="supports" role="table" aria-label="Browser support by version" aria-colcount={BROWSERS.length}>
   <div role="rowgroup">
-    <header class="supports-header" role="row">
+    <header class="head" role="row">
       {BROWSERS.map((browser, index) => (
-        <div class={`browser--${browser}`} role="columnheader" aria-colindex={index + 1}>
-          <span class="browser-title">{BROWSERS_NAME[browser]}</span>
+        <div role="columnheader" aria-colindex={index + 1}>
+          <span>{BROWSERS_NAME[browser]}</span>
         </div>
       ))}
     </header>
   </div>
   <div role="rowgroup">
     {supports.map(([periodName, periods]) => (
-      <article class:list={['supports-item', 'statistics', periodName]} role="row">
+      <article class:list={['period', periodClass(periodName)]} role="row">
         {periods.map((period) => {
           const hasVersion = Boolean(period.version[0])
           return (
             <div
-              class:list={[period.browser, ...(period.stats || []), fontSizeClass(period.version)]}
+              class:list={[...(period.stats || []), fontSizeClass(period.version)]}
               role="cell"
               aria-colindex={columnIndex(period.browser)}
               aria-label={cellLabel(period.browser, period)}
               tabindex={hasVersion && period.usage > 0 ? 0 : undefined}
             >
-              <span class="version" aria-hidden="true">{formatVersion(period.version)}</span>
-              <span class="state" aria-hidden="true"></span>
-              {hasVersion && <span class="usage" aria-hidden="true">{formatUsage(period.usage)}</span>}
+              {hasVersion && <span class="ver" aria-hidden="true">{formatVersion(period.version)}</span>}
+              {hasState(period.stats) && <span class="state" aria-hidden="true"></span>}
+              {hasVersion && <span class="pct" aria-hidden="true">{formatUsage(period.usage)}</span>}
             </div>
           )
         })}

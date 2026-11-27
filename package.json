@@ -28,7 +28,6 @@
     "choices.js": "^11.2.4",
     "markdown-it": "^15.0.3",
     "markdown-it-link-attributes": "^4.0.1",
-    "normalize.css": "^8.0.1",
     "web-features": "^3.47.0"
   },
   "devDependencies": {
