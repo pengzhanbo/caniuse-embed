@@ -17,6 +17,7 @@ const TRANSFORM_DIR = 'src/services'
 const DEPENDENCY_FILES = [
   'src/utils/normalize-version.ts',
   'src/utils/compare-version.ts',
+  'src/utils/format-id.ts',
   'src/common/constants.ts',
 ]
 

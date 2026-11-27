@@ -1,4 +1,5 @@
 import Choices from 'choices.js'
+import { DEFAULT_FUTURE, DEFAULT_PAST, MAX_FUTURE, MAX_PAST } from '../common/constants'
 
 type Lang = 'en-US' | 'zh-CN'
 type Theme = 'auto' | 'dark' | 'light'
@@ -15,26 +16,25 @@ interface ChoicesItem {
   label: string
   value: string
 }
-
-const MAX_PAST = 5
-const MAX_FUTURE = 3
-const DEFAULT_PAST = 2
-const DEFAULT_FUTURE = 1
+interface FeatureItem extends ChoicesItem {
+  baseline: boolean
+}
+type FeatureTuple = [label: string, value: string, baseline: boolean]
 
 const locales: Record<Lang, Locale> = {
   'en-US': {
     noPast: 'No Past Version',
     noFuture: 'No Future Version',
-    past: 'Past Version (Current Version - {val})',
-    future: 'Future Version (Current Version + {val})',
+    past: 'Up to {val} past version group(s)',
+    future: 'Up to {val} future version group(s)',
     noFeature: 'Select a feature',
     loadFailed: 'Failed to load the feature list, please refresh the page.',
   },
   'zh-CN': {
     noPast: '不显示旧版本',
     noFuture: '不显示新版本',
-    past: '旧版本 (当前版本 - {val})',
-    future: '未来版本 (当前版本 + {val})',
+    past: '最多显示 {val} 个过去版本分组',
+    future: '最多显示 {val} 个未来版本分组',
     noFeature: '请选择一个特性',
     loadFailed: '特性列表加载失败，请刷新页面重试。',
   },
@@ -67,6 +67,10 @@ const media = typeof window.matchMedia !== 'undefined'
 
 let theme: Theme = 'auto'
 let type = 'caniuse'
+let featureItems: FeatureItem[] = []
+let featuresLoaded = false
+let featureLoadError = false
+let applyingChoices = false
 
 const featureChoices = new Choices(featureSelect, {
   renderChoiceLimit: 1000,
@@ -77,7 +81,7 @@ const featureChoices = new Choices(featureSelect, {
   sorter: () => 0,
 })
 
-featureChoices.setChoices(() => getFeatureList())
+featureChoices.setChoices(() => loadFeatureChoices())
 
 // eslint-disable-next-line no-new
 new Choices(pastVersionSelect, {
@@ -145,10 +149,16 @@ function applyTheme() {
 }
 
 function onChange() {
+  const nextType = ($('input[name="embed-type"]:checked') as HTMLInputElement)?.value || 'caniuse'
+  if (nextType !== type) {
+    type = nextType
+    // 切换嵌入类型时只保留当前类型可用的特性（例如 baseline 需要 baseline 数据）
+    applyFeatureChoices()
+  }
+
   const feature = featureSelect.value || ''
   const past = pastVersionSelect.value || ''
   const future = futureVersionSelect.value || ''
-  type = ($('input[name="embed-type"]:checked') as HTMLInputElement).value || 'caniuse'
 
   rangeSetting.style.display = type === 'caniuse' ? 'block' : 'none'
   rangeAttr.style.display = type === 'caniuse' ? 'block' : 'none'
@@ -171,20 +181,51 @@ function onLangChange() {
   location.href = target
 }
 
-async function getFeatureList(): Promise<ChoicesItem[]> {
+async function loadFeatureChoices(): Promise<ChoicesItem[]> {
   try {
     const res = await fetch('/features.json')
     if (!res.ok)
       throw new Error(`${res.status} ${res.statusText}`)
-    const list = await res.json() as ChoicesItem[]
-    return [{ label: translate('noFeature'), value: '' }, ...list]
+    const list = await res.json() as FeatureTuple[]
+    featureItems = list.map(([label, value, baseline]) => ({
+      label,
+      value,
+      baseline: Boolean(baseline),
+    }))
   }
   catch (error) {
+    featureLoadError = true
     console.error('[caniuse-embed] failed to load features.json', error)
-    return [
-      { label: translate('noFeature'), value: '' },
-      { label: translate('loadFailed'), value: '' },
-    ]
+  }
+  featuresLoaded = true
+  return buildFeatureChoices()
+}
+
+function buildFeatureChoices(): ChoicesItem[] {
+  const list: ChoicesItem[] = [{ label: translate('noFeature'), value: '' }]
+  if (featureLoadError) {
+    list.push({ label: translate('loadFailed'), value: '' })
+    return list
+  }
+  const items = type === 'baseline'
+    ? featureItems.filter(item => item.baseline)
+    : featureItems
+  return list.concat(items.map(({ label, value }) => ({ label, value })))
+}
+
+function applyFeatureChoices() {
+  if (!featuresLoaded || applyingChoices)
+    return
+  applyingChoices = true
+  try {
+    const selected = featureSelect.value
+    const list = buildFeatureChoices()
+    featureChoices.setChoices(list, 'value', 'label', true, true, true)
+    const valid = selected && list.some(item => item.value === selected)
+    featureChoices.setChoiceByValue(valid ? selected : '')
+  }
+  finally {
+    applyingChoices = false
   }
 }
 

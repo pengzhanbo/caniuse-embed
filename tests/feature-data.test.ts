@@ -1,5 +1,6 @@
 import type { BaselineFeatureData, FeatureData, FeatureSupport } from '../src/types'
 import { describe, expect, it } from 'vitest'
+import { BROWSERS, periodClass } from '../src/common/constants'
 import { getBaselineStatusData } from '../src/services/baseline'
 import { getFeatureSupport as getCiuFeatureSupport } from '../src/services/ciu/supports'
 import { ensureUniqueFeatureIds } from '../src/services/ensure-unique-ids'
@@ -29,12 +30,26 @@ describe('ensureUniqueFeatureIds', () => {
       createFeature('mdn-api_crypto', 'api.crypto'),
     ]
 
-    ensureUniqueFeatureIds(list)
+    const result = ensureUniqueFeatureIds(list)
 
-    const ids = list.map(item => item.id).sort()
+    const ids = result.map(item => item.id).sort()
     expect(ids).toEqual(['mdn-api_crypto', 'mdn-api_crypto-2'])
     // 原始路径为全小写的条目保持原 id
-    expect(list.find(item => item.paths === 'api.crypto')?.id).toBe('mdn-api_crypto')
+    expect(result.find(item => item.paths === 'api.crypto')?.id).toBe('mdn-api_crypto')
+    // 不修改传入的对象
+    expect(list.map(item => item.id)).toEqual(['mdn-api_crypto', 'mdn-api_crypto'])
+  })
+
+  it('重命名时避开已经存在的带后缀 id', () => {
+    const list = [
+      createFeature('foo', 'Foo'),
+      createFeature('foo', 'foo'),
+      createFeature('foo-2', 'foo-2'),
+    ]
+
+    const result = ensureUniqueFeatureIds(list)
+
+    expect(result.map(item => item.id).sort()).toEqual(['foo', 'foo-2', 'foo-3'])
   })
 
   it('没有冲突时不改变 id', () => {
@@ -115,7 +130,7 @@ describe('caniuse supports', () => {
     },
   }
 
-  it('每个版本都会带上 prefixed 字段', () => {
+  it('每个版本都会带上 stats', () => {
     // caniuse 源漏返回 prefixed
     const supports = getCiuFeatureSupport(
       { chrome: { 119: 'x', 120: 'y' } } as any,
@@ -123,9 +138,9 @@ describe('caniuse supports', () => {
     )
     const periods = supports.find(item => item.browser === 'chrome')?.periods || []
     const real = periods.filter(period => period.version[0])
-    expect(real.every(period => typeof period.prefixed === 'boolean')).toBe(true)
-    expect(real.at(-1)?.prefixed).toBe(false)
-    expect(real[0]?.prefixed).toBe(true)
+    expect(real.every(period => Array.isArray(period.stats))).toBe(true)
+    expect(real.at(-1)?.stats).toContain('y')
+    expect(real[0]?.stats).toContain('x')
   })
 
   it('caniuse 的 y x 组合归为需要前缀', () => {
@@ -136,8 +151,8 @@ describe('caniuse supports', () => {
     const periods = supports.find(item => item.browser === 'chrome')?.periods || []
     const past = periods.find(period => period.version[0] === '119')
     const current = periods.find(period => period.version[0] === '120')
-    expect(past?.prefixed).toBe(true)
-    expect(past?.supported).toBe(false)
+    expect(past?.stats).toContain('x')
+    expect(past?.stats).not.toContain('y')
     // `y d` 表示默认关闭，可通过 flag 启用
     expect([...(current?.stats || [])].sort()).toEqual(['d', 'n'])
   })
@@ -163,7 +178,7 @@ describe('caniuse supports', () => {
     const current = periods.find(period => period.period === 'current')
     expect(current?.version).toEqual(['120'])
     expect(current?.usage).toBe(2)
-    expect(current?.supported).toBe(true)
+    expect(current?.stats).toContain('y')
   })
 })
 
@@ -180,5 +195,15 @@ describe('zipFeatureSupports', () => {
     const zipped = zipFeatureSupports(supports)
     expect(zipped).toHaveLength(1)
     expect(zipped[0]?.[0]).toBe('current')
+    // 渲染层补齐空单元格，顺序必须与 BROWSERS 一致（CSS 依赖 nth-child 定位列）
+    expect(zipped[0]?.[1].map(item => item.browser)).toEqual([...BROWSERS])
+    expect(zipped[0]?.[1]).toHaveLength(10)
+    expect(zipped[0]?.[1].find(item => item.browser === 'chrome')?.version).toEqual(['120'])
+    expect(zipped[0]?.[1].find(item => item.browser === 'safari')?.version).toEqual([''])
+  })
+
+  it('周期 class 与数据名保持一一对应', () => {
+    expect(['past_5', 'past_1', 'current', 'future_1', 'future_3'].map(periodClass))
+      .toEqual(['p5', 'p1', 'cur', 'f1', 'f3'])
   })
 })

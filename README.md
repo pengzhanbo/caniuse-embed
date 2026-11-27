@@ -20,8 +20,8 @@ Include the following javascript file in your document.
 <script type="module" src="https://caniuse-embed.vercel.app/embed.js"></script>
 ```
 
-For users in China, `vercel.app` may be unreachable. The same site is also served from a
-mirror domain, which can be used instead:
+If the primary domain is unreachable, the same site is also served from the
+mirror domain `caniuse.pengzhanbo.cn`, which can be used instead:
 
 ```html
 <script type="module" src="https://caniuse.pengzhanbo.cn/embed.js"></script>
@@ -44,8 +44,8 @@ Or use the following snippet for `baseline` data:
 | Attribute | Description | Default |
 | --- | --- | --- |
 | `data-feature` | Feature id, e.g. `css-grid` / `mdn-css_properties_z-index` | - |
-| `data-past` | Number of past versions to display, `0 - 5` | `2` |
-| `data-future` | Number of future versions to display, `0 - 3` | `1` |
+| `data-past` | Number of past version groups to display, `0 - 5` | `2` |
+| `data-future` | Number of future version groups to display, `0 - 3` | `1` |
 | `data-theme` | `light` / `dark` / `auto` | `auto` |
 | `data-origin` | Optional data source origin, must be an absolute `http(s)` URL | `https://caniuse-embed.vercel.app` |
 

@@ -28,3 +28,6 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      - name: Data check
+        run: pnpm check:data

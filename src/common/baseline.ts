@@ -1,5 +1,5 @@
 export const baselineInfo: Record<
-  'low' | 'high' | 'limit' | 'discouraged' | 'deprecated' | 'experimental',
+  'low' | 'high' | 'limit' | 'discouraged' | 'deprecated' | 'experimental' | 'unknown',
   { title?: string, label?: string, description: string }
 > = {
   low: {
@@ -27,6 +27,10 @@ export const baselineInfo: Record<
   experimental: {
     title: 'Experimental',
     description: 'This is an experimental technology.',
+  },
+  unknown: {
+    label: 'Baseline status unknown',
+    description: 'This feature is not covered by web-features yet, so its Baseline status is unknown.',
   },
 }
 

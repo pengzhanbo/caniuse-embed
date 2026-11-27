@@ -181,7 +181,6 @@ export type CaniuseStats =
   | 'y' // 支持
   | 'x' // 支持，但是需要前缀
   | 'd' // 通过浏览器标识启用
-  | 'p' // 需要 polyfill（caniuse 旧版本使用，转换时按不支持处理）
 
 export type CaniuseAgents = Record<Browser, CaniuseBrowserAgent>
 

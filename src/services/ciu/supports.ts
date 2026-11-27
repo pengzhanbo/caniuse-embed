@@ -55,12 +55,5 @@ function getPartialPeriodAboutStats(stats = ''): PeriodStats {
   // caniuse 数据缺失该版本时，语义是未知
   const result = tokens.size ? [...tokens] : [FEATURE_IDENTIFIERS.unknown]
 
-  return {
-    stats: result,
-    supported: result.includes(FEATURE_IDENTIFIERS.supported),
-    partialSupported: result.includes(FEATURE_IDENTIFIERS.partial),
-    unknown: result.includes(FEATURE_IDENTIFIERS.unknown),
-    flag: result.includes(FEATURE_IDENTIFIERS.flagged),
-    prefixed: result.includes(FEATURE_IDENTIFIERS.prefixed),
-  }
+  return { stats: result }
 }

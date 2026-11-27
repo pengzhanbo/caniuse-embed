@@ -4,8 +4,9 @@ import path from 'node:path'
 import process from 'node:process'
 import { buildFeatureData } from '../src/services/build-feature-data'
 import { getTransformVersion } from '../src/services/cache-version'
-import { resolveDataSources } from '../src/services/data-source'
+import { resolveDataSources, toDataVersion } from '../src/services/data-source'
 import { fetchData } from '../src/utils/fetch-data'
+import { writeFileAtomic } from '../src/utils/write-file'
 
 const cacheDir = path.join(process.cwd(), 'data')
 const cacheFile = path.join(cacheDir, 'cached.json')
@@ -22,15 +23,23 @@ const [bcd, caniuse, webFeatures] = await Promise.all([
     .then(res => res.features),
 ])
 
-const data = buildFeatureData(bcd, caniuse, webFeatures)
+const data = {
+  ...buildFeatureData(bcd, caniuse, webFeatures),
+  versions: {
+    bcd: toDataVersion(sources.bcd.version),
+    caniuse: toDataVersion(sources.caniuse.version),
+    webFeatures: toDataVersion(sources.baseline.version),
+  },
+}
 const version = await getTransformVersion()
 
 await fs.mkdir(cacheDir, { recursive: true })
-await fs.writeFile(cacheFile, JSON.stringify({
+await writeFileAtomic(cacheFile, JSON.stringify({
   ...data,
+  schema: 1,
   version,
   cachedAt: Date.now(),
-}), 'utf-8')
+}))
 
 console.log('Feature list generated:', {
   bcd: `${sources.bcd.version} (${bcd.__meta.timestamp})`,

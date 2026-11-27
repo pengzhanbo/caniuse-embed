@@ -9,7 +9,6 @@ import type {
 import {
   BROWSERS,
   CANIUSE_BROWSER_TO_BCD_BROWSERS,
-  FEATURE_IDENTIFIERS,
 } from '../../common/constants'
 import { getBrowserPeriods, type PeriodStats } from '../periods'
 import { getCaniuseStats } from './caniuse-status'
@@ -39,13 +38,5 @@ export function getPartialPeriodAboutStats(
   supports: SimpleSupportStatement[],
   version: string,
 ): PeriodStats {
-  const stats = getCaniuseStats(supports, version)
-  return {
-    supported: stats.includes(FEATURE_IDENTIFIERS.supported),
-    partialSupported: stats.includes(FEATURE_IDENTIFIERS.partial),
-    unknown: stats.includes(FEATURE_IDENTIFIERS.unknown),
-    flag: stats.includes(FEATURE_IDENTIFIERS.flagged),
-    prefixed: stats.includes(FEATURE_IDENTIFIERS.prefixed),
-    stats,
-  }
+  return { stats: getCaniuseStats(supports, version) }
 }

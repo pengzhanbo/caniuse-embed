@@ -5,7 +5,7 @@ import { formatDate } from '../utils/format-date'
 interface Props {
   source: string
   feature: string
-  lastUpdated?: number
+  lastUpdated?: number | string
 }
 
 const { source, lastUpdated, feature } = Astro.props

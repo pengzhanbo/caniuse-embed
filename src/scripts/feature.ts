@@ -7,23 +7,12 @@
  * future: number - future browser version  range: 0 - 3
  * theme: optional string - light /dark / auto
  */
+import { DEFAULT_FUTURE, DEFAULT_PAST, MAX_FUTURE, MAX_PAST, periodClass, PERIODS } from '../common/constants'
 import { $, el, initSearch, initTheme, noNullable, on, onFontLoading, resize, toNum, updateMeta, updateThemeWithSearch } from './shared'
 
-const MAX_PAST = 5
-const MAX_FUTURE = 3
-const DEFAULT_PAST = 2
-const DEFAULT_FUTURE = 1
-
-const PERIOD_CLASSES = [
-  'past_1',
-  'past_2',
-  'past_3',
-  'past_4',
-  'past_5',
-  'future_1',
-  'future_2',
-  'future_3',
-] as const
+const PERIOD_CLASSES = PERIODS
+  .filter(period => period !== 'current')
+  .map(period => [period, periodClass(period)] as const)
 
 initTheme()
 
@@ -62,9 +51,9 @@ function updatePeriod(search: URLSearchParams) {
     return
 
   // 逐项切换，避免覆盖元素的基础 class
-  for (const name of PERIOD_CLASSES) {
-    const [type, index] = name.split('_') as ['past' | 'future', string]
+  for (const [period, className] of PERIOD_CLASSES) {
+    const [type, index] = period.split('_') as ['past' | 'future', string]
     const limit = type === 'past' ? past : future
-    el.classList.toggle(name, Number(index) <= limit)
+    el.classList.toggle(className, Number(index) <= limit)
   }
 }

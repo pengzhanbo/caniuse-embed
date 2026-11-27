@@ -1,0 +1,76 @@
+/**
+ * 最小化的基础样式重置
+ *
+ * 只保留首页实际使用到的 normalize.css 规则（文档、标题、表单、代码、hidden），
+ * 不再为未使用的元素（fieldset、details、`[type=search]` 等）付出体积。
+ * 引入顺序必须保持在 choices.css 之前，避免覆盖组件库自身的表单样式。
+ */
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  display: block;
+}
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+pre,
+code {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+a {
+  background-color: transparent;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+}
+
+button,
+input {
+  overflow: visible;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+}
+
+button::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+[type='radio'] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+[hidden] {
+  display: none;
+}

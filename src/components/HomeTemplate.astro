@@ -1,4 +1,5 @@
 ---
+import type { Locale } from '../i18n'
 import { SITE_ORIGIN } from '../common/constants'
 import Layout from '../layouts/Layout.astro'
 import IconAuto from './icons/Auto.astro'
@@ -6,45 +7,13 @@ import IconGithub from './icons/Github.astro'
 import IconMoon from './icons/Moon.astro'
 import IconSun from './icons/Sun.astro'
 
-import 'normalize.css'
+import '../styles/reset.css'
 import 'choices.js/public/assets/styles/choices.min.css'
 import '../styles/home.css'
 
 export interface Props {
   lang: string
-  locale: {
-    description: string
-    madeWith: string
-    deployWith: string
-    canIUseUpdated: string
-    bcdUpdated: string
-    examples: string
-    featureSupportTitle: string
-    featureSupportDesc: string
-    baselineTitle: string
-    baselineDesc: string
-    createEmbed: string
-    selectType: string
-    featureSupportType: string
-    baselineType: string
-    selectFeature: string
-    selectFeatureDesc: string
-    additionalSettings: string
-    pastVersions: string
-    futureVersions: string
-    includeScript: string
-    includeScriptDesc: string
-    getEmbedCode: string
-    getEmbedCodeDesc: string
-    parameters: string
-    featureName: string
-    pastDesc: string
-    futureDesc: string
-    themeDesc: string
-    originDesc: string
-    originExample: string
-    embedPreview: string
-  }
+  locale: Locale
   bcdUpdatedDate: string
   ciuUpdatedDate: string
 }
@@ -54,7 +23,7 @@ const { lang, locale, bcdUpdatedDate, ciuUpdatedDate } = Astro.props
 const embedSnippet = `<script type="module" src="${SITE_ORIGIN}/embed.js"></script>`
 ---
 
-<Layout lang={lang} allowInlineScripts>
+<Layout lang={lang}>
   <a href="https://github.com/pengzhanbo/caniuse-embed" target="_blank" rel="noopener noreferrer" class="fork" aria-label="View source on GitHub">
     <IconGithub />
   </a>

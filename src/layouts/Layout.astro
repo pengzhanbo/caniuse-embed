@@ -1,27 +1,32 @@
 ---
+import { SITE_ORIGIN } from '../common/constants'
 import { markdownToPlainText } from '../utils/markdown'
+
+import '../styles/fonts.css'
 
 interface Props {
   title?: string
+  description?: string | undefined
   source?: string
   lang?: string
-  allowInlineScripts?: boolean
+  noindex?: boolean
 }
 
-const { title, source, lang = 'en-US', allowInlineScripts = false } = Astro.props
+const {
+  title,
+  description,
+  source,
+  lang = 'en-US',
+  noindex = false,
+} = Astro.props
 
 const plainTitle = title ? markdownToPlainText(title) : ''
-
-const csp = [
-  'default-src \'self\'',
-  allowInlineScripts ? 'script-src \'self\' \'unsafe-inline\'' : 'script-src \'self\'',
-  'style-src \'self\' \'unsafe-inline\'',
-  'img-src \'self\' data:',
-  'font-src \'self\'',
-  'connect-src \'self\'',
-  'base-uri \'self\'',
-  'form-action \'none\'',
-].join('; ')
+const plainDescription = description ? markdownToPlainText(description) : ''
+const siteName = 'Can I use... Support tables for HTML5, CSS3, etc'
+const fullTitle = plainTitle ? `${plainTitle} | ${siteName}` : siteName
+const metaDescription = plainDescription
+  || '"Can I use" provides up-to-date browser support tables for support of front-end web technologies on desktop and mobile web browsers.'
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE_ORIGIN).href
 ---
 <!doctype html>
 <html lang={lang} dir="ltr">
@@ -33,11 +38,19 @@ const csp = [
     />
     <link rel="icon" href="/favicon-128.png" sizes="16x16 32x32 64x64 128x128" type="image/png" />
     <link rel="apple-touch-icon" href="/favicon-128.png" />
-    <meta name="Description" content="&quot;Can I use&quot; provides up-to-date browser support tables for support of front-end web technologies on desktop and mobile web browsers." />
+    <script is:inline src="/theme-init.js"></script>
+    <meta name="Description" content={metaDescription} />
     <meta name="keywords" content="web browser compatibility support html css svg html5 css3 opera chrome firefox safari internet explorer" />
     <meta name="generator" content={Astro.generator} />
-    {import.meta.env.PROD && <meta http-equiv="Content-Security-Policy" content={csp} />}
-    <title>{plainTitle ? `${plainTitle} | ` : ''} Can I use... Support tables for HTML5, CSS3, etc</title>
+    {noindex && <meta name="robots" content="noindex" />}
+    {!noindex && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Can I Use Embed" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metaDescription} />
+    {!noindex && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary" />
+    <title>{fullTitle}</title>
   </head>
   <body class={source}>
     <slot />

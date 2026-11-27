@@ -3,21 +3,11 @@ import { decimalAdd } from '@pengzhanbo/utils'
 import { MAX_FUTURE, MAX_PAST } from '../common/constants'
 import { normalizeVersion } from '../utils/normalize-version'
 
-export type PeriodStats = Pick<
-  FeatureSupportPeriod,
-  'stats' | 'supported' | 'partialSupported' | 'prefixed' | 'unknown' | 'flag'
->
+export interface PeriodStats {
+  stats: CaniuseStats[]
+}
 
 export type GetVersionStats = (version: string) => PeriodStats
-
-/**
- * 占位的空周期（浏览器没有更多历史 / 未来版本时补位）
- *
- * 这里只保留最小字段：每个特性 10 个浏览器 × 9 个周期
- */
-function emptyPeriod(period: PeriodType): FeatureSupportPeriod {
-  return { period, version: [''], usage: 0 }
-}
 
 function statsEqual(a: CaniuseStats[] | undefined, b: CaniuseStats[] | undefined): boolean {
   if (a === b)
@@ -32,8 +22,8 @@ function statsEqual(a: CaniuseStats[] | undefined, b: CaniuseStats[] | undefined
 /**
  * 以当前最新发行版本为基准，生成 过去 5 个版本 / 当前版本 / 未来 3 个版本 的周期数据
  *
- * caniuse 与 BCD 两个数据源只有「如何获取某个版本的支持状态」不同，
- * 这里复用同一套周期合并逻辑，避免两份实现继续分叉。
+ * 只返回真实存在的周期：浏览器没有更多历史 / 未来版本时不补空占位，
+ * 渲染层通过显式 `grid-column` 对齐，避免 70% 的周期对象只是空壳。
  */
 export function getBrowserPeriods(
   agent: Pick<CaniuseBrowserAgent, 'current_version' | 'version_list'>,
@@ -98,12 +88,6 @@ export function getBrowserPeriods(
       i++
     }
   }
-  pastPeriod = null
-  if (past > 0) {
-    for (; past > 0; past--)
-      periods.unshift(emptyPeriod(`past_${MAX_PAST - past + 1}` as PeriodType))
-  }
-
   let futurePeriod: FeatureSupportPeriod | null = null
   let future = 1
   // 查找未来的版本，对于每个具体版本，如果多个相邻版本具有相同的支持情况，则将相邻版本合并
@@ -138,12 +122,6 @@ export function getBrowserPeriods(
       futurePeriod = null
       j--
     }
-  }
-
-  futurePeriod = null
-  if (future < MAX_FUTURE) {
-    for (; future <= MAX_FUTURE; future++)
-      periods.push(emptyPeriod(`future_${future}` as PeriodType))
   }
 
   return periods

@@ -1,10 +1,32 @@
+/**
+ * 把描述与子路径对齐后拼接
+ *
+ * `descriptions` 与完整 `paths` 按下标一一对应（`flatten-compat-data` 中同步 push），
+ * 而调用方传入的通常是尾部子路径，因此这里取描述数组的尾部同样长度，
+ * 不能多取一位，否则每个描述都会与「上一层」的路径错位。
+ */
 function withDescriptions(paths: string[], descriptions: string[], sep = ': '): string {
-  if (paths.length < descriptions.length)
-    descriptions = descriptions.slice(descriptions.length - paths.length - 1)
+  // 没有更深子路径时，保留当前特性自身的描述（通常是最后一项），
+  // 避免 offset 把 descriptions 全部截掉（如 `css.at-rules.media`）
+  if (paths.length === 0)
+    return (descriptions[descriptions.length - 1] || '').trim()
+
+  const offset = descriptions.length - paths.length
+  const list = offset > 0 ? descriptions.slice(offset) : descriptions
 
   const res: string[] = []
-  for (let i = 0; i < descriptions.length; i++) {
-    res.push(descriptions[i] || paths[i]!)
+  const length = Math.max(list.length, paths.length)
+  for (let i = 0; i < length; i++) {
+    const value = list[i] || paths[i] || ''
+    const last = res[res.length - 1]
+    // 描述与路径可能恰好相同（例如 `Array` 的构造器），合并相邻重复段；
+    // 后一段以前一段开头时（`color-mix()` → `color-mix() with ...`）保留更完整的一段
+    if (!value || value === last)
+      continue
+    if (last && value.startsWith(`${last} `))
+      res[res.length - 1] = value
+    else
+      res.push(value)
   }
   return res.filter(Boolean).join(sep).trim()
 }
@@ -26,13 +48,6 @@ export function formatTitle(paths: string[], descriptions: string[]): string {
       const before = `${title} API`
       if (!titles.length)
         return before
-      const temp = titles.join(' ')
-      if (
-        (temp.includes('constructor') || temp.includes('@@'))
-        && titles.length > 1
-      ) {
-        titles.shift()
-      }
       if (titles.length <= 2) {
         return `${before}: ${(titles).join(' ')}`
       }

@@ -1,25 +1,5 @@
-@font-face {
-  font-family: 'open sans';
-  src: url("/fonts/open-sans-regular.woff2") format("woff2");
-  font-display: swap;
-  font-weight: normal;
-  font-style: normal
-}
-
-@font-face {
-  font-family: 'open sans';
-  src: url("/fonts/open-sans-300.woff2") format("woff2");
-  font-display: swap;
-  font-weight: 300;
-  font-style: normal
-}
-
-@font-face {
-  font-family: 'open sans';
-  src: url("/fonts/open-sans-700.woff2") format("woff2");
-  font-display: swap;
-  font-weight: 700;
-  font-style: normal
+:root {
+  color-scheme: light dark;
 }
 
 html,
@@ -31,34 +11,12 @@ body {
 body {
   font: 16px / 1.5 "Open Sans", Helvetica, Arial, sans-serif;
   font-weight: normal;
-  background-size: 400px 400px, 10px 10px;
   color: black;
 }
 
-@media (max-width: 736px) {
-  body {
-    padding:0;
-    background-size: 12.5em 12.5em,.625em .625em
-  }
-}
-
-article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {
-  display: block;
-}
-
 a {
-  color: #EB8900;
+  color: #5086a1;
   text-decoration: none;
-}
-
-a:hover {
-  text-decoration: none;
-}
-
-ul {
-  padding-left: 0;
-  margin-top: 0;
-  margin-bottom: 0;
 }
 
 h1,h2,h3,h4,h5,h6 {

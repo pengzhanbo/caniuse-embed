@@ -1,7 +1,23 @@
+import type { FeatureDataVersions } from '../types'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import process from 'node:process'
 
 const CDN = 'https://cdn.jsdelivr.net/npm'
 const RESOLVE_API = 'https://data.jsdelivr.com/v1/packages/npm'
+
+/**
+ * 已解析的具体版本号（`8.1.11`、`1.0.30001828`、`3.48.0-rc.1`）
+ *
+ * 版本选择器（`latest`、tag、`^1.0.0` 等）不能作为「本次构建使用的版本」写入
+ * 缓存或产物，否则会让人误以为可以据此复现。
+ */
+const CONCRETE_VERSION = /^\d+\.\d+\.\d+(?:-[0-9a-z.-]+)?(?:\+[0-9a-z.-]+)?$/i
+
+export function toDataVersion(version: string | undefined): string {
+  const value = version?.trim()
+  return value && CONCRETE_VERSION.test(value) ? value : 'unknown'
+}
 
 /**
  * 远程数据源
@@ -98,4 +114,28 @@ export async function resolveDataSources(): Promise<Record<keyof typeof DATA_SOU
   )
 
   return { bcd, caniuse, baseline }
+}
+
+/**
+ * 读取 `node_modules` 中已安装数据集的版本
+ *
+ * 远程获取失败回退到本地时，产物需要如实记录实际使用的版本。
+ */
+export async function getLocalDataVersions(): Promise<FeatureDataVersions> {
+  const read = async (pkg: string): Promise<string> => {
+    try {
+      const file = path.join(process.cwd(), 'node_modules', pkg, 'package.json')
+      const pkgJson = JSON.parse(await fs.readFile(file, 'utf-8')) as { version?: string }
+      return toDataVersion(pkgJson.version)
+    }
+    catch {
+      return 'unknown'
+    }
+  }
+
+  return {
+    bcd: await read(DATA_SOURCES.bcd.pkg),
+    caniuse: await read(DATA_SOURCES.caniuse.pkg),
+    webFeatures: await read(DATA_SOURCES.baseline.pkg),
+  }
 }

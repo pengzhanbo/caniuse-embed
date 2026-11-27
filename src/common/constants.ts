@@ -3,12 +3,13 @@ import type { CaniuseStats } from '../types'
 /**
  * 站点域名
  *
- * 默认域名是 `caniuse-embed.vercel.app`；
- * `caniuse.pengzhanbo.cn` 是同一站点的镜像域名，服务于网络无法访问
- * `vercel.app` 的用户（主要是国内用户），二者内容完全一致。
+ * 以 `astro.config.ts` 的 `site` 为唯一事实来源；
+ * `caniuse.pengzhanbo.cn` 是同一站点的镜像域名。
  */
-export const SITE_ORIGIN = 'https://caniuse-embed.vercel.app'
-export const SITE_HOST = 'caniuse-embed.vercel.app'
+const DEFAULT_SITE_ORIGIN = 'https://caniuse-embed.vercel.app'
+
+export const SITE_ORIGIN = (import.meta.env?.SITE || DEFAULT_SITE_ORIGIN).replace(/\/+$/, '')
+export const SITE_HOST = new URL(SITE_ORIGIN).host
 export const SITE_URL = `${SITE_ORIGIN}/`
 
 export const BROWSERS = [
@@ -49,8 +50,26 @@ export const PERIODS = [
   'future_3',
 ] as const
 
+/**
+ * 周期对应的 DOM class
+ *
+ * 数据层仍使用可读的 `past_1` / `future_1`，但每个页面会重复输出这些 class，
+ * 因此渲染时压缩为 `p1` / `f1`；`current` 使用 `cur`。
+ */
+export function periodClass(period: string): string {
+  if (period === 'current')
+    return 'cur'
+  if (period.startsWith('past_'))
+    return `p${period.slice(5)}`
+  if (period.startsWith('future_'))
+    return `f${period.slice(7)}`
+  return period
+}
+
 export const MAX_PAST = 5
 export const MAX_FUTURE = 3
+export const DEFAULT_PAST = 2
+export const DEFAULT_FUTURE = 1
 
 export const CANIUSE_BROWSER_TO_BCD_BROWSERS: Record<string, string> = {
   ie: 'ie',

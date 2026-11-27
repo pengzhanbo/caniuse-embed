@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light dark;
   --c-text: #000;
   --c-check: #1e8e3e;
   --c-cross: #ea8600;
@@ -27,6 +28,8 @@
   --bg-discouraged-engine: var(--bg-limit-engine);
   --discouraged-img: url(../assets/baseline-discouraged-light.svg);
 
+  --experimental-img: url(../assets/baseline-experimental-light.svg);
+
   --browser-chrome: url(../assets/chrome.svg);
   --browser-edge: url(../assets/edge.svg);
   --browser-firefox: url(../assets/firefox.svg);
@@ -54,6 +57,8 @@
   --deprecated-img: url(../assets/baseline-deprecated-dark.svg);
 
   --discouraged-img: url(../assets/baseline-discouraged-dark.svg);
+
+  --experimental-img: url(../assets/baseline-experimental-dark.svg);
 }
 
 .baseline.high {
@@ -88,6 +93,19 @@
   --img: var(--discouraged-img);
 }
 
+.baseline.experimental {
+  --bg: var(--bg-limit);
+  --bg-engine: var(--bg-limit-engine);
+  --img: var(--experimental-img);
+}
+
+.baseline.unknown {
+  --bg: var(--bg-limit);
+  --bg-engine: var(--bg-limit-engine);
+  --img: none;
+  border-style: dashed;
+}
+
 .baseline {
   --code-bg: var(--bg-engine);
 
@@ -116,7 +134,7 @@ code {
 }
 
 .logo {
-  display: inline-block;;
+  display: inline-block;
   width: 36px;
   height: 30px;
   background-image: var(--img);
@@ -128,6 +146,7 @@ code {
 .baseline.deprecated .logo {
   width: 18px;
   height: 18px;
+  margin-top: 3px;
 }
 
 .container {
@@ -135,7 +154,7 @@ code {
   align-items: flex-start;
   justify-content: flex-start;
   gap: 12px;
-  padding-top: 12px;;
+  padding-top: 12px;
 }
 
 .content {
@@ -239,8 +258,4 @@ code {
   padding: 2px 4px;
   border-radius: 4px;
   transition: var(--transition);
-}
-
-.baseline.deprecated .logo {
-  margin-top: 3px;
 }
