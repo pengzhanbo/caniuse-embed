@@ -53,12 +53,10 @@ function postHeight() {
 let themeMode = 'auto' // light / dark / auto
 
 export function initTheme() {
+  // 先应用 URL 中的 theme，避免先按系统主题渲染再切换导致闪烁
+  updateThemeWithSearch(initSearch())
   if (typeof window.matchMedia !== 'undefined') {
-    const media = darkMather()
-    if (themeMode === 'auto')
-      updateTheme(media.matches)
-
-    media.addEventListener('change', (ev) => {
+    darkMather().addEventListener('change', (ev) => {
       if (themeMode === 'auto')
         updateTheme(ev.matches)
     })
@@ -86,3 +84,16 @@ export function onFontLoading(fn: () => void) {
     document.fonts.ready?.then(() => fn())
   }
 }
+
+/**
+ * 内容变化（文字折行、字体替换、图片加载）不一定触发 resize，
+ * 用 ResizeObserver 观察根容器，确保 iframe 高度始终跟随内容。
+ */
+export function observeHeight() {
+  if (!el || typeof ResizeObserver === 'undefined')
+    return
+  const observer = new ResizeObserver(() => resize())
+  observer.observe(el)
+}
+
+observeHeight()

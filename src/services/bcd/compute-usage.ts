@@ -33,6 +33,14 @@ function computedGlobalUsage(agents: CaniuseAgents, device: Device) {
   }
 }
 
+/**
+ * 清空全局使用率缓存
+ */
+export function resetUsageCaches(): void {
+  globalUsages.desktop = { browserList: [], total: 0 }
+  globalUsages.mobile = { browserList: [], total: 0 }
+}
+
 function computedUsageWithDevice(support: SupportBlock, agents: CaniuseAgents, browsers: Browsers, device: Device): FeatureUsage | undefined {
   const { browserList, total } = globalUsages[device]
   if (!total)

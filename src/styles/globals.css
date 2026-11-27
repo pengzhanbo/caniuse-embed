@@ -22,6 +22,10 @@
   font-style: normal
 }
 
+:root {
+  color-scheme: light dark;
+}
+
 html,
 body {
   margin: 0;
@@ -31,14 +35,12 @@ body {
 body {
   font: 16px / 1.5 "Open Sans", Helvetica, Arial, sans-serif;
   font-weight: normal;
-  background-size: 400px 400px, 10px 10px;
   color: black;
 }
 
 @media (max-width: 736px) {
   body {
     padding:0;
-    background-size: 12.5em 12.5em,.625em .625em
   }
 }
 
@@ -47,7 +49,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {
 }
 
 a {
-  color: #EB8900;
+  color: #5086a1;
   text-decoration: none;
 }
 

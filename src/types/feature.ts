@@ -3,6 +3,15 @@ import type { Browser, CaniuseStats } from './caniuse-data'
 
 export type PeriodType = 'past_5' | 'past_4' | 'past_3' | 'past_2' | 'past_1' | 'current' | 'future' | 'future_1' | 'future_2' | 'future_3'
 
+/**
+ * 本次构建实际使用的上游数据版本
+ */
+export interface FeatureDataVersions {
+  bcd: string
+  caniuse: string
+  webFeatures: string
+}
+
 export interface FeatureData {
   /**
    * 特性唯一 id
@@ -112,27 +121,6 @@ export interface FeatureSupportPeriod {
    * 各个浏览器的支持情况
    */
   stats?: CaniuseStats[]
-
-  /**
-   * 是否支持
-   */
-  supported?: boolean
-  /**
-   * 是否部分支持
-   */
-  partialSupported?: boolean
-  /**
-   * 支持但需要前缀
-   */
-  prefixed?: boolean
-  /**
-   * 支持情况未知
-   */
-  unknown?: boolean
-  /**
-   * 支持但需要设置浏览器标识
-   */
-  flag?: boolean
 }
 
 export interface FeatureStatus {

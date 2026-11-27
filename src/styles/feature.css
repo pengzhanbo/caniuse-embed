@@ -26,7 +26,6 @@
   --prefix-fg: rgba(60, 60, 67);
   --flag-fg: rgba(60, 60, 67);
   --flag-bg: rgba(60, 60, 67, 0.2);
-  --footer-link-fg: #f2e8d5;
 
   --transition: background 0.25s ease, color 0.25s ease, border 0.25s ease;
 }
@@ -81,7 +80,7 @@
   border-color: #385884
 }
 
-.browser--firefox,.browser--and_ff {
+.browser--firefox {
   border-color: #a36223
 }
 
@@ -93,11 +92,7 @@
   border-color: #666
 }
 
-.browser--opera {
-  border-color: #812323
-}
-
-.browser--op_mini,.browser--op_mob {
+.browser--op_mini {
   border-color: #992626
 }
 
@@ -118,7 +113,7 @@
   padding: 3px 4px;
   margin: 16px -1px 0;
   background-color: var(--form-bg);
-  color: rgba(255,255,255,0.7);
+  color: #fff;
   font-size: 12px;
   transition: var(--transition);
 }
@@ -135,7 +130,7 @@
 }
 
 .footer a {
-  color: var(--footer-link-fg);
+  color: #fff;
   text-decoration: underline;
   text-underline-offset: 2px;
   transition: var(--transition);
@@ -255,14 +250,13 @@
 
 @media (max-width: 540px) {
   .supports-header > [role="columnheader"] {
-    height: 130px;
+    height: 72px;
   }
   .supports-header .browser-title {
     position: absolute;
     border-bottom: 0;
     padding-bottom: 0;
     transform: rotate(-90deg);
-    white-space: nowrap;
     left: 0;
     bottom: 15px;
     text-align: left;
@@ -272,13 +266,30 @@
 
 @media (max-width: 500px) {
   .supports-header > [role="columnheader"] {
-    height: 110px;
+    height: 64px;
+  }
+
+  .supports-header .browser-title {
+    line-height: 1;
+    white-space: inherit;
   }
 }
 
 .supports-item {
   text-align: center;
 }
+
+/* 缺格时仍然落到正确的列，避免行内单元格整体左移 */
+.supports-item > .ie { grid-column: 1 }
+.supports-item > .edge { grid-column: 2 }
+.supports-item > .firefox { grid-column: 3 }
+.supports-item > .chrome { grid-column: 4 }
+.supports-item > .safari { grid-column: 5 }
+.supports-item > .ios_saf { grid-column: 6 }
+.supports-item > .op_mini { grid-column: 7 }
+.supports-item > .and_chr { grid-column: 8 }
+.supports-item > .android { grid-column: 9 }
+.supports-item > .samsung { grid-column: 10 }
 
 .supports-item > div {
   display: flex;
@@ -323,6 +334,11 @@
   width: 100%;
 }
 
+.supports-item > div.version-6 { --font-size: 6px }
+.supports-item > div.version-7 { --font-size: 7px }
+.supports-item > div.version-8 { --font-size: 8px }
+.supports-item > div.version-10 { --font-size: 10px }
+
 .supports-item > div span.usage {
   position: absolute;
   width: 100%;
@@ -335,8 +351,40 @@
   transition: var(--transition);
 }
 
-.supports-item > div:hover span.usage {
+.supports-item > div:hover span.usage,
+.supports-item > div:focus-visible span.usage {
   display: block;
+}
+
+.supports-item > div:focus-visible {
+  outline: 2px solid var(--primary-border);
+  outline-offset: 1px;
+}
+
+/* 触屏设备没有 hover，把使用率作为第二行常驻显示 */
+@media (hover: none) {
+  .supports-item > div {
+    height: auto;
+    max-height: none;
+    min-height: 30px;
+    flex-direction: column;
+    line-height: 1.15;
+    padding: 2px 0;
+  }
+
+  .supports-item > div span.version {
+    height: auto;
+  }
+
+  .supports-item > div span.usage {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    background: none;
+    color: inherit;
+    font-size: 9px;
+  }
 }
 
 .supports-item > div span.state {
@@ -365,12 +413,11 @@
   }
 
   .supports-item > div span.usage {
-    font-size: 10px;
+    font-size: 8px;
   }
 }
 
 .n,
-.p,
 .d:not(.y) {
   background: var(--no-support-pattern);
   color: var(--no-support-fg);
@@ -410,7 +457,7 @@
   width: 8px;
   height: 7px;
   font-size: 20px;
-  font-weight: light;
+  font-weight: 400;
   line-height: 3px;
   text-align: center;
   color: #666;
@@ -496,11 +543,19 @@
 }
 
 .note .y {
-  color: var(--supported);
+  color: #1f6b2b;
 }
 
 .note .a {
-  color: var(--partial);
+  color: #5f5501;
+}
+
+.dark .note .y {
+  color: #319B43;
+}
+
+.dark .note .a {
+  color: #8B8D11;
 }
 
 .feature [class*="past_"],
@@ -536,6 +591,10 @@
 .baseline section {
   flex: 1;
   min-width: 0;
+}
+
+.baseline.unknown {
+  border-style: dashed;
 }
 
 .baseline p {
@@ -630,6 +689,6 @@
   --baseline-logo: url(../assets/baseline-deprecated-dark.svg);
 }
 
-.baseline .logo.experimental {
+.dark .baseline .logo.experimental {
   --baseline-logo: url(../assets/baseline-experimental-dark.svg);
 }

@@ -21,6 +21,22 @@ function isSafeHref(href: string): boolean {
   return /^https?:\/\//i.test(href.trim())
 }
 
+/** 转义 markdown 链接文本中的方括号，避免破坏链接结构 */
+function escapeLinkText(text: string): string {
+  return text.replace(/([[\]])/g, '\\$1')
+}
+
+/** 链接目标使用尖括号包裹，并编码会破坏语法的字符 */
+function escapeLinkHref(href: string): string {
+  return href.replace(/[<>\s]/g, (char) => {
+    if (char === '<')
+      return '%3C'
+    if (char === '>')
+      return '%3E'
+    return '%20'
+  })
+}
+
 function stripTags(content: string): string {
   return content.replace(TAG_PATTERN, '')
 }
@@ -71,7 +87,7 @@ function preprocess(content: string, { links = true }: PreprocessOptions = {}): 
         return text
 
       const href = getHref(tag)
-      return isSafeHref(href) ? `[${text}](${href})` : text
+      return isSafeHref(href) ? `[${escapeLinkText(text)}](<${escapeLinkHref(href)}>)` : text
     })
     // 行内代码转换为 markdown 反引号
     .replace(CODE_PATTERN, (_, code: string) => toCodeSpan(code))
@@ -119,7 +135,17 @@ export function markdownToPlainText(content: string): string {
     .replaceAll('&gt;', '>')
     .replaceAll('&quot;', '"')
     .replaceAll('&#39;', '\'')
-    .replaceAll(/&#(\d+);/g, (_, code: string) => String.fromCodePoint(Number(code)))
+    .replaceAll(/&#(\d+);/g, (_, code: string) => decodeCodePoint(Number(code)))
+    .replaceAll(/&#x([\da-f]+);/gi, (_, code: string) => decodeCodePoint(Number.parseInt(code, 16)))
     .replace(/\s+/g, ' ')
     .trim()
+}
+
+/** 越界 / 非法码点直接丢弃，避免一条上游数据让整个构建崩溃 */
+function decodeCodePoint(code: number): string {
+  if (!Number.isInteger(code) || code <= 0 || code > 0x10FFFF)
+    return ''
+  if (code >= 0xD800 && code <= 0xDFFF)
+    return '\uFFFD'
+  return String.fromCodePoint(code)
 }

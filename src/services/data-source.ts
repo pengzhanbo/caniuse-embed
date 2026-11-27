@@ -1,3 +1,6 @@
+import type { FeatureDataVersions } from '../types'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import process from 'node:process'
 
 const CDN = 'https://cdn.jsdelivr.net/npm'
@@ -98,4 +101,28 @@ export async function resolveDataSources(): Promise<Record<keyof typeof DATA_SOU
   )
 
   return { bcd, caniuse, baseline }
+}
+
+/**
+ * 读取 `node_modules` 中已安装数据集的版本
+ *
+ * 远程获取失败回退到本地时，产物需要如实记录实际使用的版本。
+ */
+export async function getLocalDataVersions(): Promise<FeatureDataVersions> {
+  const read = async (pkg: string): Promise<string> => {
+    try {
+      const file = path.join(process.cwd(), 'node_modules', pkg, 'package.json')
+      const pkgJson = JSON.parse(await fs.readFile(file, 'utf-8')) as { version?: string }
+      return pkgJson.version || 'unknown'
+    }
+    catch {
+      return 'unknown'
+    }
+  }
+
+  return {
+    bcd: await read(DATA_SOURCES.bcd.pkg),
+    caniuse: await read(DATA_SOURCES.caniuse.pkg),
+    webFeatures: await read(DATA_SOURCES.baseline.pkg),
+  }
 }

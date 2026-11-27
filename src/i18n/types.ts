@@ -1,0 +1,33 @@
+export interface Locale {
+  description: string
+  madeWith: string
+  deployWith: string
+  canIUseUpdated: string
+  bcdUpdated: string
+  examples: string
+  featureSupportTitle: string
+  featureSupportDesc: string
+  baselineTitle: string
+  baselineDesc: string
+  createEmbed: string
+  selectType: string
+  featureSupportType: string
+  baselineType: string
+  selectFeature: string
+  selectFeatureDesc: string
+  additionalSettings: string
+  pastVersions: string
+  futureVersions: string
+  includeScript: string
+  includeScriptDesc: string
+  getEmbedCode: string
+  getEmbedCodeDesc: string
+  parameters: string
+  featureName: string
+  pastDesc: string
+  futureDesc: string
+  themeDesc: string
+  originDesc: string
+  originExample: string
+  embedPreview: string
+}

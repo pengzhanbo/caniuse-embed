@@ -28,6 +28,16 @@ describe('markdownRender', () => {
     expect(html).toMatch(/rel="noopener noreferrer"/)
   })
 
+  it('链接目标中的空格会被编码，括号不会破坏链接结构', () => {
+    const html = markdownRender('<a href="https://example.com/a b(c)">docs</a>', true)
+    expect(html).toMatch(/href="https:\/\/example\.com\/a%20b\(c\)"/)
+  })
+
+  it('链接文本中的方括号会被转义', () => {
+    const html = markdownRender('<a href="https://example.com">[docs]</a>', true)
+    expect(html).toContain('>[docs]</a>')
+  })
+
   it('标题场景下不生成嵌套链接', () => {
     const html = markdownRender('<a href="https://example.com">docs</a> <code>x</code>', true, { links: false })
     expect(html).not.toContain('<a ')
@@ -57,5 +67,14 @@ describe('markdownToPlainText', () => {
     expect(markdownToPlainText('A: <code>x</code> &amp; y')).toBe('A: x & y')
     expect(markdownToPlainText('AbortController API: <code>AbortController()</code> constructor'))
       .toBe('AbortController API: AbortController() constructor')
+  })
+
+  it('越界或非法的数字实体不会让构建崩溃', () => {
+    expect(markdownToPlainText('x &#99999999; y')).toBe('x y')
+    expect(markdownToPlainText('a &#0; b')).toBe('a b')
+  })
+
+  it('支持十六进制实体', () => {
+    expect(markdownToPlainText('&#x27;')).toBe('\'')
   })
 })

@@ -18,7 +18,7 @@ export interface Params {
 export interface Props {
   data: FeatureData
   status: FeatureStatus | undefined
-  bcdUpdated: number
+  bcdUpdated: string
   ciuUpdated: number
 }
 
@@ -45,7 +45,7 @@ const lastUpdated = source === 'mdn' ? bcdUpdated : ciuUpdated
 const supports = data.supports
 ---
 
-<Layout title={data.title} {source}>
+<Layout title={data.title} {source} description={data.description}>
   <input class="feature_id" type="hidden" hidden value={feature} />
 
   <main class="main feature past_1 past_2 future_1">

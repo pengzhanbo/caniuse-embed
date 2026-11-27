@@ -2,6 +2,7 @@ import type { CaniuseAgents, FeatureData, FeatureSupport, MDNCompatData } from '
 import { omit } from '@pengzhanbo/utils'
 import { FEATURE_IDENTIFIERS } from '../../common/constants'
 import { formatId } from '../../utils/format-id'
+import { hasMainstreamUnknown } from '../feature-stats'
 import { computeUsage } from './compute-usage'
 import { flattenCompatData } from './flatten-compat-data'
 import { formatTitle } from './format-title'
@@ -27,7 +28,7 @@ export function* bcd2FeatureList(bcd: MDNCompatData, agents: CaniuseAgents): Gen
       deprecated: compat.status?.deprecated || false,
       experimental: compat.status?.experimental || false,
       prefixed: stats.includes(FEATURE_IDENTIFIERS.prefixed),
-      unknown: stats.includes(FEATURE_IDENTIFIERS.unknown),
+      unknown: hasMainstreamUnknown(supports),
       flag: stats.includes(FEATURE_IDENTIFIERS.flagged),
       usage: computeUsage(compat.support, agents, browsers), // Not implemented 未实现
       supports,

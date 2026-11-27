@@ -49,6 +49,7 @@ const stats = {
   titlesWithHtml: 0,
   contradictory: { 'a+y': 0, 'x+y': 0, 'd-without-n': 0 },
   prefixedFeatures: 0,
+  unknownFeatures: 0,
   unknownCells: 0,
   discouraged: 0,
 }
@@ -66,6 +67,9 @@ for (const feature of featureList) {
 
   if (feature.prefixed)
     stats.prefixedFeatures++
+
+  if (feature.unknown)
+    stats.unknownFeatures++
 
   for (const support of feature.supports) {
     for (const period of support.periods) {
@@ -94,10 +98,21 @@ if (stats.contradictory['a+y'] > 0)
   errors.push(`存在 a+y 矛盾状态: ${stats.contradictory['a+y']}`)
 if (stats.contradictory['x+y'] > 0)
   errors.push(`存在 x+y 矛盾状态: ${stats.contradictory['x+y']}`)
+if (stats.contradictory['d-without-n'] > 0)
+  errors.push(`存在 d 但没有 n 的矛盾状态: ${stats.contradictory['d-without-n']}`)
 if (stats.discouraged < discouragedFeatures)
   errors.push(`baseline discouraged 数量(${stats.discouraged}) 少于 web-features(${discouragedFeatures})`)
 
-console.log(JSON.stringify(stats, null, 2))
+// 特性级 unknown 只统计主流浏览器，正常情况下占比应很低；
+// 占比突然升高通常意味着上游数据结构发生了变化
+const unknownRatio = stats.unknownFeatures / Math.max(featureList.length, 1)
+if (unknownRatio > 0.5)
+  errors.push(`unknown 特性占比异常: ${(unknownRatio * 100).toFixed(1)}%`)
+
+console.log(JSON.stringify({
+  ...stats,
+  unknownFeatureRatio: Number(unknownRatio.toFixed(3)),
+}, null, 2))
 
 if (errors.length) {
   console.error('\n数据异常:')

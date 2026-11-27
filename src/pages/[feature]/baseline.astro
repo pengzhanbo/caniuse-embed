@@ -30,7 +30,7 @@ export async function getStaticPaths() {
         data: feature,
         status: baseline[formatId(feature.source === 'mdn' ? feature.paths : feature.id)],
       },
-  })).filter(({ props }) => props.status || props.data.deprecated)
+  }))
 }
 
 const { feature } = Astro.params
@@ -45,7 +45,7 @@ const { type, title, label, description, reason } = getBaselineStatus(status, da
 const support = status?.support
 ---
 
-<Layout title={data.title} {source}>
+<Layout title={data.title} {source} description={data.description}>
   <input class="feature_id" type="hidden" hidden value={feature} />
   <main class:list={['main', 'baseline', type]}>
     <h1>

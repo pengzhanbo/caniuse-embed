@@ -1,11 +1,13 @@
 import type { CaniuseCompatData, CaniuseData, FeatureData } from '../../types'
 import { FEATURE_IDENTIFIERS } from '../../common/constants'
 import { formatId } from '../../utils/format-id'
+import { hasMainstreamUnknown } from '../feature-stats'
 import { getFeatureSupport } from './supports'
 
 export function* ciu2FeatureList({ data, agents }: CaniuseData): Generator<FeatureData> {
   for (const [featureName, compat] of Object.entries(data)) {
     const stats = flattenStatsValues(compat.stats)
+    const supports = getFeatureSupport(compat.stats, agents)
     yield {
       id: formatId(featureName),
       source: 'caniuse',
@@ -16,14 +18,14 @@ export function* ciu2FeatureList({ data, agents }: CaniuseData): Generator<Featu
       deprecated: false,
       experimental: false,
       prefixed: stats.includes(FEATURE_IDENTIFIERS.prefixed),
-      unknown: stats.includes(FEATURE_IDENTIFIERS.unknown),
+      unknown: hasMainstreamUnknown(supports),
       flag: stats.includes(FEATURE_IDENTIFIERS.flagged),
       usage: {
         partial: compat.usage_perc_a,
         supported: compat.usage_perc_y,
         total: compat.usage_perc_a + compat.usage_perc_y,
       },
-      supports: getFeatureSupport(compat.stats, agents),
+      supports,
     }
   }
 }

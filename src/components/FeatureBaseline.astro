@@ -14,7 +14,7 @@ const { type, title, label, description } = getBaselineStatus(
 ---
 
 <div class:list={['baseline', type]}>
-  <span class:list={['logo', type]}></span>
+  {type !== 'unknown' && <span class:list={['logo', type]}></span>}
   <section>
     <p class="title">
       {title && <strong>{title}</strong>}

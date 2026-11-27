@@ -23,6 +23,7 @@
 }
 
 :root {
+  color-scheme: light dark;
   --primary: rgba(60, 60, 67);
   --primary-hover: rgba(60, 60, 67, 0.11);
   --bg: #fff;
@@ -39,7 +40,6 @@
 body {
   font: 16px / 1.5 "open sans", Helvetica, Arial, sans-serif;
   font-weight: normal;
-  background-size: 400px 400px, 10px 10px;
   color: var(--primary);
   background-color: var(--bg);
   transition: all .25s ease;
@@ -48,7 +48,6 @@ body {
 @media (max-width: 736px) {
   body {
     padding:0;
-    background-size: 12.5em 12.5em,.625em .625em
   }
 }
 

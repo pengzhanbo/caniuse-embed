@@ -5,8 +5,16 @@ import { defineConfig } from 'astro/config'
 import { build } from 'rolldown'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const embedEntry = path.join(__dirname, 'src/scripts/embed.ts')
+
+// dev 下按入口文件的 mtime 缓存打包结果，避免每次刷新都重新跑 rolldown
+let embedCache: { mtimeMs: number, code: string } | null = null
 
 async function buildEmbedScript() {
+  const { mtimeMs } = await fs.stat(embedEntry)
+  if (embedCache && embedCache.mtimeMs === mtimeMs)
+    return embedCache.code
+
   const result = await build({
     input: 'src/scripts/embed.ts',
     cwd: __dirname,
@@ -16,12 +24,14 @@ async function buildEmbedScript() {
     treeshake: true,
     tsconfig: true,
   })
-  return result.output[0].code
+  const code = result.output[0].code
+  embedCache = { mtimeMs, code }
+  return code
 }
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://caniuse.pengzhanbo.cn',
+  site: 'https://caniuse-embed.vercel.app',
   devToolbar: {
     enabled: false,
   },
@@ -32,8 +42,10 @@ export default defineConfig({
       hooks: {
         'astro:server:setup': ({ server }) => {
           server.middlewares.use(async (req, res, next) => {
-            if (req.url === '/embed.js') {
+            const { pathname } = new URL(req.url || '/', 'http://localhost')
+            if (pathname === '/embed.js') {
               res.setHeader('Content-Type', 'text/javascript;charset=utf-8')
+              res.setHeader('Cache-Control', 'no-store')
               res.end(await buildEmbedScript())
             }
             else {

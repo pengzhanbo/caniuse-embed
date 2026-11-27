@@ -1,6 +1,6 @@
 ---
 import type { CaniuseStats, FeatureSupport } from '../types'
-import { BROWSERS, BROWSERS_NAME } from '../common/constants'
+import { BROWSERS, BROWSERS_NAME, FEATURE_IDENTIFIERS } from '../common/constants'
 import { zipFeatureSupports } from '../services/zip-feature-supports'
 import { formatUsage } from '../utils/format-usage'
 
@@ -22,19 +22,18 @@ function sortVersion(version: string, index = 0): string {
   return version
 }
 
-function fontSize(version: [string] | [string, string]): string {
+function fontSizeClass(version: [string] | [string, string]): string {
   const ver = formatVersion(version)
   if (!ver.includes('-'))
     return ''
   const len = ver.length
-  const styles = '--font-size:'
   if (len >= 9)
-    return `${styles} 6px`
+    return 'version-6'
   if (len >= 7)
-    return `${styles} 7px`
+    return 'version-7'
   if (len === 6)
-    return `${styles} 8px`
-  return `${styles} 10px`
+    return 'version-8'
+  return 'version-10'
 }
 
 function describeStats(stats: CaniuseStats[] | undefined): string {
@@ -42,17 +41,17 @@ function describeStats(stats: CaniuseStats[] | undefined): string {
     return 'no data'
 
   const parts: string[] = []
-  if (stats.includes('n'))
+  if (stats.includes(FEATURE_IDENTIFIERS.unsupported))
     parts.push('not supported')
-  if (stats.includes('a'))
+  if (stats.includes(FEATURE_IDENTIFIERS.partial))
     parts.push('partial support')
-  if (stats.includes('x'))
+  if (stats.includes(FEATURE_IDENTIFIERS.prefixed))
     parts.push('requires a vendor prefix')
-  if (stats.includes('d'))
+  if (stats.includes(FEATURE_IDENTIFIERS.flagged))
     parts.push('behind a flag')
-  if (stats.includes('u'))
+  if (stats.includes(FEATURE_IDENTIFIERS.unknown))
     parts.push('unknown support')
-  if (stats.includes('y'))
+  if (stats.includes(FEATURE_IDENTIFIERS.supported))
     parts.push('supported')
 
   return parts.join(', ') || 'not supported'
@@ -67,22 +66,35 @@ function cellLabel(browser: string, period: { version: [string] | [string, strin
 ---
 
 <div class="supports" role="table" aria-label="Browser support by version">
-  <header class="supports-header" role="row">
-    {BROWSERS.map(browser => (
-      <div class={`browser--${browser}`} role="columnheader">
-        <span class="browser-title">{BROWSERS_NAME[browser]}</span>
-      </div>
-    ))}
-  </header>
-  {supports.map(([periodName, periods]) => (
-    <article class:list={['supports-item', 'statistics', periodName]} role="row">
-      {periods.map(period => (
-        <div class:list={[period.browser, ...(period.stats || [])]} role="cell" aria-label={cellLabel(period.browser, period)}>
-          <span class="version" style={fontSize(period.version)} aria-hidden="true">{formatVersion(period.version)}</span>
-          <span class="state" aria-hidden="true"></span>
-          {period.version[0] && (<span class="usage" aria-hidden="true">{formatUsage(period.usage)}</span>)}
+  <div role="rowgroup">
+    <header class="supports-header" role="row">
+      {BROWSERS.map(browser => (
+        <div class={`browser--${browser}`} role="columnheader">
+          <span class="browser-title">{BROWSERS_NAME[browser]}</span>
         </div>
       ))}
-    </article>
-  ))}
+    </header>
+  </div>
+  <div role="rowgroup">
+    {supports.map(([periodName, periods]) => (
+      <article class:list={['supports-item', 'statistics', periodName]} role="row">
+        {periods.map((period) => {
+          const hasVersion = Boolean(period.version[0])
+          return (
+            <div
+              class:list={[period.browser, ...(period.stats || []), fontSizeClass(period.version)]}
+              role="cell"
+              aria-label={hasVersion ? cellLabel(period.browser, period) : undefined}
+              aria-hidden={hasVersion ? undefined : 'true'}
+              tabindex={hasVersion && period.usage > 0 ? 0 : undefined}
+            >
+              <span class="version" aria-hidden="true">{formatVersion(period.version)}</span>
+              <span class="state" aria-hidden="true"></span>
+              {hasVersion && <span class="usage" aria-hidden="true">{formatUsage(period.usage)}</span>}
+            </div>
+          )
+        })}
+      </article>
+    ))}
+  </div>
 </div>

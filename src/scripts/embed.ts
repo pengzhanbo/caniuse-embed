@@ -9,7 +9,7 @@
   const qs = ['script[src*="caniuse"][src*="/embed.js"]', 'script[src*="/embed.js"]']
 
   // 无法从 script 标签推导地址时的兜底数据源（站点默认域名）
-  // 国内镜像：https://caniuse.pengzhanbo.cn
+  // 镜像域名：https://caniuse.pengzhanbo.cn
   const DEFAULT_ORIGIN = 'https://caniuse-embed.vercel.app'
   // 嵌入内容的高度上限，避免异常消息把宿主页面撑高
   const MAX_HEIGHT = 4000
@@ -21,21 +21,48 @@
    * 正确设置 对应的 iframe height 值
    */
   let uuid = 1
+  const initialized = new WeakSet<Element>()
 
-  const embeds = $$(ce)
-
-  for (const embed of embeds) {
-    const source = genSource(embed)
-    if (source) {
-      /**
-       * 支持 MutationObserver, 这在一些框架中比较有用，
-       * 比如 切换 浅色 / 深色 模式
-       */
-      observer(embed, createIframe(embed, source))
-    }
-  }
+  for (const embed of $$(ce))
+    initEmbed(embed)
 
   on('message', onmessage)
+  observeDocument()
+
+  function initEmbed(embed: Element) {
+    if (initialized.has(embed))
+      return
+    const source = genSource(embed)
+    if (!source)
+      return
+    initialized.add(embed)
+    /**
+     * 支持 MutationObserver, 这在一些框架中比较有用，
+     * 比如 切换 浅色 / 深色 模式
+     */
+    observer(embed, createIframe(embed, source))
+  }
+
+  /**
+   * 监听文档中新增的嵌入块（SPA 路由、Markdown 异步渲染、条件渲染等）
+   */
+  function observeDocument() {
+    if (typeof window.MutationObserver === 'undefined')
+      return
+    const obs = new MutationObserver((records) => {
+      for (const record of records) {
+        for (const node of record.addedNodes) {
+          if (!(node instanceof Element))
+            continue
+          if (node.matches(ce))
+            initEmbed(node)
+          for (const embed of node.querySelectorAll(ce))
+            initEmbed(embed)
+        }
+      }
+    })
+    obs.observe(document.documentElement, { childList: true, subtree: true })
+  }
 
   function onmessage(ev: MessageEvent): void {
     const data = parseData(ev.data)
@@ -82,7 +109,7 @@
   /**
    * 获取 embed.js 所在数据源
    *
-   * 默认域名是 caniuse-embed.vercel.app，国内镜像域名是 caniuse.pengzhanbo.cn，
+   * 默认域名是 caniuse-embed.vercel.app，镜像域名是 caniuse.pengzhanbo.cn，
    * 两者内容一致，直接使用 script 标签上的地址即可（无需写死域名）。
    */
   function getEmbedOrigin(): string {
