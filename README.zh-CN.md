@@ -49,6 +49,54 @@
 
 `embed.js` 是没有顶层 `import` 的打包产物，因此即使漏写 `type="module"` 也能正常执行。
 
+## 数据接口
+
+除了嵌入组件，还可以直接请求单个特性的 JSON 数据，实现自定义渲染器。
+
+```bash
+curl https://caniuse-embed.vercel.app/css-grid.json
+```
+
+特性 id 与嵌入组件的 `data-feature` 一致，例如 `css-grid`、`mdn-css_properties_z-index`。
+
+```js
+const res = await fetch('https://caniuse-embed.vercel.app/css-grid.json')
+const data = await res.json()
+
+console.log(data.status?.baseline) // 'high' | 'low' | 'discouraged' | false
+```
+
+响应字段：
+
+| 字段 | 说明 |
+| --- | --- |
+| `id` | 特性唯一 id |
+| `source` | 数据来源：`caniuse` / `mdn` |
+| `paths` | 上游数据路径，如 `api.navigator.requestMediaKeySystemAccess` |
+| `title` | 特性名称（纯文本） |
+| `description` | 特性描述，可能包含 Markdown 行内语法 |
+| `url` | 特性相关文档链接 |
+| `experimental` | 是否为实验性特性 |
+| `deprecated` | 是否已被废弃 |
+| `prefixed` | 是否需要厂商前缀 |
+| `unknown` | 是否存在支持情况未知 |
+| `flag` | 是否需要通过浏览器标识启用 |
+| `usage` | 市场占有率统计：`supported` / `partial` / `total` |
+| `supports` | 各浏览器过去 5 个版本、当前版本、未来 3 个版本的支持情况 |
+| `status` | Baseline 信息，`null` 表示 web-features 尚未收录 |
+
+`status` 字段：
+
+| 字段 | 说明 |
+| --- | --- |
+| `baseline` | `high`（广泛可用）/ `low`（新近可用）/ `discouraged`（劝阻使用）/ `false`（非基线） |
+| `date` | 达到当前基线状态的日期，格式为 `YYYY-MM-DD` |
+| `reason` | 劝阻使用的原因（仅 `discouraged`） |
+| `support` | 各浏览器首次支持该特性的版本 |
+
+接口为构建期预渲染的静态 JSON，允许跨域请求（`Access-Control-Allow-Origin: *`），
+并带有 `Cache-Control`，可直接由 CDN 缓存。
+
 ## 示例
 
 ![caniuse example](./preview/caniuse.webp)

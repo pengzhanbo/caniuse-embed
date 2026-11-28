@@ -52,6 +52,57 @@ Or use the following snippet for `baseline` data:
 `embed.js` is a bundled module script without top-level imports, so it also works
 when the `type="module"` attribute is omitted.
 
+## Data API
+
+Besides the embed component, you can request the JSON data of a single feature to
+build your own renderer.
+
+```bash
+curl https://caniuse-embed.vercel.app/css-grid.json
+```
+
+The feature id is the same as `data-feature` in the embed component, e.g.
+`css-grid`, `mdn-css_properties_z-index`.
+
+```js
+const res = await fetch('https://caniuse-embed.vercel.app/css-grid.json')
+const data = await res.json()
+
+console.log(data.status?.baseline) // 'high' | 'low' | 'discouraged' | false
+```
+
+Response fields:
+
+| Field | Description |
+| --- | --- |
+| `id` | Unique feature id |
+| `source` | Data source: `caniuse` / `mdn` |
+| `paths` | Upstream data path, e.g. `api.navigator.requestMediaKeySystemAccess` |
+| `title` | Feature title (plain text) |
+| `description` | Feature description, may contain inline Markdown syntax |
+| `url` | Link to the feature documentation |
+| `experimental` | Whether the feature is experimental |
+| `deprecated` | Whether the feature is deprecated |
+| `prefixed` | Whether the feature requires a vendor prefix |
+| `unknown` | Whether support is unknown somewhere |
+| `flag` | Whether the feature requires a browser flag |
+| `usage` | Market share statistics: `supported` / `partial` / `total` |
+| `supports` | Support in the past 5 versions, the current version and the future 3 versions of each browser |
+| `status` | Baseline info; `null` when the feature is not covered by web-features |
+
+The `status` field:
+
+| Field | Description |
+| --- | --- |
+| `baseline` | `high` (widely available) / `low` (newly available) / `discouraged` / `false` (not Baseline) |
+| `date` | Date when the current Baseline status was reached, `YYYY-MM-DD` |
+| `reason` | Reason for discouragement (only for `discouraged`) |
+| `support` | First version supporting the feature in each browser |
+
+The endpoint is a static JSON file prerendered at build time. It allows cross-origin
+requests (`Access-Control-Allow-Origin: *`) and sends `Cache-Control`, so it can be
+cached by a CDN directly.
+
 ## Example
 
 ![caniuse example](./preview/caniuse.webp)
